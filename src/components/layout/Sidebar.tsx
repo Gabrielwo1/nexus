@@ -19,6 +19,8 @@ import {
   Instagram,
   ChevronDown,
   Zap,
+  FileText,
+  KanbanSquare,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -68,6 +70,16 @@ const nav = [
       { label: "Instagram Orgânico", href: "/dados/instagram", icon: Instagram },
       { label: "Performance Geral", href: "/dados", icon: TrendingUp },
     ],
+  },
+  {
+    label: "Contratos",
+    href: "/contratos",
+    icon: FileText,
+  },
+  {
+    label: "Tarefas",
+    href: "/tarefas",
+    icon: KanbanSquare,
   },
 ];
 

@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --card: 224 71% 6%;
+    --card-foreground: 213 31% 91%;
+    --popover: 224 71% 5%;
+    --popover-foreground: 215 20.2% 65.1%;
+    --primary: 238 84% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 47% 11%;
+    --secondary-foreground: 215 20.2% 65.1%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215 20.2% 55%;
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 238 84% 67%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-nexus-700 rounded-full;
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-nexus-400 to-violet-400 bg-clip-text text-transparent;
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+/* Shimmer skeleton */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(224 71% 6%) 25%,
+    hsl(224 71% 9%) 50%,
+    hsl(224 71% 6%) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}

@@ -19,7 +19,7 @@ export default function CobrancasPage() {
       supabase.from("clients").select("id,name").eq("status", "active").order("name"),
     ]).then(([inv, cli]) => {
       setInvoices((inv.data as any) || []);
-      setClients(cli.data || []);
+      setClients((cli.data as any) || []);
       setLoading(false);
     });
   }, []);

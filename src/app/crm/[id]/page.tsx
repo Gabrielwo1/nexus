@@ -39,8 +39,8 @@ export default function ClienteDetailPage() {
       supabase.from("instagram_metrics").select("*").eq("client_id", id).order("week_start"),
     ]).then(([c, inv, met]) => {
       if (c.data) { setClient(c.data); setForm(c.data); }
-      setInvoices(inv.data || []);
-      setMetrics(met.data || []);
+      setInvoices((inv.data as any) || []);
+      setMetrics((met.data as any) || []);
       setLoading(false);
     });
   }, [id]);

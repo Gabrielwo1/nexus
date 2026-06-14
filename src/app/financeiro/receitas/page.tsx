@@ -35,8 +35,8 @@ export default function ReceitasPage() {
       supabase.from("clients").select("id,name").eq("status", "active").order("name"),
     ]).then(([inv, exp, cli]) => {
       setInvoices((inv.data as any) || []);
-      setExpenses(exp.data || []);
-      setClients(cli.data || []);
+      setExpenses((exp.data as any) || []);
+      setClients((cli.data as any) || []);
       setLoading(false);
     });
   }, []);

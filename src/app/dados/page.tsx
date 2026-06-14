@@ -21,7 +21,7 @@ export default function DadosPage() {
       supabase.from("clients").select("name, monthly_fee, status").eq("status", "active").order("monthly_fee", { ascending: false }),
     ]).then(([dash, cli]) => {
       setData(dash);
-      setClientesMrr(((cli.data as any) || []).map(c => ({ name: c.name, fee: Number(c.monthly_fee) })));
+      setClientesMrr(((cli.data as any[]) || []).map((c: any) => ({ name: c.name, fee: Number(c.monthly_fee) })));
       setLoading(false);
     });
   }, []);

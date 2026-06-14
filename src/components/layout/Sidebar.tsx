@@ -11,7 +11,7 @@ import {
   LayoutDashboard,
   Palette,
   CalendarDays,
-  FolderImage,
+  FolderOpen,
   CheckSquare,
   TrendingUp,
   Receipt,
@@ -38,7 +38,7 @@ const nav = [
     children: [
       { label: "Branding", href: "/equipe/branding", icon: Palette },
       { label: "Calendário & Copys", href: "/equipe/calendario", icon: CalendarDays },
-      { label: "Armazenamento de Mídias", href: "/equipe/midias", icon: FolderImage },
+      { label: "Armazenamento de Mídias", href: "/equipe/midias", icon: FolderOpen },
       { label: "Mídias para Aprovação", href: "/equipe/aprovacoes", icon: CheckSquare },
     ],
   },

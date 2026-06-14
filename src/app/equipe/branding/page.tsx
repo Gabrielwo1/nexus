@@ -42,7 +42,7 @@ export default function BrandingPage() {
       supabase.from("clients").select("id,name").eq("status", "active").order("name"),
       supabase.from("branding_assets").select("*, clients(name)").order("created_at", { ascending: false }),
     ]).then(([c, a]) => {
-      setClients(c.data || []);
+      setClients((c.data as any) || []);
       setAssets((a.data as any) || []);
       setLoading(false);
     });

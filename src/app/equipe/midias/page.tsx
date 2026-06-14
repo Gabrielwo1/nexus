@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import type { Midia, Client, TeamMember } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import {
-  FolderImage, Search, Filter, Play, Download,
+  FolderOpen, Search, Filter, Play, Download,
   Image as ImageIcon, Music, FileText, Plus, Loader2,
 } from "lucide-react";
 
@@ -62,7 +62,7 @@ export default function MidiasPage() {
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FolderImage className="w-5 h-5 text-sky-400" />
+          <FolderOpen className="w-5 h-5 text-sky-400" />
           <div>
             <h1 className="text-2xl font-bold text-foreground">Armazenamento de Mídias</h1>
             <p className="text-sm text-muted-foreground">{midias.length} arquivos · Recebidos via Telegram</p>
@@ -112,7 +112,7 @@ export default function MidiasPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <FolderImage className="w-10 h-10 text-muted-foreground" />
+          <FolderOpen className="w-10 h-10 text-muted-foreground" />
           <p className="text-muted-foreground text-sm">Nenhuma mídia encontrada</p>
           <p className="text-muted-foreground text-xs">As mídias aparecem aqui quando a equipe envia via Telegram</p>
         </div>

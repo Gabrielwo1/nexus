@@ -81,8 +81,8 @@ export default function TarefasPage() {
       supabase.from("clients").select("id, name").eq("status", "active").order("name"),
     ]).then(([t, m, c]) => {
       setTasks((t.data as any) || []);
-      setMembers(m.data || []);
-      setClients(c.data || []);
+      setMembers((m.data as any) || []);
+      setClients((c.data as any) || []);
       setLoading(false);
     });
   }, []);

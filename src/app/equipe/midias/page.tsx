@@ -45,7 +45,7 @@ export default function MidiasPage() {
       supabase.from("clients").select("id,name").eq("status", "active").order("name"),
     ]).then(([m, c]) => {
       setMidias((m.data as any) || []);
-      setClients(c.data || []);
+      setClients((c.data as any) || []);
       setLoading(false);
     });
   }, []);

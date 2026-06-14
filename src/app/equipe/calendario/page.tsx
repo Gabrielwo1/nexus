@@ -49,8 +49,8 @@ export default function CalendarioPage() {
       supabase.from("team_members").select("*").eq("status", "active"),
     ]).then(([p, c, t]) => {
       setPosts((p.data as any) || []);
-      setClients(c.data || []);
-      setTeam(t.data || []);
+      setClients((c.data as any) || []);
+      setTeam((t.data as any) || []);
       setLoading(false);
     });
   }, []);

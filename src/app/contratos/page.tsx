@@ -104,8 +104,8 @@ export default function ContratosPage() {
     ]).then(([c, n, m, cl]) => {
       setContracts((c.data as any) || []);
       setNotas((n.data as any) || []);
-      setMembers(m.data || []);
-      setClients(cl.data || []);
+      setMembers((m.data as any) || []);
+      setClients((cl.data as any) || []);
       setLoading(false);
     });
   }, []);

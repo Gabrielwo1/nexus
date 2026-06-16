@@ -92,17 +92,45 @@ export type InstagramMetric = {
   clients?: { name: string }
 }
 
+export type StageStatus = 'pendente' | 'em_andamento' | 'entregue' | 'aprovado' | 'ajustes'
+
 export type CalendarPost = {
   id: string
-  client_id: string
+  client_id: string | null
   title: string
   copy: string | null
   caption: string | null
   type: string
   status: string
   scheduled_at: string | null
+  scheduled_date: string | null
   published_at: string | null
   assigned_to: string | null
+  current_stage: string | null
+  // Etapa 1: Roteiro (Gerval)
+  roteiro_status: StageStatus
+  roteiro_text: string | null
+  roteiro_url: string | null
+  roteiro_by: string | null
+  roteiro_done_at: string | null
+  roteiro_approved_at: string | null
+  // Etapa 2: Gravação (Guto)
+  gravacao_status: StageStatus
+  gravacao_url: string | null
+  gravacao_by: string | null
+  gravacao_done_at: string | null
+  gravacao_approved_at: string | null
+  // Etapa 3: Edição (Petterson)
+  edicao_status: StageStatus
+  edicao_url: string | null
+  edicao_by: string | null
+  edicao_done_at: string | null
+  edicao_approved_at: string | null
+  // Etapa 4: Publicação (Karina)
+  publicacao_status: StageStatus
+  post_link: string | null
+  publicacao_by: string | null
+  publicacao_approved_at: string | null
   created_at: string
   clients?: { name: string }
   team_members?: { name: string }

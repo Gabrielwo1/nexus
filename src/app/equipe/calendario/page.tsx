@@ -5,13 +5,13 @@ import { supabase } from "@/lib/supabase";
 import type { CalendarPost, Client, TeamMember, StageStatus } from "@/lib/supabase";
 import {
   STAGES, TIPOS_POST, STAGE_FIELDS, STAGE_STATUS_LABEL, STAGE_STATUS_STYLE,
-  applicableStages, stageStatus, isStageUnlocked, activeStage, isConcluido,
+  STAGE_CONTENT, applicableStages, stageStatus, isStageUnlocked, isConcluido,
   awaitingApproval, type StageDef,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import {
   CalendarDays, Plus, X, Check, Loader2, ChevronLeft, ChevronRight,
-  Lock, FileText, Play, Image as ImageIcon, Send,
+  Lock, FileText, Play, Image as ImageIcon, Send, Film, FileType2,
   ThumbsUp, RotateCcw, ExternalLink, LayoutGrid, ListChecks,
   PanelLeftClose, PanelLeftOpen, BarChart3,
 } from "lucide-react";
@@ -591,6 +591,7 @@ function StageCard({
   const st = stageStatus(post, stage);
   const unlocked = isStageUnlocked(post, stage);
   const f = STAGE_FIELDS[stage.key];
+  const content = STAGE_CONTENT[stage.key];
   const [text, setText] = useState(post.roteiro_text || "");
   const [url, setUrl] = useState("");
 
@@ -629,8 +630,12 @@ function StageCard({
             </div>
           )}
           {savedUrl && (
-            <a href={savedUrl} target="_blank" rel="noopener noreferrer" className="mb-2 flex items-center gap-1.5 text-xs text-nexus-400 hover:underline">
-              <ExternalLink className="w-3 h-3" /> {stage.key === "publicacao" ? "Ver post publicado" : "Abrir arquivo entregue"}
+            <a href={savedUrl} target="_blank" rel="noopener noreferrer"
+              className="mb-2 w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-colors"
+              style={{ background: stage.color + "1a", color: stage.color }}
+            >
+              {content.kind === "doc" ? <FileType2 className="w-3.5 h-3.5" /> : content.kind === "media" ? <Film className="w-3.5 h-3.5" /> : <ExternalLink className="w-3.5 h-3.5" />}
+              {content.accessLabel}
             </a>
           )}
 
@@ -643,9 +648,10 @@ function StageCard({
           {(st === "em_andamento" || st === "ajustes") && (
             <div className="space-y-2">
               {stage.key === "roteiro" && (
-                <textarea value={text} onChange={e => setText(e.target.value)} rows={4} placeholder="Cole o roteiro aqui (ou só anexe o link abaixo)..." className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 resize-none" />
+                <textarea value={text} onChange={e => setText(e.target.value)} rows={4} placeholder="Cole o roteiro aqui (ou anexe o PDF/DOC abaixo)..." className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 resize-none" />
               )}
-              <input value={url} onChange={e => setUrl(e.target.value)} placeholder={stage.key === "publicacao" ? "Link do post publicado..." : stage.key === "roteiro" ? "Link do roteiro (opcional)..." : "Link do arquivo (Drive, R2...)"} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+              <input value={url} onChange={e => setUrl(e.target.value)} placeholder={content.placeholder} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+              <p className="text-[10px] text-muted-foreground">Formato esperado: {content.label}</p>
               <button
                 onClick={() => {
                   const deliverable: Record<string, string> = {};

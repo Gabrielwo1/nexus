@@ -41,6 +41,19 @@ export const STAGES: StageDef[] = [
 
 export const TIPOS_POST = ["reel", "story", "carrossel", "foto"];
 
+// Tipo de conteúdo esperado em cada etapa (para upload/acesso)
+export const STAGE_CONTENT: Record<StageKey, {
+  label: string;        // descrição do formato
+  placeholder: string;  // placeholder do input de link
+  accessLabel: string;  // texto do botão de acesso
+  kind: "doc" | "media" | "link";
+}> = {
+  roteiro:    { label: "PDF ou DOC", placeholder: "Link do roteiro (PDF/DOC)...", accessLabel: "Acessar roteiro", kind: "doc" },
+  gravacao:   { label: "Imagem ou vídeo", placeholder: "Link da gravação (imagem/vídeo)...", accessLabel: "Acessar gravação", kind: "media" },
+  edicao:     { label: "Imagem ou vídeo", placeholder: "Link do arquivo final (imagem/vídeo)...", accessLabel: "Acessar edição", kind: "media" },
+  publicacao: { label: "Link do post", placeholder: "Link do post publicado...", accessLabel: "Ver post publicado", kind: "link" },
+};
+
 export const STAGE_STATUS_LABEL: Record<StageStatus, string> = {
   pendente: "Pendente",
   em_andamento: "Em andamento",

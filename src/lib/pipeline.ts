@@ -70,6 +70,18 @@ export const STAGE_STATUS_STYLE: Record<StageStatus, string> = {
   ajustes: "text-red-400 bg-red-400/10",
 };
 
+// Mapeia um funcionário para a etapa que ele opera
+const NAME_TO_STAGE: Record<string, StageKey> = {
+  Gerval: "roteiro", Guto: "gravacao", Petterson: "edicao", Karina: "publicacao",
+};
+export function stageForMember(m: { name: string; role: string }): StageDef | null {
+  const byName = NAME_TO_STAGE[m.name];
+  if (byName) return STAGES.find(s => s.key === byName) || null;
+  if (m.role === "copywriter") return STAGES[0];
+  if (m.role === "videomaker") return STAGES[1];
+  return null;
+}
+
 // Etapas aplicáveis a um post (gravação só para reels/stories)
 export function applicableStages(post: CalendarPost): StageDef[] {
   return STAGES.filter(s => !s.onlyTypes || s.onlyTypes.includes(post.type));

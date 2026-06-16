@@ -6,7 +6,7 @@ import type { CalendarPost, Client, TeamMember, StageStatus } from "@/lib/supaba
 import {
   STAGES, TIPOS_POST, STAGE_FIELDS, STAGE_STATUS_LABEL, STAGE_STATUS_STYLE,
   STAGE_CONTENT, applicableStages, stageStatus, isStageUnlocked, isConcluido,
-  awaitingApproval, type StageDef,
+  awaitingApproval, stageForMember, type StageDef,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import {
@@ -14,6 +14,7 @@ import {
   Lock, FileText, Play, Image as ImageIcon, Send, Film, FileType2,
   ThumbsUp, RotateCcw, ExternalLink, LayoutGrid, ListChecks,
   PanelLeftClose, PanelLeftOpen, BarChart3,
+  Upload, User, ArrowLeft, ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -41,11 +42,6 @@ export default function CalendarioPage() {
   const [filterClient, setFilterClient] = useState("todos");
   const [showSummary, setShowSummary] = useState(true);
 
-  const [form, setForm] = useState({
-    client_id: "", title: "", type: "reel",
-    scheduled_date: new Date().toISOString().split("T")[0], caption: "",
-  });
-
   const loadAll = () => {
     Promise.all([
       supabase.from("calendar_posts").select("*, clients(name)").order("scheduled_date", { ascending: true }),
@@ -71,19 +67,26 @@ export default function CalendarioPage() {
     filterClient === "todos" || p.client_id === filterClient
   );
 
-  const createPost = async () => {
-    if (!form.title) { toast.error("Título obrigatório"); return; }
+  // Gerval cria um novo post já entregando o roteiro
+  const createNewRoteiro = async (fields: {
+    client_id: string; title: string; type: string; scheduled_date: string; caption: string;
+    roteiro_text: string; roteiro_url: string; memberId: string;
+  }) => {
     setSaving(true);
+    const hasContent = !!(fields.roteiro_text || fields.roteiro_url);
     const payload: any = {
-      client_id: form.client_id || null,
-      title: form.title,
-      type: form.type,
-      scheduled_date: form.scheduled_date,
-      caption: form.caption || null,
+      client_id: fields.client_id || null,
+      title: fields.title,
+      type: fields.type,
+      scheduled_date: fields.scheduled_date,
+      caption: fields.caption || null,
       status: "producao",
       current_stage: "roteiro",
-      roteiro_status: "pendente",
-      roteiro_by: ownerOf(STAGES[0])?.id || null,
+      roteiro_status: hasContent ? "entregue" : "pendente",
+      roteiro_text: fields.roteiro_text || null,
+      roteiro_url: fields.roteiro_url || null,
+      roteiro_done_at: hasContent ? new Date().toISOString() : null,
+      roteiro_by: fields.memberId || ownerOf(STAGES[0])?.id || null,
       gravacao_by: ownerOf(STAGES[1])?.id || null,
       edicao_by: ownerOf(STAGES[2])?.id || null,
       publicacao_by: ownerOf(STAGES[3])?.id || null,
@@ -92,9 +95,8 @@ export default function CalendarioPage() {
     setSaving(false);
     if (error) { toast.error("Erro: " + error.message); return; }
     setShowForm(false);
-    setForm({ client_id: "", title: "", type: "reel", scheduled_date: new Date().toISOString().split("T")[0], caption: "" });
     loadAll();
-    toast.success("Post adicionado ao calendário");
+    toast.success(hasContent ? "Roteiro enviado — aguardando aprovação" : "Post criado na fila de roteiro");
   };
 
   const patchPost = async (id: string, updates: any, successMsg: string) => {
@@ -272,7 +274,7 @@ export default function CalendarioPage() {
             </div>
           </div>
           <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-4 py-2 bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg text-sm font-medium transition-colors">
-            <Plus className="w-4 h-4" /> Novo Post
+            <Upload className="w-4 h-4" /> Novo Upload
           </button>
         </div>
 
@@ -302,55 +304,34 @@ export default function CalendarioPage() {
               </button>
             ))}
           </div>
-          <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
-            <option value="todos">Todos os clientes</option>
-            {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+        </div>
+
+        {/* Abas por projeto / cliente */}
+        <div className="flex items-center gap-1.5 flex-wrap border-b border-border pb-2">
+          <button onClick={() => setFilterClient("todos")} className={cn("px-3 py-1.5 rounded-lg text-xs font-medium transition-all", filterClient === "todos" ? "bg-nexus-600 text-white" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+            Todos os projetos
+          </button>
+          {clients.map(c => {
+            const count = posts.filter(p => p.client_id === c.id).length;
+            return (
+              <button key={c.id} onClick={() => setFilterClient(c.id)} className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", filterClient === c.id ? "bg-nexus-600 text-white" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+                {c.name}
+                {count > 0 && <span className={cn("text-[10px] px-1.5 py-0.5 rounded-full", filterClient === c.id ? "bg-white/20" : "bg-accent")}>{count}</span>}
+              </button>
+            );
+          })}
         </div>
 
         {showForm && (
-          <div className="glass rounded-xl p-5 border border-nexus-500/20">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-foreground">Novo Post</h2>
-              <button onClick={() => setShowForm(false)} className="p-1 rounded hover:bg-accent transition-colors"><X className="w-4 h-4 text-muted-foreground" /></button>
-            </div>
-            <div className="grid grid-cols-4 gap-3">
-              <div className="col-span-2">
-                <label className="block text-xs text-muted-foreground mb-1.5">Título / tema *</label>
-                <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Ex: Reel - 5 mitos sobre ortodontia" className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
-              </div>
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1.5">Cliente</label>
-                <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
-                  <option value="">Selecionar...</option>
-                  {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1.5">Tipo</label>
-                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
-                  {TIPOS_POST.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1.5">Data de publicação</label>
-                <input type="date" value={form.scheduled_date} onChange={e => setForm({ ...form, scheduled_date: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
-              </div>
-              <div className="col-span-3">
-                <label className="block text-xs text-muted-foreground mb-1.5">Briefing / observação inicial</label>
-                <input value={form.caption} onChange={e => setForm({ ...form, caption: e.target.value })} placeholder="Direção para o roteiro..." className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
-              </div>
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-3">
-              O post entra direto na fila de roteiro do Gerval. {form.type === "reel" || form.type === "story" ? "Passará por Roteiro → Gravação → Edição → Publicação." : "Carrossel/foto pulam a gravação: Roteiro → Edição → Publicação."}
-            </p>
-            <div className="flex justify-end gap-3 mt-4">
-              <button onClick={() => setShowForm(false)} className="px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:text-foreground transition-colors">Cancelar</button>
-              <button onClick={createPost} disabled={saving} className="px-4 py-2 text-sm bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-60">
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Criar
-              </button>
-            </div>
-          </div>
+          <UploadWizard
+            members={members}
+            clients={clients}
+            posts={posts}
+            saving={saving}
+            onClose={() => setShowForm(false)}
+            onCreateNew={createNewRoteiro}
+            onDeliverExisting={deliverStage}
+          />
         )}
 
         {loading ? (
@@ -690,6 +671,245 @@ function StageCard({
           )}
         </>
       )}
+    </div>
+  );
+}
+
+// ============ Wizard de Novo Upload (3 passos) ============
+function UploadWizard({
+  members, clients, posts, saving, onClose, onCreateNew, onDeliverExisting,
+}: {
+  members: TeamMember[];
+  clients: Client[];
+  posts: CalendarPost[];
+  saving: boolean;
+  onClose: () => void;
+  onCreateNew: (fields: { client_id: string; title: string; type: string; scheduled_date: string; caption: string; roteiro_text: string; roteiro_url: string; memberId: string; }) => void;
+  onDeliverExisting: (post: CalendarPost, stage: StageDef, deliverable: Record<string, string>) => void;
+}) {
+  const [step, setStep] = useState(1);
+  const [memberId, setMemberId] = useState("");
+  const [mode, setMode] = useState<"novo" | "existente">("existente");
+  const [postId, setPostId] = useState("");
+
+  // campos de upload
+  const [fileName, setFileName] = useState("");
+  const [url, setUrl] = useState("");
+  const [text, setText] = useState("");
+  // campos de novo post (Gerval)
+  const [np, setNp] = useState({ client_id: "", title: "", type: "reel", scheduled_date: new Date().toISOString().split("T")[0], caption: "" });
+
+  const member = members.find(m => m.id === memberId);
+  const stage = member ? stageForMember(member) : null;
+  const content = stage ? STAGE_CONTENT[stage.key] : null;
+  const isRoteiro = stage?.key === "roteiro";
+
+  // fila do funcionário (posts esperando a etapa dele)
+  const queue = stage ? posts.filter(p => {
+    const appl = applicableStages(p);
+    if (!appl.find(s => s.key === stage.key)) return false;
+    if (!isStageUnlocked(p, stage)) return false;
+    const st = stageStatus(p, stage);
+    return st === "pendente" || st === "em_andamento" || st === "ajustes";
+  }) : [];
+
+  const selectedPost = posts.find(p => p.id === postId);
+
+  const submit = () => {
+    if (!stage) return;
+    if (mode === "novo") {
+      if (!np.title) { toast.error("Informe o título do post"); return; }
+      if (!text && !url) { toast.error("Cole o roteiro ou anexe o link do PDF/DOC"); return; }
+      onCreateNew({ ...np, roteiro_text: text, roteiro_url: url, memberId });
+    } else {
+      if (!selectedPost) { toast.error("Selecione um post"); return; }
+      const deliverable: Record<string, string> = {};
+      if (stage.key === "roteiro") {
+        if (!text && !url) { toast.error("Cole o roteiro ou anexe o link"); return; }
+        if (text) deliverable.roteiro_text = text;
+        if (url) deliverable.roteiro_url = url;
+      } else {
+        if (!url) { toast.error("Informe o link do arquivo"); return; }
+        deliverable[STAGE_FIELDS[stage.key].deliverable[0]] = url;
+      }
+      onDeliverExisting(selectedPost, stage, deliverable);
+    }
+  };
+
+  const stepLabels = ["Quem é você", isRoteiro ? "Roteiro / post" : "Selecionar post", "Upload"];
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl" onClick={e => e.stopPropagation()}>
+        {/* Header + steps */}
+        <div className="p-5 border-b border-border flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Upload className="w-5 h-5 text-nexus-400" />
+            <h2 className="text-base font-semibold text-foreground">Novo Upload</h2>
+          </div>
+          <button onClick={onClose} className="p-1 rounded hover:bg-accent transition-colors"><X className="w-4 h-4 text-muted-foreground" /></button>
+        </div>
+        <div className="px-5 pt-4 flex items-center gap-2">
+          {stepLabels.map((lbl, i) => (
+            <div key={i} className="flex items-center gap-2 flex-1">
+              <div className={cn("flex items-center gap-1.5 text-xs", step === i + 1 ? "text-nexus-300 font-semibold" : step > i + 1 ? "text-emerald-400" : "text-muted-foreground")}>
+                <span className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold", step === i + 1 ? "bg-nexus-600 text-white" : step > i + 1 ? "bg-emerald-600 text-white" : "bg-accent text-muted-foreground")}>
+                  {step > i + 1 ? "✓" : i + 1}
+                </span>
+                {lbl}
+              </div>
+              {i < stepLabels.length - 1 && <div className="flex-1 h-px bg-border" />}
+            </div>
+          ))}
+        </div>
+
+        <div className="p-5 min-h-[280px]">
+          {/* PASSO 1 — quem é você */}
+          {step === 1 && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-3">Selecione seu nome para ver suas tarefas:</p>
+              <div className="grid grid-cols-2 gap-2">
+                {members.map(m => {
+                  const s = stageForMember(m);
+                  return (
+                    <button key={m.id} onClick={() => { setMemberId(m.id); setMode(stageForMember(m)?.key === "roteiro" ? "novo" : "existente"); }}
+                      className={cn("flex items-center gap-3 p-3 rounded-xl border text-left transition-all", memberId === m.id ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-sm font-bold text-white">{m.name[0]}</div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-foreground">{m.name}</p>
+                        <p className="text-[11px] text-muted-foreground truncate">{s ? s.label : m.role}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* PASSO 2 — escolher post ou criar novo */}
+          {step === 2 && stage && (
+            <div>
+              {isRoteiro && (
+                <div className="flex gap-2 mb-4">
+                  <button onClick={() => setMode("novo")} className={cn("flex-1 p-3 rounded-xl border text-left transition-all", mode === "novo" ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
+                    <Plus className="w-4 h-4 text-nexus-400 mb-1" />
+                    <p className="text-sm font-medium text-foreground">Criar novo roteiro/post</p>
+                    <p className="text-[11px] text-muted-foreground">Começar um conteúdo do zero</p>
+                  </button>
+                  <button onClick={() => setMode("existente")} className={cn("flex-1 p-3 rounded-xl border text-left transition-all", mode === "existente" ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
+                    <FileText className="w-4 h-4 text-nexus-400 mb-1" />
+                    <p className="text-sm font-medium text-foreground">Reenviar existente</p>
+                    <p className="text-[11px] text-muted-foreground">{queue.length} na sua fila</p>
+                  </button>
+                </div>
+              )}
+
+              {mode === "existente" && (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {queue.length === 0 ? (
+                    <div className="py-10 text-center text-sm text-muted-foreground">Nenhum post na sua fila no momento 🎉</div>
+                  ) : queue.map(p => {
+                    const Icon = TIPO_ICON[p.type] || FileText;
+                    return (
+                      <button key={p.id} onClick={() => setPostId(p.id)} className={cn("w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all", postId === p.id ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
+                        <Icon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{p.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{p.clients?.name || "Sem cliente"} · {p.type}{p.scheduled_date && ` · ${format(parseISO(p.scheduled_date), "dd/MM")}`}</p>
+                        </div>
+                        {stageStatus(p, stage) === "ajustes" && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-red-400/10 text-red-400">ajustes</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {mode === "novo" && isRoteiro && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="block text-xs text-muted-foreground mb-1.5">Título / tema *</label>
+                    <input value={np.title} onChange={e => setNp({ ...np, title: e.target.value })} placeholder="Ex: Reel - 5 mitos sobre ortodontia" className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Cliente</label>
+                    <select value={np.client_id} onChange={e => setNp({ ...np, client_id: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      <option value="">Selecionar...</option>
+                      {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Tipo</label>
+                    <select value={np.type} onChange={e => setNp({ ...np, type: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      {TIPOS_POST.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs text-muted-foreground mb-1.5">Data de publicação</label>
+                    <input type="date" value={np.scheduled_date} onChange={e => setNp({ ...np, scheduled_date: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* PASSO 3 — upload */}
+          {step === 3 && stage && content && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-accent/40">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: stage.color }} />
+                <p className="text-xs text-foreground">
+                  <span className="font-medium">{member?.name}</span> · {stage.label} ·
+                  {mode === "novo" ? " novo post" : ` ${selectedPost?.title}`}
+                </p>
+              </div>
+              <div className="p-2.5 rounded-lg bg-nexus-600/10 border border-nexus-500/20">
+                <p className="text-[11px] text-nexus-300">Formato aceito nesta função: <span className="font-semibold">{content.label}</span></p>
+              </div>
+
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1.5">Nome do arquivo</label>
+                <input value={fileName} onChange={e => setFileName(e.target.value)} placeholder="Ex: roteiro-mitos-v1" className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+              </div>
+
+              {isRoteiro && (
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1.5">Roteiro (texto)</label>
+                  <textarea value={text} onChange={e => setText(e.target.value)} rows={4} placeholder="Cole o roteiro aqui (ou anexe o PDF/DOC abaixo)..." className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 resize-none" />
+                </div>
+              )}
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1.5">Link do arquivo ({content.label})</label>
+                <input value={url} onChange={e => setUrl(e.target.value)} placeholder={content.placeholder} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer nav */}
+        <div className="p-5 border-t border-border flex items-center justify-between">
+          <button onClick={() => step > 1 ? setStep(step - 1) : onClose()} className="flex items-center gap-1.5 px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:text-foreground transition-colors">
+            <ArrowLeft className="w-4 h-4" /> {step > 1 ? "Voltar" : "Cancelar"}
+          </button>
+          {step < 3 ? (
+            <button
+              onClick={() => {
+                if (step === 1 && !stage) { toast.error("Esse membro não opera uma etapa do pipeline"); return; }
+                if (step === 1 && !memberId) { toast.error("Selecione seu nome"); return; }
+                if (step === 2 && mode === "existente" && !postId) { toast.error("Selecione um post"); return; }
+                if (step === 2 && mode === "novo" && !np.title) { toast.error("Informe o título"); return; }
+                setStep(step + 1);
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg font-medium transition-colors"
+            >
+              Próximo <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button onClick={submit} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 text-sm bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg font-medium transition-colors disabled:opacity-60">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} Enviar
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

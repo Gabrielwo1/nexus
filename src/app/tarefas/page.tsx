@@ -65,6 +65,8 @@ export default function TarefasPage() {
   const [ganttStart, setGanttStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [dragging, setDragging] = useState<string | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editForm, setEditForm] = useState<any>(null);
 
   const [form, setForm] = useState({
     title: "", type: "reel", status: "pending", priority: "normal",
@@ -124,6 +126,42 @@ export default function TarefasPage() {
     setEditingTask(null);
     toast.success("Tarefa removida");
   };
+
+  const startEdit = (t: Task) => {
+    setEditForm({
+      title: t.title, type: t.type || "reel", priority: t.priority || "normal",
+      assigned_to: t.assigned_to || "", client_id: t.client_id || "",
+      start_date: t.start_date || "", end_date: t.end_date || "",
+      estimated_hours: t.estimated_hours?.toString() || "",
+      color: t.color || "#6366f1", description: t.description || "",
+    });
+    setEditMode(true);
+  };
+
+  const saveEdit = async () => {
+    if (!editingTask) return;
+    if (!editForm.title) { toast.error("Título obrigatório"); return; }
+    setSaving(true);
+    const payload = {
+      title: editForm.title, type: editForm.type, priority: editForm.priority,
+      assigned_to: editForm.assigned_to || null, client_id: editForm.client_id || null,
+      start_date: editForm.start_date || null, end_date: editForm.end_date || null,
+      estimated_hours: editForm.estimated_hours ? parseInt(editForm.estimated_hours) : null,
+      color: editForm.color, description: editForm.description || null,
+    };
+    const { data, error } = await supabase
+      .from("tasks").update(payload).eq("id", editingTask.id)
+      .select("*, team_members(name, role), clients(name)").single();
+    setSaving(false);
+    if (error) { toast.error("Erro: " + error.message); return; }
+    setTasksAfterEdit(data as any);
+    setEditingTask(data as any);
+    setEditMode(false);
+    toast.success("Tarefa atualizada");
+  };
+
+  const setTasksAfterEdit = (updated: Task) =>
+    setTasks(prev => prev.map(t => t.id === updated.id ? updated : t));
 
   // Gantt: 30 dias visíveis
   const ganttDays = eachDayOfInterval({ start: ganttStart, end: addDays(ganttStart, 29) });
@@ -507,60 +545,134 @@ export default function TarefasPage() {
 
       {/* Modal detalhe da tarefa */}
       {editingTask && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditingTask(null)}>
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => { setEditingTask(null); setEditMode(false); }}>
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: editingTask.color || "#6366f1" }} />
-                <h2 className="text-base font-semibold text-foreground">{editingTask.title}</h2>
+                <h2 className="text-base font-semibold text-foreground">{editMode ? "Editar tarefa" : editingTask.title}</h2>
               </div>
-              <button onClick={() => setEditingTask(null)} className="p-1 rounded hover:bg-accent transition-colors">
-                <X className="w-4 h-4 text-muted-foreground" />
-              </button>
-            </div>
-
-            {editingTask.description && (
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{editingTask.description}</p>
-            )}
-
-            <div className="space-y-2.5 mb-4">
-              {[
-                { label: "Responsável", value: editingTask.team_members?.name || "—" },
-                { label: "Cliente", value: editingTask.clients?.name || "—" },
-                { label: "Tipo", value: editingTask.type || "—" },
-                { label: "Prioridade", value: editingTask.priority || "normal" },
-                { label: "Horas estimadas", value: editingTask.estimated_hours ? `${editingTask.estimated_hours}h` : "—" },
-                { label: "Início", value: editingTask.start_date ? format(parseISO(editingTask.start_date), "dd/MM/yyyy") : "—" },
-                { label: "Prazo", value: editingTask.end_date ? format(parseISO(editingTask.end_date), "dd/MM/yyyy") : "—" },
-              ].map(d => (
-                <div key={d.label} className="flex justify-between py-1.5 border-b border-border/50">
-                  <span className="text-xs text-muted-foreground">{d.label}</span>
-                  <span className="text-xs text-foreground font-medium capitalize">{d.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mb-4">
-              <p className="text-xs text-muted-foreground mb-2">Status</p>
-              <div className="grid grid-cols-3 gap-1.5">
-                {STATUS_COLS.map(s => (
-                  <button
-                    key={s.key}
-                    onClick={() => { updateStatus(editingTask.id, s.key); setEditingTask({ ...editingTask, status: s.key }); toast.success("Status atualizado"); }}
-                    className={cn("py-1.5 px-2 rounded-lg text-xs font-medium transition-all", editingTask.status === s.key ? `${s.bg} ${s.color} border ${s.border}` : "text-muted-foreground hover:bg-accent border border-transparent")}
-                  >
-                    {s.label}
+              <div className="flex items-center gap-1">
+                {!editMode && (
+                  <button onClick={() => startEdit(editingTask)} className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-nexus-300 hover:bg-nexus-600/10 border border-nexus-500/30 transition-colors">
+                    <Edit3 className="w-3.5 h-3.5" /> Editar
                   </button>
-                ))}
+                )}
+                <button onClick={() => { setEditingTask(null); setEditMode(false); }} className="p-1 rounded hover:bg-accent transition-colors">
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </button>
               </div>
             </div>
 
-            <button
-              onClick={() => deleteTask(editingTask.id)}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 text-sm transition-colors"
-            >
-              <X className="w-4 h-4" /> Remover tarefa
-            </button>
+            {editMode ? (
+              /* ===== MODO EDIÇÃO ===== */
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1.5">Título *</label>
+                  <input value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Tipo</label>
+                    <select value={editForm.type} onChange={e => setEditForm({ ...editForm, type: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      {TIPOS_TAREFA.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Prioridade</label>
+                    <select value={editForm.priority} onChange={e => setEditForm({ ...editForm, priority: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      <option value="baixa">Baixa</option><option value="normal">Normal</option><option value="alta">Alta</option><option value="urgente">Urgente</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Responsável</label>
+                    <select value={editForm.assigned_to} onChange={e => setEditForm({ ...editForm, assigned_to: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      <option value="">Sem responsável</option>
+                      {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Cliente</label>
+                    <select value={editForm.client_id} onChange={e => setEditForm({ ...editForm, client_id: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500">
+                      <option value="">Sem cliente</option>
+                      {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Início</label>
+                    <input type="date" value={editForm.start_date} onChange={e => setEditForm({ ...editForm, start_date: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Prazo</label>
+                    <input type="date" value={editForm.end_date} onChange={e => setEditForm({ ...editForm, end_date: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Horas estimadas</label>
+                    <input type="number" value={editForm.estimated_hours} onChange={e => setEditForm({ ...editForm, estimated_hours: e.target.value })} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">Cor</label>
+                    <input type="color" value={editForm.color} onChange={e => setEditForm({ ...editForm, color: e.target.value })} className="w-full h-9 rounded-lg border border-border cursor-pointer bg-transparent" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1.5">Descrição</label>
+                  <textarea value={editForm.description} onChange={e => setEditForm({ ...editForm, description: e.target.value })} rows={3} className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 resize-none" />
+                </div>
+                <div className="flex justify-end gap-2 pt-1">
+                  <button onClick={() => setEditMode(false)} className="px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:text-foreground transition-colors">Cancelar</button>
+                  <button onClick={saveEdit} disabled={saving} className="px-4 py-2 text-sm bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-60">
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Salvar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* ===== MODO VISUALIZAÇÃO ===== */
+              <>
+                {editingTask.description && (
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{editingTask.description}</p>
+                )}
+
+                <div className="space-y-2.5 mb-4">
+                  {[
+                    { label: "Responsável", value: editingTask.team_members?.name || "—" },
+                    { label: "Cliente", value: editingTask.clients?.name || "—" },
+                    { label: "Tipo", value: editingTask.type || "—" },
+                    { label: "Prioridade", value: editingTask.priority || "normal" },
+                    { label: "Horas estimadas", value: editingTask.estimated_hours ? `${editingTask.estimated_hours}h` : "—" },
+                    { label: "Início", value: editingTask.start_date ? format(parseISO(editingTask.start_date), "dd/MM/yyyy") : "—" },
+                    { label: "Prazo", value: editingTask.end_date ? format(parseISO(editingTask.end_date), "dd/MM/yyyy") : "—" },
+                  ].map(d => (
+                    <div key={d.label} className="flex justify-between py-1.5 border-b border-border/50">
+                      <span className="text-xs text-muted-foreground">{d.label}</span>
+                      <span className="text-xs text-foreground font-medium capitalize">{d.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-xs text-muted-foreground mb-2">Status</p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {STATUS_COLS.map(s => (
+                      <button
+                        key={s.key}
+                        onClick={() => { updateStatus(editingTask.id, s.key); setEditingTask({ ...editingTask, status: s.key }); toast.success("Status atualizado"); }}
+                        className={cn("py-1.5 px-2 rounded-lg text-xs font-medium transition-all", editingTask.status === s.key ? `${s.bg} ${s.color} border ${s.border}` : "text-muted-foreground hover:bg-accent border border-transparent")}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => deleteTask(editingTask.id)}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 text-sm transition-colors"
+                >
+                  <X className="w-4 h-4" /> Remover tarefa
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

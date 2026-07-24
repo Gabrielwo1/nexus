@@ -6,7 +6,7 @@ import {
   FORMATOS, COMUNICACOES, TIPOS_CONTEUDO, PARTICIPANTES, findTag, type TagOpt,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
-import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check } from "lucide-react";
+import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check, Copy, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -15,6 +15,8 @@ type Props = {
   members: TeamMember[];
   onUpdate: (id: string, patch: Record<string, any>) => Promise<void>;
   onCreate: () => void;
+  onDuplicate: (post: CalendarPost) => void;
+  onDelete: (id: string) => void;
   creating?: boolean;
 };
 
@@ -58,7 +60,7 @@ function PersonPill({ name }: { name: string }) {
 const fmtDate = (d: string | null) =>
   d ? format(parseISO(d), "dd MMM yyyy", { locale: ptBR }) : "";
 
-export default function NotionTable({ posts, members, onUpdate, onCreate, creating }: Props) {
+export default function NotionTable({ posts, members, onUpdate, onCreate, onDuplicate, onDelete, creating }: Props) {
   const [editing, setEditing] = useState<string | null>(null); // "id:field"
   const key = (id: string, f: string) => `${id}:${f}`;
 
@@ -254,32 +256,63 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, creati
 
   return (
     <div className="glass rounded-xl overflow-hidden">
+      {/* Barra superior */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+        <span className="text-xs text-muted-foreground">
+          {posts.length} {posts.length === 1 ? "post" : "posts"}
+        </span>
+        <button onClick={onCreate} disabled={creating}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-nexus-600 hover:bg-nexus-500 text-white text-xs font-medium transition-colors disabled:opacity-60">
+          {creating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />} Adicionar
+        </button>
+      </div>
+
       <div className="overflow-x-auto">
         <table className="border-collapse" style={{ minWidth: "100%" }}>
           <thead>
             <tr className="border-b border-border bg-accent/20">
               {COLS.map(c => (
                 <th key={c.key} style={{ width: c.w, minWidth: c.w }}
-                  className="px-3 py-2.5 text-left border-r border-border/40 last:border-r-0">
+                  className="px-3 py-2.5 text-left border-r border-border/40">
                   <div className="flex items-center gap-1.5">
                     <c.icon className="w-3 h-3 text-muted-foreground/70" />
                     <span className="text-[11px] font-medium text-muted-foreground whitespace-nowrap">{c.label}</span>
                   </div>
                 </th>
               ))}
+              <th style={{ width: 72, minWidth: 72 }} className="px-3 py-2.5" />
             </tr>
           </thead>
           <tbody>
             {posts.length === 0 ? (
-              <tr><td colSpan={COLS.length} className="px-4 py-12 text-center text-sm text-muted-foreground">Nenhum post ainda</td></tr>
+              <tr><td colSpan={COLS.length + 1} className="px-4 py-12 text-center text-sm text-muted-foreground">Nenhum post ainda</td></tr>
             ) : posts.map(p => (
               <tr key={p.id} className="border-b border-border/40 hover:bg-accent/10 transition-colors group">
                 {COLS.map(c => (
                   <td key={c.key} style={{ width: c.w, minWidth: c.w }}
-                    className="px-3 py-2 border-r border-border/20 last:border-r-0 align-middle">
+                    className="px-3 py-2 border-r border-border/20 align-middle">
                     {cell(p, c.key)}
                   </td>
                 ))}
+                {/* Ações da linha */}
+                <td style={{ width: 72, minWidth: 72 }} className="px-3 py-2 align-middle">
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => onDuplicate(p)}
+                      title="Duplicar linha"
+                      className="p-1.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => onDelete(p.id)}
+                      title="Excluir linha"
+                      className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

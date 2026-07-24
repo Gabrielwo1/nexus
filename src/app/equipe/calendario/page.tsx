@@ -126,6 +126,30 @@ export default function CalendarioPage() {
     setPosts(prev => [...prev, data as any]);
   };
 
+  const duplicateRow = async (post: CalendarPost) => {
+    setSaving(true);
+    const { id, created_at, updated_at, clients: _c, team_members: _t, ...rest } = post as any;
+    const { data, error } = await supabase
+      .from("calendar_posts")
+      .insert({ ...rest, title: post.title ? `${post.title} (cópia)` : "" })
+      .select("*, clients(name)").single();
+    setSaving(false);
+    if (error) { toast.error("Erro ao duplicar: " + error.message); return; }
+    setPosts(prev => [...prev, data as any]);
+    toast.success("Linha duplicada");
+  };
+
+  const deleteRow = async (id: string) => {
+    const post = posts.find(p => p.id === id);
+    const label = post?.title ? `"${post.title}"` : "esta linha";
+    if (!confirm(`Excluir ${label}? Esta ação não pode ser desfeita.`)) return;
+    const { error } = await supabase.from("calendar_posts").delete().eq("id", id);
+    if (error) { toast.error("Erro ao excluir: " + error.message); return; }
+    setPosts(prev => prev.filter(p => p.id !== id));
+    if (detail?.id === id) setDetail(null);
+    toast.success("Linha excluída");
+  };
+
   const patchPost = async (id: string, updates: any, successMsg: string) => {
     const { data, error } = await supabase
       .from("calendar_posts").update(updates).eq("id", id)
@@ -373,6 +397,8 @@ export default function CalendarioPage() {
                 creating={saving}
                 onUpdate={updateCell}
                 onCreate={createEmptyRow}
+                onDuplicate={duplicateRow}
+                onDelete={deleteRow}
               />
             )}
 

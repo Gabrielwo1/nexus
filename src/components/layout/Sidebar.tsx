@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 import {
   Users,
   DollarSign,
@@ -22,8 +23,9 @@ import {
   FileText,
   KanbanSquare,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const nav = [
@@ -86,6 +88,11 @@ const nav = [
     label: "Tarefas",
     href: "/tarefas",
     icon: KanbanSquare,
+  },
+  {
+    label: "Usuários",
+    href: "/usuarios",
+    icon: Users,
   },
 ];
 
@@ -187,6 +194,47 @@ function NavItem({ item }: { item: typeof nav[0] }) {
   );
 }
 
+function UserBox() {
+  const router = useRouter();
+  const [perfil, setPerfil] = useState<{ nome: string; nivel: string } | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data }) => {
+      const email = data.user?.email;
+      if (!email) return;
+      const { data: m } = await supabase
+        .from("team_members").select("name, access_level").eq("email", email).maybeSingle();
+      setPerfil({
+        nome: (m as any)?.name || email.split("@")[0],
+        nivel: (m as any)?.access_level === "admin" ? "Administrador"
+          : (m as any)?.access_level === "gestor" ? "Gestor" : "Funcionário",
+      });
+    });
+  }, []);
+
+  const sair = async () => {
+    await supabase.auth.signOut();
+    router.replace("/login");
+  };
+
+  return (
+    <div className="px-3 py-4 border-t border-border">
+      <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-accent/50">
+        <div className="w-7 h-7 rounded-full bg-neutral-700 flex items-center justify-center text-xs font-bold text-white">
+          {perfil?.nome?.[0]?.toUpperCase() || "?"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-foreground truncate">{perfil?.nome || "..."}</p>
+          <p className="text-[10px] text-muted-foreground">{perfil?.nivel || ""}</p>
+        </div>
+        <button onClick={sair} title="Sair" className="p-1 rounded hover:bg-accent transition-colors">
+          <LogOut className="w-3.5 h-3.5 text-muted-foreground" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function Sidebar() {
   return (
     <aside className="w-60 h-screen flex flex-col border-r border-border bg-card shrink-0">
@@ -207,17 +255,7 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="px-3 py-4 border-t border-border">
-        <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-accent/50">
-          <div className="w-7 h-7 rounded-full bg-neutral-700 flex items-center justify-center text-xs font-bold text-white">
-            E
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">Eliab Silva</p>
-            <p className="text-[10px] text-muted-foreground">Admin</p>
-          </div>
-        </div>
-      </div>
+      <UserBox />
     </aside>
   );
 }

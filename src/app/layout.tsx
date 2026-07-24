@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { AppShell } from "@/components/layout/AppShell";
 import { Toaster } from "sonner";
 
 const inter = Inter({
@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NEXUS — Impulse Media",
-  description: "Sistema de gestão da agência Impulse Media",
+  title: "NEXUS — YPHE",
+  description: "Sistema de gestão da agência YPHE",
 };
 
 export default function RootLayout({
@@ -22,20 +22,15 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={`${inter.variable} font-sans`}>
-        <div className="flex h-screen overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto">
-            {children}
-          </main>
-        </div>
+        <AppShell>{children}</AppShell>
         <Toaster
           theme="dark"
           position="bottom-right"
           toastOptions={{
             style: {
-              background: "hsl(224 71% 6%)",
-              border: "1px solid hsl(216 34% 17%)",
-              color: "hsl(213 31% 91%)",
+              background: "hsl(0 0% 12%)",
+              border: "1px solid hsl(222 14% 23%)",
+              color: "hsl(213 25% 89%)",
             },
           }}
         />

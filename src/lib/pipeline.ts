@@ -18,7 +18,7 @@ export type StageDef = {
 export const STAGES: StageDef[] = [
   {
     key: "roteiro", label: "Roteiro", short: "R",
-    ownerName: "Gerval", ownerRole: "copywriter", color: "#6366f1",
+    ownerName: "", ownerRole: "copywriter", color: "#20bced",
     statusField: "roteiro_status", approvedField: "roteiro_approved_at",
   },
   {
@@ -111,7 +111,7 @@ export const STAGE_STATUS_STYLE: Record<StageStatus, string> = {
 
 // Mapeia um funcionário para a etapa que ele opera
 const NAME_TO_STAGE: Record<string, StageKey> = {
-  Gerval: "roteiro", Guto: "gravacao", Pet: "edicao", Karyne: "publicacao",
+  Guto: "gravacao", Pet: "edicao", Karyne: "publicacao",
 };
 export function stageForMember(m: { name: string; role: string }): StageDef | null {
   const byName = NAME_TO_STAGE[m.name];

@@ -6,7 +6,7 @@ import type { CalendarPost, Client, TeamMember, StageStatus } from "@/lib/supaba
 import {
   STAGES, TIPOS_POST, STAGE_FIELDS, STAGE_STATUS_LABEL, STAGE_STATUS_STYLE,
   STAGE_CONTENT, applicableStages, stageStatus, isStageUnlocked, isConcluido,
-  awaitingApproval, stageForMember, type StageDef,
+  awaitingApproval, stageForMember, FORMATOS, PARTICIPANTES, findTag, type StageDef,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +20,7 @@ import NotionTable from "@/components/calendario/NotionTable";
 import { toast } from "sonner";
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval, startOfWeek, endOfWeek,
-  isSameDay, isSameMonth, addMonths, parseISO, isToday,
+  isSameDay, isSameMonth, addMonths, parseISO, isToday, differenceInDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -42,6 +42,7 @@ export default function CalendarioPage() {
   const [detail, setDetail] = useState<CalendarPost | null>(null);
   const [filterClient, setFilterClient] = useState("todos");
   const [showSummary, setShowSummary] = useState(true);
+  const [resumoMes, setResumoMes] = useState("");
 
   const loadAll = () => {
     Promise.all([
@@ -209,21 +210,74 @@ export default function CalendarioPage() {
   const concluidos = filteredPosts.filter(isConcluido).length;
   const emProducao = filteredPosts.length - concluidos;
 
-  // ----- Resumo p/ painel esquerdo -----
-  const stageCounts = STAGES.map(stage => ({
-    stage,
-    count: filteredPosts.filter(p => {
-      const stages = applicableStages(p);
-      if (!stages.find(s => s.key === stage.key)) return false;
-      return isStageUnlocked(p, stage) && stageStatus(p, stage) !== "aprovado";
-    }).length,
-  }));
-  const tipoCounts = TIPOS_POST.map(tp => ({ tp, count: filteredPosts.filter(p => p.type === tp).length }))
-    .filter(t => t.count > 0);
-  const ajustesCount = filteredPosts.filter(p =>
-    applicableStages(p).some(s => stageStatus(p, s) === "ajustes")
-  ).length;
-  const maxStage = Math.max(1, ...stageCounts.map(s => s.count));
+  // ================= RESUMO =================
+  // Meses disponíveis (pela data de postagem)
+  const mesesDisponiveis = Array.from(
+    new Set(filteredPosts.filter(p => p.scheduled_date).map(p => p.scheduled_date!.slice(0, 7)))
+  ).sort();
+  const mesAtualKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
+  const mesResumo = mesesDisponiveis.includes(resumoMes)
+    ? resumoMes
+    : (mesesDisponiveis.includes(mesAtualKey) ? mesAtualKey : mesesDisponiveis[0] || mesAtualKey);
+  const idxMes = mesesDisponiveis.indexOf(mesResumo);
+  const mesLabel = format(parseISO(`${mesResumo}-01`), "MMMM 'de' yyyy", { locale: ptBR });
+
+  const postsMes = filteredPosts.filter(p => p.scheduled_date?.startsWith(mesResumo));
+
+  // 1) Entregáveis por responsável
+  const porResponsavel = (() => {
+    const map = new Map<string, number>();
+    postsMes.forEach(p => {
+      const nome = members.find(m => m.id === p.responsavel_id)?.name || "Aberto";
+      map.set(nome, (map.get(nome) || 0) + 1);
+    });
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  })();
+
+  // 2) Links confirmados x não confirmados (por etapa)
+  const LINKS = [
+    { label: "Roteiro", url: "roteiro_url", status: "roteiro_status", color: "#20bced" },
+    { label: "Captação", url: "gravacao_url", status: "gravacao_status", color: "#97e9ff" },
+    { label: "Finalizado", url: "edicao_url", status: "edicao_status", color: "#052699" },
+  ] as const;
+  const linksResumo = LINKS.map(l => {
+    const confirmados = postsMes.filter(p => (p as any)[l.status] === "aprovado").length;
+    return { ...l, confirmados, naoConfirmados: postsMes.length - confirmados };
+  });
+  const totalConfirmados = linksResumo.reduce((a, l) => a + l.confirmados, 0);
+  const totalLinks = postsMes.length * LINKS.length;
+
+  // 3) Participantes do mês
+  const porParticipante = (() => {
+    const map = new Map<string, number>();
+    postsMes.forEach(p => {
+      const t = findTag(PARTICIPANTES, p.participante);
+      const nome = t?.label || "—";
+      map.set(nome, (map.get(nome) || 0) + 1);
+    });
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  })();
+
+  // 4) Formatos do mês
+  const porFormato = FORMATOS
+    .map(f => ({ ...f, count: postsMes.filter(p => p.type === f.value).length }))
+    .filter(f => f.count > 0);
+
+  // Gantt de captação → postagem (mês selecionado)
+  const ganttItens = postsMes
+    .filter(p => p.captacao_date && p.scheduled_date)
+    .sort((a, b) => a.captacao_date!.localeCompare(b.captacao_date!));
+  const ganttRange = (() => {
+    if (ganttItens.length === 0) return null;
+    const inicio = ganttItens.reduce((min, p) => p.captacao_date! < min ? p.captacao_date! : min, ganttItens[0].captacao_date!);
+    const fim = ganttItens.reduce((max, p) => p.scheduled_date! > max ? p.scheduled_date! : max, ganttItens[0].scheduled_date!);
+    const dias = Math.max(1, differenceInDays(parseISO(fim), parseISO(inicio)) + 1);
+    return { inicio, fim, dias };
+  })();
+
+  // Resumo geral (todos os meses)
+  const geralConfirmados = filteredPosts.reduce((acc, p) =>
+    acc + LINKS.filter(l => (p as any)[l.status] === "aprovado").length, 0);
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -240,71 +294,170 @@ export default function CalendarioPage() {
             </button>
           </div>
 
-          {/* Totais */}
-          <div className="p-4 grid grid-cols-2 gap-2 border-b border-border">
-            <div className="rounded-lg bg-accent/40 p-2.5">
-              <p className="text-lg font-bold text-foreground">{filteredPosts.length}</p>
-              <p className="text-[10px] text-muted-foreground">Posts no total</p>
-            </div>
-            <div className="rounded-lg bg-emerald-400/10 p-2.5">
-              <p className="text-lg font-bold text-emerald-400">{concluidos}</p>
-              <p className="text-[10px] text-muted-foreground">Concluídos</p>
-            </div>
-            <div className="rounded-lg bg-nexus-400/10 p-2.5">
-              <p className="text-lg font-bold text-nexus-400">{emProducao}</p>
-              <p className="text-[10px] text-muted-foreground">Em produção</p>
-            </div>
-            <div className="rounded-lg bg-orange-400/10 p-2.5">
-              <p className="text-lg font-bold text-orange-400">{approvalQueue.length}</p>
-              <p className="text-[10px] text-muted-foreground">P/ aprovar</p>
-            </div>
+          {/* Seletor de mês */}
+          <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
+            <button
+              onClick={() => idxMes > 0 && setResumoMes(mesesDisponiveis[idxMes - 1])}
+              disabled={idxMes <= 0}
+              className="p-1 rounded hover:bg-accent disabled:opacity-30 transition-colors"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
+            <span className="text-xs font-medium text-foreground capitalize">{mesLabel}</span>
+            <button
+              onClick={() => idxMes < mesesDisponiveis.length - 1 && setResumoMes(mesesDisponiveis[idxMes + 1])}
+              disabled={idxMes >= mesesDisponiveis.length - 1}
+              className="p-1 rounded hover:bg-accent disabled:opacity-30 transition-colors"
+            >
+              <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
           </div>
 
-          {/* Carga por etapa */}
+          <div className="px-4 py-3 border-b border-border">
+            <p className="text-2xl font-bold text-foreground">{postsMes.length}</p>
+            <p className="text-[10px] text-muted-foreground">entregáveis no mês</p>
+          </div>
+
+          {/* 1) Entregáveis por responsável */}
           <div className="p-4 border-b border-border">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Fila por etapa / responsável</p>
-            <div className="space-y-2.5">
-              {stageCounts.map(({ stage, count }) => (
-                <div key={stage.key}>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Entregáveis por responsável</p>
+            <div className="space-y-2">
+              {porResponsavel.length === 0 && <p className="text-[11px] text-muted-foreground">Sem entregáveis</p>}
+              {porResponsavel.map(([nome, qtd]) => (
+                <div key={nome}>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full" style={{ background: stage.color }} />
-                      <span className="text-xs text-foreground">{stage.label}</span>
-                      <span className="text-[10px] text-muted-foreground">{stage.ownerName}</span>
-                    </div>
-                    <span className="text-xs font-semibold text-foreground">{count}</span>
+                    <span className={cn("text-xs", nome === "Aberto" ? "text-orange-300" : "text-foreground")}>{nome}</span>
+                    <span className="text-xs font-semibold text-foreground">{qtd}</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-accent/60 overflow-hidden">
-                    <div className="h-full rounded-full transition-all" style={{ width: `${(count / maxStage) * 100}%`, background: stage.color }} />
+                    <div className="h-full rounded-full"
+                      style={{ width: `${(qtd / postsMes.length) * 100}%`, background: nome === "Aberto" ? "#fb923c" : "#20bced" }} />
                   </div>
                 </div>
               ))}
             </div>
-            {ajustesCount > 0 && (
-              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-red-400">
-                <RotateCcw className="w-3 h-3" /> {ajustesCount} em ajustes
+          </div>
+
+          {/* 2) Links confirmados x não confirmados */}
+          <div className="p-4 border-b border-border">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Links do mês</p>
+            <div className="flex items-baseline gap-1.5 mb-3">
+              <span className="text-lg font-bold text-emerald-400">{totalConfirmados}</span>
+              <span className="text-[11px] text-muted-foreground">de {totalLinks} confirmados</span>
+            </div>
+            <div className="space-y-2.5">
+              {linksResumo.map(l => (
+                <div key={l.label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-foreground">{l.label}</span>
+                    <span className="text-[11px]">
+                      <span className="text-emerald-400 font-medium">{l.confirmados}</span>
+                      <span className="text-muted-foreground"> / {l.naoConfirmados} pend.</span>
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-accent/60 overflow-hidden">
+                    <div className="h-full rounded-full bg-emerald-500"
+                      style={{ width: postsMes.length ? `${(l.confirmados / postsMes.length) * 100}%` : "0%" }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3) Participantes do mês */}
+          <div className="p-4 border-b border-border">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Participantes</p>
+            <div className="space-y-1.5">
+              {porParticipante.length === 0 && <p className="text-[11px] text-muted-foreground">Sem participantes</p>}
+              {porParticipante.map(([nome, qtd]) => (
+                <div key={nome} className="flex items-center justify-between">
+                  <span className="text-xs text-foreground truncate">{nome}</span>
+                  <span className="text-xs font-medium text-muted-foreground">{qtd}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 4) Quantidade por formato */}
+          <div className="p-4 border-b border-border">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Por formato</p>
+            <div className="space-y-1.5">
+              {porFormato.length === 0 && <p className="text-[11px] text-muted-foreground">Sem posts</p>}
+              {porFormato.map(f => (
+                <div key={f.value} className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: f.color }} />
+                    <span className="text-xs text-foreground">{f.label}</span>
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground">{f.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gantt: captação → postagem */}
+          <div className="p-4 border-b border-border">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Captação → Postagem</p>
+            {!ganttRange ? (
+              <p className="text-[11px] text-muted-foreground">Nenhum conteúdo com data de captação neste mês</p>
+            ) : (
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[9px] text-muted-foreground mb-1">
+                  <span>{format(parseISO(ganttRange.inicio), "dd/MM")}</span>
+                  <span>{format(parseISO(ganttRange.fim), "dd/MM")}</span>
+                </div>
+                {ganttItens.map(p => {
+                  const offset = differenceInDays(parseISO(p.captacao_date!), parseISO(ganttRange.inicio));
+                  const dur = Math.max(1, differenceInDays(parseISO(p.scheduled_date!), parseISO(p.captacao_date!)) + 1);
+                  const fmt = findTag(FORMATOS, p.type);
+                  return (
+                    <div key={p.id} className="group cursor-pointer" onClick={() => setDetail(p)} title={`${p.title}\n${format(parseISO(p.captacao_date!), "dd/MM")} → ${format(parseISO(p.scheduled_date!), "dd/MM")} (${dur}d)`}>
+                      <p className="text-[10px] text-muted-foreground truncate mb-0.5 group-hover:text-foreground transition-colors">
+                        {p.title || "sem título"}
+                      </p>
+                      <div className="relative h-2 rounded-full bg-accent/50 overflow-hidden">
+                        <div
+                          className="absolute h-full rounded-full"
+                          style={{
+                            left: `${(offset / ganttRange.dias) * 100}%`,
+                            width: `${(dur / ganttRange.dias) * 100}%`,
+                            background: fmt?.color || "#20bced",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* Por tipo */}
-          <div className="p-4">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Por tipo de conteúdo</p>
-            <div className="space-y-2">
-              {tipoCounts.map(({ tp, count }) => {
-                const Icon = TIPO_ICON[tp] || FileText;
-                return (
-                  <div key={tp} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Icon className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-xs text-foreground capitalize">{tp}</span>
-                    </div>
-                    <span className="text-xs font-medium text-muted-foreground">{count}</span>
-                  </div>
-                );
-              })}
-              {tipoCounts.length === 0 && <p className="text-[11px] text-muted-foreground">Sem posts</p>}
+          {/* ===== RESUMO GERAL ===== */}
+          <div className="p-4 bg-accent/20">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3">Resumo geral</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-lg bg-card p-2.5 border border-border">
+                <p className="text-lg font-bold text-foreground">{filteredPosts.length}</p>
+                <p className="text-[10px] text-muted-foreground">Posts no total</p>
+              </div>
+              <div className="rounded-lg bg-card p-2.5 border border-border">
+                <p className="text-lg font-bold text-emerald-400">{concluidos}</p>
+                <p className="text-[10px] text-muted-foreground">Concluídos</p>
+              </div>
+              <div className="rounded-lg bg-card p-2.5 border border-border">
+                <p className="text-lg font-bold text-nexus-400">{emProducao}</p>
+                <p className="text-[10px] text-muted-foreground">Em produção</p>
+              </div>
+              <div className="rounded-lg bg-card p-2.5 border border-border">
+                <p className="text-lg font-bold text-orange-400">{approvalQueue.length}</p>
+                <p className="text-[10px] text-muted-foreground">P/ aprovar</p>
+              </div>
             </div>
+            <div className="mt-2 rounded-lg bg-card p-2.5 border border-border">
+              <p className="text-lg font-bold text-emerald-400">{geralConfirmados}</p>
+              <p className="text-[10px] text-muted-foreground">Links confirmados (todos os meses)</p>
+            </div>
+            <p className="mt-2 text-[10px] text-muted-foreground">{mesesDisponiveis.length} meses no calendário</p>
           </div>
         </aside>
       )}

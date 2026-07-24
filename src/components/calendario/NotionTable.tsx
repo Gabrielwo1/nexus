@@ -6,7 +6,7 @@ import {
   FORMATOS, COMUNICACOES, TIPOS_CONTEUDO, PARTICIPANTES, findTag, type TagOpt,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
-import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check, Copy, Trash2 } from "lucide-react";
+import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check, Copy, Trash2, Rocket, CheckCircle2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -33,6 +33,7 @@ const COLS = [
   { key: "roteiro_url", label: "Link do Roteiro", icon: Link2, w: 160 },
   { key: "gravacao_url", label: "Link - Capitações", icon: Link2, w: 160 },
   { key: "edicao_url", label: "Link - Finalizados", icon: Link2, w: 160 },
+  { key: "publicado", label: "Publicado", icon: Rocket, w: 150 },
 ];
 
 // pílula colorida estilo Notion
@@ -272,6 +273,30 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
     );
   };
 
+  const renderPublicado = (p: CalendarPost) => {
+    const publicado = p.publicacao_status === "aprovado" || p.status === "publicado";
+    const toggle = () =>
+      onUpdate(p.id, publicado
+        ? { publicacao_status: "pendente", status: "producao", published_at: null, current_stage: "publicacao" }
+        : { publicacao_status: "aprovado", status: "publicado", published_at: new Date().toISOString(), current_stage: "concluido" }
+      );
+    return (
+      <button
+        onClick={toggle}
+        title={publicado ? "Publicado — clique para desmarcar" : "Marcar como publicado"}
+        className={cn(
+          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all",
+          publicado
+            ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25"
+            : "text-muted-foreground border-border hover:text-foreground hover:border-nexus-500/50"
+        )}
+      >
+        {publicado ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Rocket className="w-3.5 h-3.5" />}
+        {publicado ? "Publicado" : "Publicar"}
+      </button>
+    );
+  };
+
   const cell = (p: CalendarPost, colKey: string) => {
     switch (colKey) {
       case "captacao_date":
@@ -286,6 +311,7 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
       case "roteiro_url":
       case "gravacao_url":
       case "edicao_url": return renderUrl(p, colKey);
+      case "publicado": return renderPublicado(p);
       default: return null;
     }
   };

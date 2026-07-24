@@ -107,6 +107,14 @@ export type CalendarPost = {
   published_at: string | null
   assigned_to: string | null
   current_stage: string | null
+  // Campos estilo Notion
+  captacao_date: string | null
+  edicao_start: string | null
+  edicao_end: string | null
+  participante: string | null
+  comunicacao: string | null
+  tipo_conteudo: string | null
+  responsavel_id: string | null
   // Etapa 1: Roteiro (Gerval)
   roteiro_status: StageStatus
   roteiro_text: string | null

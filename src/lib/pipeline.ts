@@ -41,6 +41,40 @@ export const STAGES: StageDef[] = [
 
 export const TIPOS_POST = ["reel", "story", "carrossel", "foto"];
 
+// ---- Campos estilo Notion (tags coloridas) ----
+export type TagOpt = { value: string; label: string; color: string };
+
+export const FORMATOS: TagOpt[] = [
+  { value: "reel", label: "Reels", color: "#ec4899" },
+  { value: "story", label: "Stories", color: "#10b981" },
+  { value: "carrossel", label: "Carrossel", color: "#f59e0b" },
+  { value: "foto", label: "Foto", color: "#0ea5e9" },
+];
+
+export const COMUNICACOES: TagOpt[] = [
+  { value: "identidade", label: "Identidade", color: "#f59e0b" },
+  { value: "solucao", label: "Solução", color: "#ec4899" },
+  { value: "identificacao", label: "Identificação", color: "#0ea5e9" },
+];
+
+export const TIPOS_CONTEUDO: TagOpt[] = [
+  { value: "marco", label: "Marco", color: "#3b82f6" },
+  { value: "cadencia", label: "Cadência", color: "#10b981" },
+  { value: "complemento", label: "Complemento", color: "#f59e0b" },
+  { value: "livre", label: "Livre", color: "#ef4444" },
+];
+
+export const PARTICIPANTES: TagOpt[] = [
+  { value: "sem_participacao", label: "sem participação", color: "#6b7280" },
+  { value: "equipe", label: "Equipe", color: "#6b7280" },
+  { value: "dr_mussi", label: "Dr. Mussi", color: "#3b82f6" },
+  { value: "dr_henrique", label: "Dr. Henrique", color: "#6b7280" },
+  { value: "dr_viktor", label: "Dr. Viktor", color: "#6b7280" },
+];
+
+export const findTag = (opts: TagOpt[], v: string | null): TagOpt | undefined =>
+  opts.find(o => o.value === v);
+
 // Tipo de conteúdo esperado em cada etapa (para upload/acesso)
 export const STAGE_CONTENT: Record<StageKey, {
   label: string;        // descrição do formato

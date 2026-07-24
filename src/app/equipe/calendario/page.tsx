@@ -14,8 +14,9 @@ import {
   Lock, FileText, Play, Image as ImageIcon, Send, Film, FileType2,
   ThumbsUp, RotateCcw, ExternalLink, LayoutGrid, ListChecks,
   PanelLeftClose, PanelLeftOpen, BarChart3,
-  Upload, User, ArrowLeft, ArrowRight,
+  Upload, User, ArrowLeft, ArrowRight, Table2,
 } from "lucide-react";
+import NotionTable from "@/components/calendario/NotionTable";
 import { toast } from "sonner";
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval, startOfWeek, endOfWeek,
@@ -23,14 +24,14 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-type View = "calendario" | "filas" | "aprovacoes";
+type View = "tabela" | "calendario" | "filas" | "aprovacoes";
 
 const TIPO_ICON: Record<string, React.ElementType> = {
   reel: Play, story: Play, carrossel: ImageIcon, foto: ImageIcon,
 };
 
 export default function CalendarioPage() {
-  const [view, setView] = useState<View>("calendario");
+  const [view, setView] = useState<View>("tabela");
   const [posts, setPosts] = useState<CalendarPost[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -97,6 +98,32 @@ export default function CalendarioPage() {
     setShowForm(false);
     loadAll();
     toast.success(hasContent ? "Roteiro enviado — aguardando aprovação" : "Post criado na fila de roteiro");
+  };
+
+  // ---- Tabela estilo Notion: edição inline e nova linha ----
+  const updateCell = async (id: string, patch: Record<string, any>) => {
+    const { data, error } = await supabase
+      .from("calendar_posts").update(patch).eq("id", id)
+      .select("*, clients(name)").single();
+    if (error) { toast.error("Erro ao salvar: " + error.message); return; }
+    setPosts(prev => prev.map(p => p.id === id ? (data as any) : p));
+  };
+
+  const createEmptyRow = async () => {
+    setSaving(true);
+    const payload: any = {
+      title: "", type: "reel", status: "producao", current_stage: "roteiro",
+      client_id: filterClient !== "todos" ? filterClient : (clients[0]?.id || null),
+      roteiro_by: ownerOf(STAGES[0])?.id || null,
+      gravacao_by: ownerOf(STAGES[1])?.id || null,
+      edicao_by: ownerOf(STAGES[2])?.id || null,
+      publicacao_by: ownerOf(STAGES[3])?.id || null,
+    };
+    const { data, error } = await supabase
+      .from("calendar_posts").insert(payload).select("*, clients(name)").single();
+    setSaving(false);
+    if (error) { toast.error("Erro: " + error.message); return; }
+    setPosts(prev => [...prev, data as any]);
   };
 
   const patchPost = async (id: string, updates: any, successMsg: string) => {
@@ -295,6 +322,7 @@ export default function CalendarioPage() {
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex gap-1 border border-border rounded-lg p-0.5">
             {([
+              { k: "tabela", label: "Todos os posts", icon: Table2 },
               { k: "calendario", label: "Calendário", icon: LayoutGrid },
               { k: "filas", label: "Filas por etapa", icon: ListChecks },
               { k: "aprovacoes", label: `Aprovações${approvalQueue.length ? ` (${approvalQueue.length})` : ""}`, icon: ThumbsUp },
@@ -338,6 +366,16 @@ export default function CalendarioPage() {
           <div className="h-64 flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>
         ) : (
           <>
+            {view === "tabela" && (
+              <NotionTable
+                posts={filteredPosts}
+                members={members}
+                creating={saving}
+                onUpdate={updateCell}
+                onCreate={createEmptyRow}
+              />
+            )}
+
             {view === "calendario" && (
               <div className="glass rounded-xl p-4">
                 <div className="flex items-center justify-between mb-4">

@@ -93,12 +93,15 @@ const statusLabels: Record<string, string> = {
 export default function Dashboard() {
   return (
     <div className="p-8 space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          Visão geral da Impulse Media — Junho 2026
-        </p>
+      {/* Header com fundo da marca */}
+      <div className="brand-hero rounded-xl border border-border overflow-hidden">
+        <div className="px-6 py-8">
+          <img src="/brand/logo-yphe.svg" alt="YPHE" className="h-5 w-auto brightness-0 invert opacity-80 mb-3" />
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Visão geral da agência — Junho 2026
+          </p>
+        </div>
       </div>
 
       {/* KPIs */}

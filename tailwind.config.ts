@@ -39,19 +39,26 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        /* Azul da marca YPHE — usado como acento sobre a base neutra */
+        /* Azul da marca YPHE — do ciano #20BCED ao azul profundo #052699 */
         nexus: {
-          50:  "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554",
+          50:  "#eafaff",
+          100: "#d2f4ff",
+          200: "#97e9ff",  /* oficial — ciano claro */
+          300: "#63dbfa",
+          400: "#3ccbf4",
+          500: "#20bced",  /* oficial — azul principal */
+          600: "#1596c4",
+          700: "#146f9b",
+          800: "#134e78",
+          900: "#0d3a63",
+          950: "#052699",  /* oficial — azul profundo */
+        },
+        /* Neutros oficiais da marca */
+        yphe: {
+          dark: "#151A24",
+          slate: "#23333B",
+          gray: "#292F3B",
+          light: "#DCE3EB",
         },
       },
       borderRadius: {

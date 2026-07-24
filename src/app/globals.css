@@ -11,32 +11,34 @@
 
 @layer base {
   :root {
-    /* Neutros — escala Notion dark */
-    --background: 0 0% 9%;      /* #171717 — fundo geral */
-    --foreground: 0 0% 91%;     /* #E8E8E8 — texto primário */
-    --card: 0 0% 12%;           /* #1F1F1F — superfícies */
-    --card-foreground: 0 0% 91%;
-    --popover: 0 0% 13%;
-    --popover-foreground: 0 0% 91%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 70%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 58%;  /* #949494 — texto secundário */
-    --accent: 0 0% 16%;            /* #292929 — hover / campos */
-    --accent-foreground: 0 0% 96%;
-    --border: 0 0% 19%;            /* #303030 — divisórias */
-    --input: 0 0% 19%;
+    /* Neutros — derivados da paleta oficial YPHE (#151A24 / #23333B / #292F3B / #DCE3EB) */
+    --background: 220 24% 11%;     /* #151A24 — fundo geral */
+    --foreground: 213 25% 89%;     /* #DCE3EB — texto primário */
+    --card: 220 16% 14%;           /* superfícies */
+    --card-foreground: 213 25% 89%;
+    --popover: 220 16% 15%;
+    --popover-foreground: 213 25% 89%;
+    --secondary: 222 14% 20%;      /* #292F3B */
+    --secondary-foreground: 213 15% 72%;
+    --muted: 222 14% 20%;
+    --muted-foreground: 213 12% 60%;
+    --accent: 200 24% 19%;         /* #23333B — hover / campos */
+    --accent-foreground: 213 25% 95%;
+    --border: 222 14% 23%;         /* divisórias */
+    --input: 222 14% 23%;
 
-    /* Azul da marca */
-    --brand: 217 91% 60%;          /* #3B82F6 */
+    /* Azul da marca YPHE */
+    --brand: 194 85% 53%;          /* #20BCED */
+    --brand-deep: 226 94% 31%;     /* #052699 */
+    --brand-light: 190 100% 80%;   /* #97E9FF */
     --primary: var(--brand);
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 220 24% 11%;
     --ring: var(--brand);
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;              /* cantos mais sóbrios, estilo Notion */
+    --radius: 0.5rem;
   }
 }
 
@@ -104,4 +106,32 @@
     linear-gradient(hsl(0 0% 100% / 0.02) 1px, transparent 1px),
     linear-gradient(90deg, hsl(0 0% 100% / 0.02) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+/* Fundos da marca YPHE (assets em /brand) */
+.brand-hero {
+  position: relative;
+  background-image: url("/brand/degrade-hero.png");
+  background-size: cover;
+  background-position: center;
+}
+.brand-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.55),
+    hsl(var(--background) / 0.92)
+  );
+  pointer-events: none;
+}
+.brand-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Brilho suave do azul da marca */
+.brand-glow {
+  box-shadow: 0 0 0 1px hsl(var(--brand) / 0.25), 0 8px 30px hsl(var(--brand) / 0.12);
 }

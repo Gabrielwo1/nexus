@@ -171,15 +171,12 @@ export function Sidebar() {
     <aside className="w-60 h-screen flex flex-col border-r border-border bg-card shrink-0">
       {/* Logo */}
       <div className="px-4 py-5 border-b border-border">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-md bg-foreground flex items-center justify-center">
-            <span className="text-[13px] font-bold tracking-tighter text-background">Y</span>
-          </div>
-          <div>
-            <p className="text-sm font-semibold tracking-[0.18em] text-foreground">YPHE</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider">NEXUS</p>
-          </div>
-        </div>
+        <img
+          src="/brand/logo-yphe.svg"
+          alt="YPHE"
+          className="h-6 w-auto brightness-0 invert opacity-90"
+        />
+        <p className="mt-1.5 text-[10px] text-muted-foreground tracking-[0.2em] uppercase">Nexus</p>
       </div>
 
       {/* Nav */}

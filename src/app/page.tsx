@@ -209,7 +209,7 @@ export default function Dashboard() {
           <div className="space-y-3">
             {recentActivity.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                <div className="w-7 h-7 rounded-full bg-neutral-700 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
                   {item.user[0]}
                 </div>
                 <div className="flex-1 min-w-0">

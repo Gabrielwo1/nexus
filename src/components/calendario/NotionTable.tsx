@@ -47,7 +47,7 @@ function Pill({ opt }: { opt: TagOpt }) {
 function PersonPill({ name }: { name: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs bg-nexus-500/20 text-nexus-200 whitespace-nowrap">
-      <span className="w-4 h-4 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[8px] font-bold text-white flex-shrink-0">
+      <span className="w-4 h-4 rounded-full bg-neutral-700 flex items-center justify-center text-[8px] font-bold text-white flex-shrink-0">
         {name[0]}
       </span>
       {name}

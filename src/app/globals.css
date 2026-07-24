@@ -2,28 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   YPHE — Design System
+   Base neutra (preto / cinza / branco) no estilo Notion,
+   com o azul da marca reservado para ações e destaques.
+   Para trocar o azul da marca, altere apenas --brand.
+   ============================================================ */
+
 @layer base {
   :root {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 6%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 71% 5%;
-    --popover-foreground: 215 20.2% 65.1%;
-    --primary: 238 84% 67%;
+    /* Neutros — escala Notion dark */
+    --background: 0 0% 9%;      /* #171717 — fundo geral */
+    --foreground: 0 0% 91%;     /* #E8E8E8 — texto primário */
+    --card: 0 0% 12%;           /* #1F1F1F — superfícies */
+    --card-foreground: 0 0% 91%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 91%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 70%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 58%;  /* #949494 — texto secundário */
+    --accent: 0 0% 16%;            /* #292929 — hover / campos */
+    --accent-foreground: 0 0% 96%;
+    --border: 0 0% 19%;            /* #303030 — divisórias */
+    --input: 0 0% 19%;
+
+    /* Azul da marca */
+    --brand: 217 91% 60%;          /* #3B82F6 */
+    --primary: var(--brand);
     --primary-foreground: 0 0% 100%;
-    --secondary: 222 47% 11%;
-    --secondary-foreground: 215 20.2% 65.1%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 215 20.2% 55%;
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 55%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --ring: 238 84% 67%;
-    --radius: 0.75rem;
+    --ring: var(--brand);
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --radius: 0.5rem;              /* cantos mais sóbrios, estilo Notion */
   }
 }
 
@@ -37,43 +50,58 @@
   }
 }
 
-/* Scrollbar customizada */
+/* Scrollbar discreta */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-nexus-700 rounded-full;
+  background: hsl(0 0% 25%);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0 0% 34%);
+  background-clip: content-box;
 }
 
-/* Glass morphism */
+/* Superfície padrão — plana e sóbria, sem "glass" */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
-/* Gradient text */
+/* Texto de destaque com o azul da marca */
 .gradient-text {
-  @apply bg-gradient-to-r from-nexus-400 to-violet-400 bg-clip-text text-transparent;
+  color: hsl(var(--brand));
 }
 
-/* Glow effect */
+/* Realce sutil (usado no item ativo do menu) */
 .glow {
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  box-shadow: inset 2px 0 0 hsl(var(--brand));
 }
 
-/* Shimmer skeleton */
+/* Skeleton */
 .shimmer {
   background: linear-gradient(
     90deg,
-    hsl(224 71% 6%) 25%,
-    hsl(224 71% 9%) 50%,
-    hsl(224 71% 6%) 75%
+    hsl(0 0% 13%) 25%,
+    hsl(0 0% 17%) 50%,
+    hsl(0 0% 13%) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+  border-radius: var(--radius);
+}
+
+/* Textura sutil de fundo para áreas amplas */
+.bg-grid {
+  background-image:
+    linear-gradient(hsl(0 0% 100% / 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(0 0% 100% / 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
 }

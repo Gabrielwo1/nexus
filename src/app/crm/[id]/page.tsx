@@ -76,7 +76,7 @@ export default function ClienteDetailPage() {
         <Link href="/crm" className="p-1.5 rounded-lg hover:bg-accent transition-colors">
           <ArrowLeft className="w-4 h-4 text-muted-foreground" />
         </Link>
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-white font-bold text-lg">
+        <div className="w-12 h-12 rounded-xl bg-neutral-700 flex items-center justify-center text-white font-bold text-lg">
           {client.name[0]}
         </div>
         <div className="flex-1">

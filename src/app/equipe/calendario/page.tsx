@@ -812,7 +812,7 @@ function UploadWizard({
                   return (
                     <button key={m.id} onClick={() => { setMemberId(m.id); setMode(stageForMember(m)?.key === "roteiro" ? "novo" : "existente"); }}
                       className={cn("flex items-center gap-3 p-3 rounded-xl border text-left transition-all", memberId === m.id ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-sm font-bold text-white">{m.name[0]}</div>
+                      <div className="w-9 h-9 rounded-full bg-neutral-700 flex items-center justify-center text-sm font-bold text-white">{m.name[0]}</div>
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-foreground">{m.name}</p>
                         <p className="text-[11px] text-muted-foreground truncate">{s ? s.label : m.role}</p>

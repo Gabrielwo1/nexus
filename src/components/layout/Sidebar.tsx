@@ -95,13 +95,13 @@ function NavItem({ item }: { item: typeof nav[0] }) {
       <Link
         href={item.href!}
         className={cn(
-          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+          "flex items-center gap-3 px-3 py-1.5 rounded-md text-sm transition-colors duration-150",
           active
-            ? "bg-nexus-600/20 text-nexus-300 glow"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            ? "bg-accent text-foreground font-medium"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
         )}
       >
-        <item.icon className={cn("w-4 h-4", active && "text-nexus-400")} />
+        <item.icon className={cn("w-4 h-4", active ? "text-nexus-400" : "text-muted-foreground")} />
         {item.label}
       </Link>
     );
@@ -114,13 +114,13 @@ function NavItem({ item }: { item: typeof nav[0] }) {
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+          "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm transition-colors duration-150",
           anyActive
-            ? "text-foreground"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            ? "text-foreground font-medium"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
         )}
       >
-        <item.icon className={cn("w-4 h-4", item.color)} />
+        <item.icon className={cn("w-4 h-4", anyActive ? "text-nexus-400" : "text-muted-foreground")} />
         <span className="flex-1 text-left">{item.label}</span>
         <ChevronDown
           className={cn(
@@ -147,10 +147,10 @@ function NavItem({ item }: { item: typeof nav[0] }) {
                     key={child.href}
                     href={child.href}
                     className={cn(
-                      "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-all duration-150",
+                      "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-colors duration-150",
                       active
-                        ? "text-nexus-300 bg-nexus-600/10"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                        ? "bg-accent text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
                     )}
                   >
                     <child.icon className="w-3.5 h-3.5" />
@@ -172,12 +172,12 @@ export function Sidebar() {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-border">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-md bg-foreground flex items-center justify-center">
+            <span className="text-[13px] font-bold tracking-tighter text-background">Y</span>
           </div>
           <div>
-            <p className="text-sm font-bold tracking-tight text-foreground">NEXUS</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Impulse Media</p>
+            <p className="text-sm font-semibold tracking-[0.18em] text-foreground">YPHE</p>
+            <p className="text-[10px] text-muted-foreground tracking-wider">NEXUS</p>
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@ export function Sidebar() {
       {/* User */}
       <div className="px-3 py-4 border-t border-border">
         <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-accent/50">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-nexus-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white">
+          <div className="w-7 h-7 rounded-full bg-neutral-700 flex items-center justify-center text-xs font-bold text-white">
             E
           </div>
           <div className="flex-1 min-w-0">

@@ -401,7 +401,7 @@ export default function ContratosPage() {
                   <tr key={c.id} className="hover:bg-accent/20 transition-colors cursor-pointer" onClick={() => setDetail(c)}>
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-neutral-700 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
                           {c.team_members?.name?.[0] || "?"}
                         </div>
                         <div>
@@ -466,7 +466,7 @@ export default function ContratosPage() {
                   <tr key={nf.id} className="hover:bg-accent/20 transition-colors">
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0">
+                        <div className="w-6 h-6 rounded-full bg-neutral-700 flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0">
                           {nf.team_members?.name?.[0] || "?"}
                         </div>
                         <span className="text-xs text-foreground">{nf.team_members?.name || "—"}</span>
@@ -517,7 +517,7 @@ export default function ContratosPage() {
           </div>
           <div className="p-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-xl bg-neutral-700 flex items-center justify-center text-white font-bold">
                 {detail.team_members?.name?.[0] || "?"}
               </div>
               <div>

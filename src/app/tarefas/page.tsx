@@ -375,7 +375,7 @@ export default function TarefasPage() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               {task.team_members?.name && (
-                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[9px] font-bold text-white">
+                                <div className="w-5 h-5 rounded-full bg-neutral-700 flex items-center justify-center text-[9px] font-bold text-white">
                                   {task.team_members.name[0]}
                                 </div>
                               )}
@@ -476,7 +476,7 @@ export default function TarefasPage() {
                     {/* Label */}
                     <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5" style={{ width: GANTT_LABEL_W, minWidth: GANTT_LABEL_W }}>
                       {task.team_members?.name && (
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-nexus-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
+                        <div className="w-6 h-6 rounded-full bg-neutral-700 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
                           {task.team_members.name[0]}
                         </div>
                       )}

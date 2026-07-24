@@ -275,6 +275,13 @@ export default function CalendarioPage() {
     return { inicio, fim, dias };
   })();
 
+  // Média de dias entre captação e postagem no mês
+  const ganttMedia = ganttItens.length === 0 ? 0 : Math.round(
+    ganttItens.reduce((acc, p) =>
+      acc + differenceInDays(parseISO(p.scheduled_date!), parseISO(p.captacao_date!)) + 1, 0
+    ) / ganttItens.length
+  );
+
   // Resumo geral (todos os meses)
   const geralConfirmados = filteredPosts.reduce((acc, p) =>
     acc + LINKS.filter(l => (p as any)[l.status] === "aprovado").length, 0);
@@ -401,34 +408,54 @@ export default function CalendarioPage() {
             {!ganttRange ? (
               <p className="text-[11px] text-muted-foreground">Nenhum conteúdo com data de captação neste mês</p>
             ) : (
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[9px] text-muted-foreground mb-1">
+              <>
+                {/* Resumo do mês */}
+                <div className="flex items-center justify-between mb-2.5 pb-2.5 border-b border-border/50">
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{ganttItens.length}</p>
+                    <p className="text-[9px] text-muted-foreground">conteúdos</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-nexus-400">{ganttMedia}d</p>
+                    <p className="text-[9px] text-muted-foreground">média de produção</p>
+                  </div>
+                </div>
+                <div className="flex justify-between text-[9px] text-muted-foreground mb-2">
                   <span>{format(parseISO(ganttRange.inicio), "dd/MM")}</span>
                   <span>{format(parseISO(ganttRange.fim), "dd/MM")}</span>
                 </div>
-                {ganttItens.map(p => {
-                  const offset = differenceInDays(parseISO(p.captacao_date!), parseISO(ganttRange.inicio));
-                  const dur = Math.max(1, differenceInDays(parseISO(p.scheduled_date!), parseISO(p.captacao_date!)) + 1);
-                  const fmt = findTag(FORMATOS, p.type);
-                  return (
-                    <div key={p.id} className="group cursor-pointer" onClick={() => setDetail(p)} title={`${p.title}\n${format(parseISO(p.captacao_date!), "dd/MM")} → ${format(parseISO(p.scheduled_date!), "dd/MM")} (${dur}d)`}>
-                      <p className="text-[10px] text-muted-foreground truncate mb-0.5 group-hover:text-foreground transition-colors">
-                        {p.title || "sem título"}
-                      </p>
-                      <div className="relative h-2 rounded-full bg-accent/50 overflow-hidden">
-                        <div
-                          className="absolute h-full rounded-full"
-                          style={{
-                            left: `${(offset / ganttRange.dias) * 100}%`,
-                            width: `${(dur / ganttRange.dias) * 100}%`,
-                            background: fmt?.color || "#20bced",
-                          }}
-                        />
+
+                <div className="space-y-2.5">
+                  {ganttItens.map(p => {
+                    const offset = differenceInDays(parseISO(p.captacao_date!), parseISO(ganttRange.inicio));
+                    const dur = Math.max(1, differenceInDays(parseISO(p.scheduled_date!), parseISO(p.captacao_date!)) + 1);
+                    const fmt = findTag(FORMATOS, p.type);
+                    return (
+                      <div key={p.id} className="group cursor-pointer" onClick={() => setDetail(p)}>
+                        <p className="text-[10px] text-foreground/90 truncate group-hover:text-nexus-300 transition-colors">
+                          {p.title || "sem título"}
+                        </p>
+                        <div className="flex items-center gap-1 text-[9px] text-muted-foreground mb-1">
+                          <span>{format(parseISO(p.captacao_date!), "dd/MM")}</span>
+                          <span className="opacity-60">→</span>
+                          <span>{format(parseISO(p.scheduled_date!), "dd/MM")}</span>
+                          <span className="ml-auto" style={{ color: fmt?.color }}>{dur}d</span>
+                        </div>
+                        <div className="relative h-2 rounded-full bg-accent/50 overflow-hidden">
+                          <div
+                            className="absolute h-full rounded-full"
+                            style={{
+                              left: `${(offset / ganttRange.dias) * 100}%`,
+                              width: `${(dur / ganttRange.dias) * 100}%`,
+                              background: fmt?.color || "#20bced",
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </div>
 

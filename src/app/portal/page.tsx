@@ -19,10 +19,21 @@ const CODE_KEY = "nexus.portal-code";
 
 type Cliente = { id: string; name: string };
 
+/** Um conteúdo está pronto para o cliente ver quando a edição foi finalizada */
+function prontoParaCliente(p: CalendarPost): boolean {
+  return (
+    p.edicao_status === "entregue" || p.edicao_status === "aprovado" ||
+    p.publicacao_status === "entregue" || p.publicacao_status === "aprovado" ||
+    !!p.edicao_url || !!p.post_link
+  );
+}
+
 export default function PortalPage() {
   const [code, setCode] = useState("");
   const [cliente, setCliente] = useState<Cliente | null>(null);
-  const [posts, setPosts] = useState<CalendarPost[]>([]);
+  const [projetos, setProjetos] = useState<Cliente[]>([]);
+  const [projeto, setProjeto] = useState<string>("todos");
+  const [posts, setPosts] = useState<CalendarPost[]>([]); // de todos os projetos
   const [checando, setChecando] = useState(true);
   const [entrando, setEntrando] = useState(false);
   const [erro, setErro] = useState("");
@@ -38,18 +49,21 @@ export default function PortalPage() {
     return (data as Cliente) || null;
   };
 
-  const carregarPosts = async (clientId: string) => {
-    const { data } = await supabase
-      .from("calendar_posts").select("*").eq("client_id", clientId)
-      .order("scheduled_date", { ascending: true });
-    setPosts((data as any) || []);
+  // Carrega todos os projetos e seus conteúdos (o cliente vê tudo por abas)
+  const carregarTudo = async () => {
+    const [{ data: cls }, { data: ps }] = await Promise.all([
+      supabase.from("clients").select("id, name").eq("status", "active").order("name"),
+      supabase.from("calendar_posts").select("*").order("scheduled_date", { ascending: true }),
+    ]);
+    setProjetos((cls as any) || []);
+    setPosts((ps as any) || []);
   };
 
   useEffect(() => {
     const salvo = typeof window !== "undefined" ? localStorage.getItem(CODE_KEY) : null;
     if (!salvo) { setChecando(false); return; }
     validar(salvo).then(async c => {
-      if (c) { setCliente(c); await carregarPosts(c.id); }
+      if (c) { setCliente(c); await carregarTudo(); }
       else localStorage.removeItem(CODE_KEY);
       setChecando(false);
     });
@@ -59,16 +73,16 @@ export default function PortalPage() {
     e.preventDefault();
     setErro(""); setEntrando(true);
     const c = await validar(code);
-    setEntrando(false);
-    if (!c) { setErro("Código inválido. Confira com sua agência."); return; }
+    if (!c) { setEntrando(false); setErro("Código inválido. Confira com sua agência."); return; }
     localStorage.setItem(CODE_KEY, code.trim());
     setCliente(c);
-    await carregarPosts(c.id);
+    await carregarTudo();
+    setEntrando(false);
   };
 
   const sair = () => {
     localStorage.removeItem(CODE_KEY);
-    setCliente(null); setPosts([]); setCode(""); setSel(null);
+    setCliente(null); setPosts([]); setProjetos([]); setProjeto("todos"); setCode(""); setSel(null);
   };
 
   const patch = async (id: string, updates: any, msg: string) => {
@@ -148,15 +162,16 @@ export default function PortalPage() {
     );
   }
 
-  // ---- Dados do portal ----
-  const finalizados = posts.filter(p => p.edicao_status === "aprovado" || p.publicacao_status === "aprovado");
-  const paraAprovar = finalizados.filter(p => p.cliente_aprovacao !== "aprovado");
-  const aprovadosCliente = posts.filter(p => p.cliente_aprovacao === "aprovado").length;
+  // ---- Dados do portal (filtrados pelo projeto selecionado) ----
+  const doProjeto = projeto === "todos" ? posts : posts.filter(p => p.client_id === projeto);
+  const paraAprovar = doProjeto.filter(p => prontoParaCliente(p) && p.cliente_aprovacao !== "aprovado");
+  const aprovadosCliente = doProjeto.filter(p => p.cliente_aprovacao === "aprovado").length;
+  const nomeProjeto = (id: string | null) => projetos.find(x => x.id === id)?.name || "";
 
   // andamento agrupado por mês
   const grupos = (() => {
     const map = new Map<string, CalendarPost[]>();
-    posts.forEach(p => {
+    doProjeto.forEach(p => {
       const k = p.scheduled_date ? p.scheduled_date.slice(0, 7) : "sem-data";
       if (!map.has(k)) map.set(k, []);
       map.get(k)!.push(p);
@@ -187,10 +202,32 @@ export default function PortalPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+        {/* Abas por projeto */}
+        {projetos.length > 1 && (
+          <div className="flex items-center gap-1.5 flex-wrap border-b border-border pb-3">
+            <button onClick={() => setProjeto("todos")}
+              className={cn("px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                projeto === "todos" ? "bg-nexus-600 text-white" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+              Todos os projetos
+            </button>
+            {projetos.map(pr => {
+              const qtd = posts.filter(p => p.client_id === pr.id).length;
+              return (
+                <button key={pr.id} onClick={() => setProjeto(pr.id)}
+                  className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                    projeto === pr.id ? "bg-nexus-600 text-white" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+                  {pr.name}
+                  {qtd > 0 && <span className={cn("text-[10px] px-1.5 py-0.5 rounded-full", projeto === pr.id ? "bg-white/20" : "bg-accent")}>{qtd}</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* Resumo */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: "Conteúdos no plano", value: posts.length, color: "text-foreground" },
+            { label: "Conteúdos no plano", value: doProjeto.length, color: "text-foreground" },
             { label: "Aguardando sua aprovação", value: paraAprovar.length, color: "text-amber-400" },
             { label: "Aprovados por você", value: aprovadosCliente, color: "text-emerald-400" },
           ].map(k => (
@@ -247,6 +284,9 @@ export default function PortalPage() {
                     )}
                   </div>
                   <div className="p-3">
+                    {projeto === "todos" && (
+                      <p className="text-[10px] text-nexus-300 mb-0.5">{nomeProjeto(p.client_id)}</p>
+                    )}
                     <p className="text-sm font-medium text-foreground line-clamp-2">{p.title || "sem título"}</p>
                     {p.scheduled_date && (
                       <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">

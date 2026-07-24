@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, getManterConectado, setManterConectado } from "@/lib/supabase";
 import { Loader2, LogIn, AlertCircle } from "lucide-react";
+
+const EMAIL_KEY = "nexus.ultimo-email";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,9 +14,14 @@ export default function LoginPage() {
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
   const [checando, setChecando] = useState(true);
+  const [manterConectado, setManter] = useState(true);
 
-  // Se já estiver logado, entra direto
+  // Se já estiver logado, entra direto; senão restaura o e-mail lembrado
   useEffect(() => {
+    setManter(getManterConectado());
+    const lembrado = typeof window !== "undefined" ? localStorage.getItem(EMAIL_KEY) : null;
+    if (lembrado) setEmail(lembrado);
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) router.replace("/");
       else setChecando(false);
@@ -25,16 +32,27 @@ export default function LoginPage() {
     e.preventDefault();
     setErro("");
     setLoading(true);
+
+    // define onde a sessão será guardada ANTES de logar
+    setManterConectado(manterConectado);
+
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
     setLoading(false);
     if (error) {
       setErro(
         error.message.includes("Invalid login")
           ? "E-mail ou senha incorretos."
+          : error.message.includes("Email not confirmed")
+          ? "E-mail ainda não confirmado. Peça a um administrador para liberar seu acesso."
           : error.message
       );
       return;
     }
+
+    // lembra o e-mail para o próximo acesso
+    if (manterConectado) localStorage.setItem(EMAIL_KEY, email.trim());
+    else localStorage.removeItem(EMAIL_KEY);
+
     router.replace("/");
   };
 
@@ -100,6 +118,16 @@ export default function LoginPage() {
               />
             </div>
 
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={manterConectado}
+                onChange={e => setManter(e.target.checked)}
+                className="w-4 h-4 rounded accent-nexus-500"
+              />
+              <span className="text-xs text-foreground">Manter conectado neste dispositivo</span>
+            </label>
+
             {erro && (
               <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
@@ -117,6 +145,11 @@ export default function LoginPage() {
           </form>
 
           <p className="text-[11px] text-muted-foreground mt-8">
+            {manterConectado
+              ? "Sua sessão fica salva neste dispositivo até você sair."
+              : "Sua sessão será encerrada ao fechar o navegador."}
+          </p>
+          <p className="text-[11px] text-muted-foreground mt-2">
             Não tem acesso? Peça para um administrador criar seu usuário em Gestão de Usuários.
           </p>
         </div>

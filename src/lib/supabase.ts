@@ -3,7 +3,52 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+/** Chave que guarda a preferência "manter conectado" */
+export const PERSIST_KEY = 'nexus.manter-conectado'
+
+export function setManterConectado(valor: boolean) {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(PERSIST_KEY, valor ? '1' : '0')
+}
+
+export function getManterConectado(): boolean {
+  if (typeof window === 'undefined') return true
+  return localStorage.getItem(PERSIST_KEY) !== '0' // padrão: manter conectado
+}
+
+/**
+ * Armazenamento da sessão:
+ *  - "manter conectado" ligado  -> localStorage (sobrevive ao fechar o navegador)
+ *  - desligado                  -> sessionStorage (cai ao fechar a aba)
+ */
+const storage = {
+  getItem: (key: string) => {
+    if (typeof window === 'undefined') return null
+    return (getManterConectado() ? localStorage : sessionStorage).getItem(key)
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window === 'undefined') return
+    const alvo = getManterConectado() ? localStorage : sessionStorage
+    const outro = getManterConectado() ? sessionStorage : localStorage
+    outro.removeItem(key) // evita sessão duplicada nos dois lugares
+    alvo.setItem(key, value)
+  },
+  removeItem: (key: string) => {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(key)
+    sessionStorage.removeItem(key)
+  },
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,   // renova o token sozinho, sem derrubar o usuário
+    detectSessionInUrl: true,
+    storage,
+    storageKey: 'nexus.auth',
+  },
+})
 
 // Tipos
 export type Client = {

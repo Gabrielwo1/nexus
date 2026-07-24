@@ -29,12 +29,12 @@ export const STAGES: StageDef[] = [
   },
   {
     key: "edicao", label: "Edição", short: "E",
-    ownerName: "Petterson", ownerRole: "social_media", color: "#34d399",
+    ownerName: "Pet", ownerRole: "social_media", color: "#34d399",
     statusField: "edicao_status", approvedField: "edicao_approved_at",
   },
   {
     key: "publicacao", label: "Publicação", short: "P",
-    ownerName: "Karina", ownerRole: "social_media", color: "#fb923c",
+    ownerName: "Karyne", ownerRole: "social_media", color: "#fb923c",
     statusField: "publicacao_status", approvedField: "publicacao_approved_at",
   },
 ];
@@ -48,6 +48,7 @@ export const FORMATOS: TagOpt[] = [
   { value: "reel", label: "Reels", color: "#ec4899" },
   { value: "story", label: "Stories", color: "#10b981" },
   { value: "carrossel", label: "Carrossel", color: "#f59e0b" },
+  { value: "post_estatico", label: "Post Estático", color: "#f97316" },
   { value: "foto", label: "Foto", color: "#0ea5e9" },
 ];
 
@@ -68,8 +69,12 @@ export const PARTICIPANTES: TagOpt[] = [
   { value: "sem_participacao", label: "sem participação", color: "#6b7280" },
   { value: "equipe", label: "Equipe", color: "#6b7280" },
   { value: "dr_mussi", label: "Dr. Mussi", color: "#3b82f6" },
-  { value: "dr_henrique", label: "Dr. Henrique", color: "#6b7280" },
-  { value: "dr_viktor", label: "Dr. Viktor", color: "#6b7280" },
+  { value: "dr_henrique", label: "Dr. Henrique", color: "#8b5cf6" },
+  { value: "dr_viktor", label: "Dr. Viktor", color: "#06b6d4" },
+  { value: "dr_ricardo", label: "Dr. Ricardo", color: "#14b8a6" },
+  { value: "dr_fabio", label: "Dr. Fábio", color: "#a855f7" },
+  { value: "dr_alexandre", label: "Dr. Alexandre", color: "#f43f5e" },
+  { value: "dra_m_lara", label: "Dra. M. Lara", color: "#eab308" },
 ];
 
 export const findTag = (opts: TagOpt[], v: string | null): TagOpt | undefined =>
@@ -106,7 +111,7 @@ export const STAGE_STATUS_STYLE: Record<StageStatus, string> = {
 
 // Mapeia um funcionário para a etapa que ele opera
 const NAME_TO_STAGE: Record<string, StageKey> = {
-  Gerval: "roteiro", Guto: "gravacao", Petterson: "edicao", Karina: "publicacao",
+  Gerval: "roteiro", Guto: "gravacao", Pet: "edicao", Karyne: "publicacao",
 };
 export function stageForMember(m: { name: string; role: string }): StageDef | null {
   const byName = NAME_TO_STAGE[m.name];

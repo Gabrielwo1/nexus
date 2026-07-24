@@ -97,14 +97,18 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, creati
           onBlur={() => setEditing(null)}
           onChange={e => commit(p.id, "responsavel_id", e.target.value)}
           className="w-full bg-card border border-nexus-500 rounded px-1.5 py-1 text-xs text-foreground focus:outline-none">
-          <option value="">—</option>
+          <option value="">Aberto</option>
           {members.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
         </select>
       );
     }
     return (
       <div onClick={() => setEditing(key(p.id, "responsavel_id"))} className="cursor-pointer min-h-[24px] flex items-center">
-        {m ? <PersonPill name={m.name} /> : <span className="text-muted-foreground/40 text-xs">—</span>}
+        {m ? <PersonPill name={m.name} /> : (
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs whitespace-nowrap bg-orange-400/15 text-orange-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-400" /> Aberto
+          </span>
+        )}
       </div>
     );
   };

@@ -204,12 +204,15 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
     edicao_url: { status: "edicao_status", approvedAt: "edicao_approved_at", label: "Finalizado" },
   };
 
+  // Marcar como pronto envia para APROVAÇÃO (entregue), não aprova direto
   const toggleReady = async (p: CalendarPost, field: string) => {
     const st = LINK_STAGE[field];
-    const isReady = (p as any)[st.status] === "aprovado";
+    const cur = (p as any)[st.status];
+    const marcado = cur === "entregue" || cur === "aprovado";
     await onUpdate(p.id, {
-      [st.status]: isReady ? "pendente" : "aprovado",
-      [st.approvedAt]: isReady ? null : new Date().toISOString(),
+      [st.status]: marcado ? "pendente" : "entregue",
+      ...(marcado ? { [st.approvedAt]: null } : {}),
+      ...(marcado ? {} : { [`${st.status.replace("_status", "")}_done_at`]: new Date().toISOString() }),
     });
   };
 
@@ -217,20 +220,30 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
     const isEd = editing === key(p.id, field);
     const val = ((p as any)[field] as string) || "";
     const st = LINK_STAGE[field];
-    const isReady = (p as any)[st.status] === "aprovado";
+    const cur = (p as any)[st.status];
+    const aprovado = cur === "aprovado";
+    const entregue = cur === "entregue";
+    const marcado = aprovado || entregue;
 
     const checkbox = (
       <button
         onClick={e => { e.stopPropagation(); toggleReady(p, field); }}
-        title={isReady ? `${st.label} pronto — clique para desmarcar` : `Marcar ${st.label} como pronto`}
+        title={
+          aprovado ? `${st.label} aprovado`
+          : entregue ? `${st.label} entregue — aguardando aprovação (clique para desmarcar)`
+          : `Marcar ${st.label} como pronto (vai para aprovação)`
+        }
         className={cn(
           "w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border transition-colors",
-          isReady ? "bg-emerald-500 border-emerald-500" : "border-border hover:border-emerald-500/60"
+          aprovado ? "bg-emerald-500 border-emerald-500"
+            : entregue ? "bg-amber-500 border-amber-500"
+            : "border-border hover:border-amber-500/60"
         )}
       >
-        {isReady && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+        {marcado && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
       </button>
     );
+    const isReady = marcado;
 
     if (isEd) {
       return (

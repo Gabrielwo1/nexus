@@ -80,6 +80,33 @@ export const PARTICIPANTES: TagOpt[] = [
 export const findTag = (opts: TagOpt[], v: string | null): TagOpt | undefined =>
   opts.find(o => o.value === v);
 
+/**
+ * Converte links do Google Drive / Docs em URL embutível (iframe).
+ * Retorna null quando o link não é previsualizável.
+ */
+export function toPreviewUrl(url: string | null): string | null {
+  if (!url) return null;
+  // Drive: /file/d/<ID>/view  ->  /file/d/<ID>/preview
+  const drive = url.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
+  if (drive) return `https://drive.google.com/file/d/${drive[1]}/preview`;
+  // Docs / Sheets / Slides: /d/<ID>/edit -> /d/<ID>/preview
+  const doc = url.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/([^/?#]+)/);
+  if (doc) return `https://docs.google.com/${doc[1]}/d/${doc[2]}/preview`;
+  // Pasta do Drive: usa o embed de listagem
+  const folder = url.match(/drive\.google\.com\/drive\/(?:u\/\d+\/)?folders\/([^/?#]+)/);
+  if (folder) return `https://drive.google.com/embeddedfolderview?id=${folder[1]}#grid`;
+  // Arquivo direto de vídeo/imagem
+  if (/\.(mp4|webm|mov|jpg|jpeg|png|gif|webp)(\?|$)/i.test(url)) return url;
+  return null;
+}
+
+export function isVideoUrl(url: string | null): boolean {
+  return !!url && /\.(mp4|webm|mov)(\?|$)/i.test(url);
+}
+export function isImageUrl(url: string | null): boolean {
+  return !!url && /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(url);
+}
+
 // Tipo de conteúdo esperado em cada etapa (para upload/acesso)
 export const STAGE_CONTENT: Record<StageKey, {
   label: string;        // descrição do formato

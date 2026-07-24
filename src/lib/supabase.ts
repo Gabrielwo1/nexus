@@ -139,6 +139,9 @@ export type CalendarPost = {
   post_link: string | null
   publicacao_by: string | null
   publicacao_approved_at: string | null
+  // Feedback de alteração (Aprovações)
+  feedback: string | null
+  feedback_at: string | null
   created_at: string
   clients?: { name: string }
   team_members?: { name: string }

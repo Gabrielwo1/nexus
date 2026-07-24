@@ -118,7 +118,7 @@ export default function CRMPage() {
   return (
     <div className="p-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="brand-header flex items-center justify-between px-6 py-5">
         <div>
           <h1 className="text-2xl font-bold text-foreground">CRM — Clientes</h1>
           <p className="text-sm text-muted-foreground mt-0.5">

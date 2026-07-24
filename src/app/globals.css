@@ -135,3 +135,28 @@
 .brand-glow {
   box-shadow: 0 0 0 1px hsl(var(--brand) / 0.25), 0 8px 30px hsl(var(--brand) / 0.12);
 }
+
+/* Degradê oficial YPHE: #20BCED -> #052699 */
+.brand-gradient {
+  background: linear-gradient(90deg, #20bced 0%, #052699 100%);
+}
+
+/* Cabeçalho de módulo: barra fina do degradê + leve tint */
+.brand-header {
+  position: relative;
+  background:
+    linear-gradient(180deg, hsl(var(--brand) / 0.06), transparent 70%),
+    hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.brand-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #20bced 0%, #052699 100%);
+}

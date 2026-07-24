@@ -94,7 +94,7 @@ export default function FinanceiroPage() {
 
   return (
     <div className="p-8 space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="brand-header flex items-center justify-between px-6 py-5">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Financeiro</h1>
           <p className="text-sm text-muted-foreground mt-0.5 capitalize">{MESES[now.getMonth()]} {now.getFullYear()}</p>

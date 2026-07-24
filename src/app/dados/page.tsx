@@ -30,7 +30,7 @@ export default function DadosPage() {
 
   return (
     <div className="p-8 space-y-8">
-      <div>
+      <div className="brand-header px-6 py-5">
         <h1 className="text-2xl font-bold text-foreground">Performance Geral</h1>
         <p className="text-sm text-muted-foreground">Visão consolidada de todos os dados da agência</p>
       </div>

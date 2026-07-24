@@ -197,7 +197,7 @@ export default function ContratosPage() {
     <div className="flex h-full overflow-hidden">
       {/* Main */}
       <div className="flex-1 overflow-y-auto p-8 space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="brand-header flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-nexus-400" />
             <div>

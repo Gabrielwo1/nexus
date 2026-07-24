@@ -72,30 +72,38 @@ export default function UsuariosPage() {
       return;
     }
 
-    // Criação — com login se informou e-mail + senha
-    let authId: string | null = null;
-    if (form.email && form.senha) {
-      if (form.senha.length < 6) { setSaving(false); toast.error("A senha precisa ter ao menos 6 caracteres"); return; }
-      const { data, error } = await supabase.auth.signUp({
-        email: form.email.trim(), password: form.senha,
-      });
-      if (error) { setSaving(false); toast.error("Erro ao criar login: " + error.message); return; }
-      authId = data.user?.id || null;
-    }
-
-    const { error } = await supabase.from("team_members").insert({
-      name: form.name.trim(),
-      role: form.role,
-      email: form.email || null,
-      phone: form.phone || null,
-      auth_user_id: authId,
-      status: "active",
-      modules: acessoTotal ? null : mods,
+    // Criação no servidor (não derruba a sessão de quem está criando)
+    const res = await fetch("/api/usuarios", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email || null,
+        senha: form.senha || null,
+        role: form.role,
+        phone: form.phone || null,
+        modules: acessoTotal ? null : mods,
+      }),
     });
+    const json = await res.json();
     setSaving(false);
-    if (error) { toast.error("Erro: " + error.message); return; }
+    if (!res.ok) { toast.error(json.error || "Erro ao criar usuário"); return; }
     fechar(); load();
-    toast.success(authId ? "Usuário criado com acesso ao sistema" : "Usuário criado (sem login)");
+    toast.success(json.comLogin ? "Usuário criado e já pode entrar no sistema" : "Usuário criado (sem login)");
+  };
+
+  const definirSenha = async (u: Usuario) => {
+    if (!u.auth_user_id) { toast.error("Usuário sem login criado"); return; }
+    const nova = prompt(`Nova senha para ${u.name} (mín. 6 caracteres):`);
+    if (!nova) return;
+    const res = await fetch("/api/usuarios", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ auth_user_id: u.auth_user_id, senha: nova }),
+    });
+    const json = await res.json();
+    if (!res.ok) { toast.error(json.error || "Erro ao definir senha"); return; }
+    toast.success(`Senha de ${u.name} atualizada`);
   };
 
   const alternarStatus = async (u: Usuario) => {
@@ -376,8 +384,8 @@ export default function UsuariosPage() {
                         className="px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
                         Editar
                       </button>
-                      {u.email && (
-                        <button onClick={() => resetarSenha(u)} title="Enviar redefinição de senha"
+                      {u.auth_user_id && (
+                        <button onClick={() => definirSenha(u)} title="Definir nova senha"
                           className="p-1.5 rounded text-muted-foreground hover:text-nexus-400 hover:bg-accent transition-colors">
                           <KeyRound className="w-3.5 h-3.5" />
                         </button>

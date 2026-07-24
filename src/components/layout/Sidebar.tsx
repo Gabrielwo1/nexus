@@ -21,6 +21,7 @@ import {
   Zap,
   FileText,
   KanbanSquare,
+  ExternalLink,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,7 +39,12 @@ const nav = [
     children: [
       { label: "Branding", href: "/equipe/branding", icon: Palette },
       { label: "Calendário & Copys", href: "/equipe/calendario", icon: CalendarDays },
-      { label: "Armazenamento de Mídias", href: "/equipe/midias", icon: FolderOpen },
+      {
+        label: "Armazenamento de Mídias",
+        href: "https://drive.google.com/drive/u/0/folders/1vH8iS3wZeXvn36qzsFEohn3626IE1QvC",
+        icon: FolderOpen,
+        external: true,
+      },
       { label: "Mídias para Aprovação", href: "/equipe/aprovacoes", icon: CheckSquare },
     ],
   },
@@ -141,18 +147,33 @@ function NavItem({ item }: { item: typeof nav[0] }) {
           >
             <div className="ml-3 mt-1 space-y-0.5 border-l border-border pl-3">
               {item.children.map((child) => {
-                const active = pathname === child.href || pathname.startsWith(child.href + "/");
+                const isExternal = "external" in child && child.external;
+                const active = !isExternal && (pathname === child.href || pathname.startsWith(child.href + "/"));
+                const classes = cn(
+                  "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-colors duration-150",
+                  active
+                    ? "bg-accent text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
+                );
+
+                if (isExternal) {
+                  return (
+                    <a
+                      key={child.href}
+                      href={child.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={classes}
+                    >
+                      <child.icon className="w-3.5 h-3.5" />
+                      <span className="flex-1">{child.label}</span>
+                      <ExternalLink className="w-3 h-3 opacity-50" />
+                    </a>
+                  );
+                }
+
                 return (
-                  <Link
-                    key={child.href}
-                    href={child.href}
-                    className={cn(
-                      "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-colors duration-150",
-                      active
-                        ? "bg-accent text-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
-                    )}
-                  >
+                  <Link key={child.href} href={child.href} className={classes}>
                     <child.icon className="w-3.5 h-3.5" />
                     {child.label}
                   </Link>

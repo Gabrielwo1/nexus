@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { canSee } from "@/lib/modules";
+import { useCurrentUser } from "@/lib/useCurrentUser";
 import {
   Users,
   DollarSign,
@@ -33,21 +35,23 @@ const nav = [
     label: "Dashboard",
     href: "/",
     icon: LayoutDashboard,
+    module: "dashboard",
   },
   {
     label: "Equipe",
     icon: Users,
     color: "text-violet-400",
     children: [
-      { label: "Branding", href: "/equipe/branding", icon: Palette },
-      { label: "Calendário & Copys", href: "/equipe/calendario", icon: CalendarDays },
+      { label: "Branding", href: "/equipe/branding", icon: Palette, module: "equipe.branding" },
+      { label: "Calendário & Copys", href: "/equipe/calendario", icon: CalendarDays, module: "equipe.calendario" },
       {
         label: "Armazenamento de Mídias",
         href: "https://drive.google.com/drive/u/0/folders/1vH8iS3wZeXvn36qzsFEohn3626IE1QvC",
         icon: FolderOpen,
         external: true,
+        module: "equipe.midias",
       },
-      { label: "Mídias para Aprovação", href: "/equipe/aprovacoes", icon: CheckSquare },
+      { label: "Mídias para Aprovação", href: "/equipe/aprovacoes", icon: CheckSquare, module: "equipe.aprovacoes" },
     ],
   },
   {
@@ -55,10 +59,10 @@ const nav = [
     icon: DollarSign,
     color: "text-emerald-400",
     children: [
-      { label: "Visão Geral", href: "/financeiro", icon: TrendingUp },
-      { label: "Receitas & Gastos", href: "/financeiro/receitas", icon: DollarSign },
-      { label: "Cobranças", href: "/financeiro/cobrancas", icon: Receipt },
-      { label: "Projeções", href: "/financeiro/projecoes", icon: BarChart3 },
+      { label: "Visão Geral", href: "/financeiro", icon: TrendingUp, module: "financeiro.visao" },
+      { label: "Receitas & Gastos", href: "/financeiro/receitas", icon: DollarSign, module: "financeiro.receitas" },
+      { label: "Cobranças", href: "/financeiro/cobrancas", icon: Receipt, module: "financeiro.cobrancas" },
+      { label: "Projeções", href: "/financeiro/projecoes", icon: BarChart3, module: "financeiro.projecoes" },
     ],
   },
   {
@@ -66,8 +70,8 @@ const nav = [
     icon: UserCircle,
     color: "text-sky-400",
     children: [
-      { label: "Clientes", href: "/crm", icon: UserCircle },
-      { label: "Adicionar Cliente", href: "/crm/novo", icon: UserPlus },
+      { label: "Clientes", href: "/crm", icon: UserCircle, module: "crm.clientes" },
+      { label: "Adicionar Cliente", href: "/crm/novo", icon: UserPlus, module: "crm.novo" },
     ],
   },
   {
@@ -75,24 +79,27 @@ const nav = [
     icon: BarChart3,
     color: "text-orange-400",
     children: [
-      { label: "Instagram Orgânico", href: "/dados/instagram", icon: Instagram },
-      { label: "Performance Geral", href: "/dados", icon: TrendingUp },
+      { label: "Instagram Orgânico", href: "/dados/instagram", icon: Instagram, module: "dados.instagram" },
+      { label: "Performance Geral", href: "/dados", icon: TrendingUp, module: "dados.performance" },
     ],
   },
   {
     label: "Contratos",
     href: "/contratos",
     icon: FileText,
+    module: "contratos",
   },
   {
     label: "Tarefas",
     href: "/tarefas",
     icon: KanbanSquare,
+    module: "tarefas",
   },
   {
     label: "Usuários",
     href: "/usuarios",
     icon: Users,
+    module: "usuarios",
   },
 ];
 
@@ -236,6 +243,20 @@ function UserBox() {
 }
 
 export function Sidebar() {
+  const { user } = useCurrentUser();
+  const mods = user?.modules;
+
+  // Mantém só os itens (e subitens) que o usuário pode ver
+  const navPermitido = nav
+    .map((item) => {
+      if (!item.children) return item;
+      const filhos = item.children.filter((c: any) => canSee(mods, c.module));
+      return filhos.length ? { ...item, children: filhos } : null;
+    })
+    .filter((item): item is typeof nav[0] =>
+      item !== null && (item.children ? true : canSee(mods, (item as any).module))
+    );
+
   return (
     <aside className="w-60 h-screen flex flex-col border-r border-border bg-card shrink-0">
       {/* Logo */}
@@ -249,7 +270,7 @@ export function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {nav.map((item) => (
+        {navPermitido.map((item) => (
           <NavItem key={item.label} item={item} />
         ))}
       </nav>

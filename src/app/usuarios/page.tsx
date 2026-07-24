@@ -9,19 +9,15 @@ import {
   Mail, Phone, Power, KeyRound, Trash2, Search,
 } from "lucide-react";
 import { toast } from "sonner";
+import { MODULES, MODULE_GROUPS, PRESETS } from "@/lib/modules";
 
 type Usuario = TeamMember & {
   email: string | null;
   access_level: string | null;
   phone: string | null;
   auth_user_id: string | null;
+  modules: string[] | null;
 };
-
-const NIVEIS = [
-  { value: "admin", label: "Administrador", desc: "Acesso total, gerencia usuários e financeiro", color: "#20bced" },
-  { value: "gestor", label: "Gestor", desc: "Aprova conteúdo e vê relatórios", color: "#a855f7" },
-  { value: "funcionario", label: "Funcionário", desc: "Executa e entrega suas etapas", color: "#6b7280" },
-];
 
 const FUNCOES = [
   "copywriter", "videomaker", "social_media", "branding", "stories",
@@ -34,11 +30,13 @@ export default function UsuariosPage() {
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [busca, setBusca] = useState("");
-  const [filtroNivel, setFiltroNivel] = useState("todos");
+  const [filtroAcesso, setFiltroAcesso] = useState("todos");
   const [editando, setEditando] = useState<Usuario | null>(null);
 
-  const vazio = { name: "", email: "", senha: "", role: "social_media", access_level: "funcionario", phone: "" };
+  const vazio = { name: "", email: "", senha: "", role: "social_media", phone: "" };
   const [form, setForm] = useState(vazio);
+  const [mods, setMods] = useState<string[]>(["dashboard"]);
+  const [acessoTotal, setAcessoTotal] = useState(false);
 
   const load = () => {
     supabase.from("team_members").select("*").order("status").order("name")
@@ -47,7 +45,9 @@ export default function UsuariosPage() {
   useEffect(load, []);
 
   const filtrados = usuarios.filter(u => {
-    if (filtroNivel !== "todos" && (u.access_level || "funcionario") !== filtroNivel) return false;
+    if (filtroAcesso === "total" && u.modules !== null) return false;
+    if (filtroAcesso === "restrito" && u.modules === null) return false;
+    if (filtroAcesso === "sem_login" && u.auth_user_id) return false;
     if (busca && !`${u.name} ${u.email || ""}`.toLowerCase().includes(busca.toLowerCase())) return false;
     return true;
   });
@@ -61,9 +61,9 @@ export default function UsuariosPage() {
       const { error } = await supabase.from("team_members").update({
         name: form.name.trim(),
         role: form.role,
-        access_level: form.access_level,
         phone: form.phone || null,
         email: form.email || null,
+        modules: acessoTotal ? null : mods,
       }).eq("id", editando.id);
       setSaving(false);
       if (error) { toast.error("Erro: " + error.message); return; }
@@ -86,11 +86,11 @@ export default function UsuariosPage() {
     const { error } = await supabase.from("team_members").insert({
       name: form.name.trim(),
       role: form.role,
-      access_level: form.access_level,
       email: form.email || null,
       phone: form.phone || null,
       auth_user_id: authId,
       status: "active",
+      modules: acessoTotal ? null : mods,
     });
     setSaving(false);
     if (error) { toast.error("Erro: " + error.message); return; }
@@ -116,16 +116,17 @@ export default function UsuariosPage() {
     setEditando(u);
     setForm({
       name: u.name, email: u.email || "", senha: "",
-      role: u.role, access_level: u.access_level || "funcionario", phone: u.phone || "",
+      role: u.role, phone: u.phone || "",
     });
+    setAcessoTotal(u.modules === null);
+    setMods(u.modules || []);
     setShowForm(true);
   };
 
-  const fechar = () => { setShowForm(false); setEditando(null); setForm(vazio); };
+  const fechar = () => { setShowForm(false); setEditando(null); setForm(vazio); setMods(["dashboard"]); setAcessoTotal(false); };
 
-  const nivelDe = (v: string | null) => NIVEIS.find(n => n.value === (v || "funcionario"))!;
   const ativos = usuarios.filter(u => u.status === "active").length;
-  const admins = usuarios.filter(u => (u.access_level || "") === "admin" && u.status === "active").length;
+  const comAcessoTotal = usuarios.filter(u => u.modules === null && u.status === "active").length;
 
   return (
     <div className="p-8 space-y-6">
@@ -136,7 +137,7 @@ export default function UsuariosPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Gestão de Usuários</h1>
             <p className="text-sm text-muted-foreground">
-              {ativos} ativos · {admins} administrador{admins !== 1 ? "es" : ""}
+              {ativos} ativos · {comAcessoTotal} com acesso total
             </p>
           </div>
         </div>
@@ -154,11 +155,16 @@ export default function UsuariosPage() {
             className="bg-card border border-border rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 w-64" />
         </div>
         <div className="flex gap-1.5">
-          {["todos", ...NIVEIS.map(n => n.value)].map(n => (
-            <button key={n} onClick={() => setFiltroNivel(n)}
+          {[
+            { k: "todos", label: "Todos" },
+            { k: "total", label: "Acesso total" },
+            { k: "restrito", label: "Acesso restrito" },
+            { k: "sem_login", label: "Sem login" },
+          ].map(f => (
+            <button key={f.k} onClick={() => setFiltroAcesso(f.k)}
               className={cn("px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                filtroNivel === n ? "bg-nexus-600/20 text-nexus-300 border border-nexus-500/30" : "text-muted-foreground hover:text-foreground border border-transparent")}>
-              {n === "todos" ? "Todos" : NIVEIS.find(x => x.value === n)!.label}
+                filtroAcesso === f.k ? "bg-nexus-600/20 text-nexus-300 border border-nexus-500/30" : "text-muted-foreground hover:text-foreground border border-transparent")}>
+              {f.label}
             </button>
           ))}
         </div>
@@ -208,23 +214,81 @@ export default function UsuariosPage() {
             </div>
           </div>
 
-          {/* Nível de acesso */}
-          <div>
-            <label className="block text-xs text-muted-foreground mb-2">Nível de acesso</label>
-            <div className="grid grid-cols-3 gap-2">
-              {NIVEIS.map(n => (
-                <button key={n.value} onClick={() => setForm({ ...form, access_level: n.value })}
-                  className={cn("text-left p-3 rounded-lg border transition-all",
-                    form.access_level === n.value ? "border-nexus-500 bg-nexus-600/10" : "border-border hover:border-nexus-500/40")}>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    {n.value === "admin" ? <Shield className="w-3.5 h-3.5" style={{ color: n.color }} />
-                      : <UserIcon className="w-3.5 h-3.5" style={{ color: n.color }} />}
-                    <span className="text-xs font-medium text-foreground">{n.label}</span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground leading-snug">{n.desc}</p>
-                </button>
-              ))}
+          {/* Módulos habilitados */}
+          <div className="rounded-lg border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-foreground">Módulos habilitados</p>
+                <p className="text-[11px] text-muted-foreground">Escolha o que este usuário enxerga no menu</p>
+              </div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={acessoTotal}
+                  onChange={e => setAcessoTotal(e.target.checked)}
+                  className="w-4 h-4 rounded accent-nexus-500" />
+                <span className="text-xs text-foreground">Acesso total</span>
+              </label>
             </div>
+
+            {!acessoTotal && (
+              <>
+                {/* Presets */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider mr-1">Modelos:</span>
+                  {PRESETS.map(p => (
+                    <button key={p.label} onClick={() => setMods(p.keys)}
+                      className="px-2.5 py-1 rounded-md text-[11px] border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                      {p.label}
+                    </button>
+                  ))}
+                  <button onClick={() => setMods([])}
+                    className="px-2.5 py-1 rounded-md text-[11px] border border-border text-muted-foreground hover:text-red-400 transition-colors">
+                    Limpar
+                  </button>
+                </div>
+
+                {/* Lista por grupo */}
+                <div className="grid grid-cols-3 gap-x-6 gap-y-3">
+                  {MODULE_GROUPS.map(grupo => {
+                    const doGrupo = MODULES.filter(m => m.group === grupo);
+                    const todosMarcados = doGrupo.every(m => mods.includes(m.key));
+                    return (
+                      <div key={grupo}>
+                        <button
+                          onClick={() => setMods(prev =>
+                            todosMarcados
+                              ? prev.filter(k => !doGrupo.some(m => m.key === k))
+                              : [...new Set([...prev, ...doGrupo.map(m => m.key)])]
+                          )}
+                          className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1.5 hover:text-nexus-400 transition-colors"
+                        >
+                          {grupo} {todosMarcados ? "— limpar" : "— marcar todos"}
+                        </button>
+                        <div className="space-y-1">
+                          {doGrupo.map(m => (
+                            <label key={m.key} className="flex items-center gap-2 cursor-pointer group">
+                              <input
+                                type="checkbox"
+                                checked={mods.includes(m.key)}
+                                onChange={e => setMods(prev =>
+                                  e.target.checked ? [...prev, m.key] : prev.filter(k => k !== m.key)
+                                )}
+                                className="w-3.5 h-3.5 rounded accent-nexus-500"
+                              />
+                              <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                                {m.label}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {mods.length} de {MODULES.length} módulos habilitados
+                </p>
+              </>
+            )}
           </div>
 
           {!editando && (
@@ -250,7 +314,7 @@ export default function UsuariosPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-accent/20">
-              {["Usuário", "Contato", "Função", "Nível", "Status", ""].map(h => (
+              {["Usuário", "Contato", "Função", "Módulos", "Status", ""].map(h => (
                 <th key={h} className="px-4 py-3 text-left text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
               ))}
             </tr>
@@ -261,7 +325,6 @@ export default function UsuariosPage() {
             ) : filtrados.length === 0 ? (
               <tr><td colSpan={6} className="px-4 py-10 text-center text-sm text-muted-foreground">Nenhum usuário encontrado</td></tr>
             ) : filtrados.map(u => {
-              const nivel = nivelDe(u.access_level);
               const inativo = u.status !== "active";
               return (
                 <tr key={u.id} className={cn("hover:bg-accent/20 transition-colors", inativo && "opacity-50")}>
@@ -287,10 +350,19 @@ export default function UsuariosPage() {
                     <span className="text-xs text-foreground capitalize">{u.role.replace("_", " ")}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                      style={{ background: nivel.color + "26", color: nivel.color }}>
-                      {nivel.label}
-                    </span>
+                    {u.modules === null ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-nexus-400/15 text-nexus-300">
+                        Acesso total
+                      </span>
+                    ) : u.modules.length === 0 ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-red-400/10 text-red-400">
+                        Nenhum módulo
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground" title={u.modules.map(k => MODULES.find(m => m.key === k)?.label).filter(Boolean).join(", ")}>
+                        {u.modules.length} de {MODULES.length} módulos
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium",

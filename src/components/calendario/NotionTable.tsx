@@ -6,7 +6,7 @@ import {
   FORMATOS, COMUNICACOES, TIPOS_CONTEUDO, PARTICIPANTES, findTag, type TagOpt,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
-import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2 } from "lucide-react";
+import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -172,23 +172,59 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, creati
     );
   };
 
+  // cada coluna de link corresponde a uma etapa do pipeline
+  const LINK_STAGE: Record<string, { status: string; approvedAt: string; label: string }> = {
+    roteiro_url: { status: "roteiro_status", approvedAt: "roteiro_approved_at", label: "Roteiro" },
+    gravacao_url: { status: "gravacao_status", approvedAt: "gravacao_approved_at", label: "Captação" },
+    edicao_url: { status: "edicao_status", approvedAt: "edicao_approved_at", label: "Finalizado" },
+  };
+
+  const toggleReady = async (p: CalendarPost, field: string) => {
+    const st = LINK_STAGE[field];
+    const isReady = (p as any)[st.status] === "aprovado";
+    await onUpdate(p.id, {
+      [st.status]: isReady ? "pendente" : "aprovado",
+      [st.approvedAt]: isReady ? null : new Date().toISOString(),
+    });
+  };
+
   const renderUrl = (p: CalendarPost, field: string) => {
     const isEd = editing === key(p.id, field);
     const val = ((p as any)[field] as string) || "";
+    const st = LINK_STAGE[field];
+    const isReady = (p as any)[st.status] === "aprovado";
+
+    const checkbox = (
+      <button
+        onClick={e => { e.stopPropagation(); toggleReady(p, field); }}
+        title={isReady ? `${st.label} pronto — clique para desmarcar` : `Marcar ${st.label} como pronto`}
+        className={cn(
+          "w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border transition-colors",
+          isReady ? "bg-emerald-500 border-emerald-500" : "border-border hover:border-emerald-500/60"
+        )}
+      >
+        {isReady && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+      </button>
+    );
+
     if (isEd) {
       return (
-        <input autoFocus defaultValue={val} placeholder="https://..."
-          onBlur={e => commit(p.id, field, e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
-          className="w-full bg-card border border-nexus-500 rounded px-1.5 py-1 text-xs text-foreground focus:outline-none" />
+        <div className="flex items-center gap-1.5">
+          {checkbox}
+          <input autoFocus defaultValue={val} placeholder="https://..."
+            onBlur={e => commit(p.id, field, e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+            className="w-full bg-card border border-nexus-500 rounded px-1.5 py-1 text-xs text-foreground focus:outline-none" />
+        </div>
       );
     }
     return (
-      <div className="min-h-[24px] flex items-center gap-1">
+      <div className="min-h-[24px] flex items-center gap-1.5">
+        {checkbox}
         {val ? (
           <>
             <a href={val} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              className="text-xs text-nexus-400 hover:underline truncate max-w-[120px]">{val}</a>
+              className={cn("text-xs hover:underline truncate max-w-[100px]", isReady ? "text-emerald-400" : "text-nexus-400")}>{val}</a>
             <button onClick={() => setEditing(key(p.id, field))} className="text-muted-foreground/50 hover:text-foreground text-[10px]">✎</button>
           </>
         ) : (

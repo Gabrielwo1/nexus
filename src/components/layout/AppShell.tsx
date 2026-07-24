@@ -12,7 +12,8 @@ import { Loader2 } from "lucide-react";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const isLogin = pathname === "/login";
+  const isPublico = pathname === "/login" || pathname.startsWith("/portal");
+  const isLogin = isPublico;
   const [status, setStatus] = useState<"carregando" | "dentro" | "fora">("carregando");
 
   useEffect(() => {

@@ -184,9 +184,14 @@ export type CalendarPost = {
   post_link: string | null
   publicacao_by: string | null
   publicacao_approved_at: string | null
-  // Feedback de alteração (Aprovações)
+  // Feedback de alteração (Aprovações internas)
   feedback: string | null
   feedback_at: string | null
+  // Portal do cliente
+  cliente_aprovacao: string | null
+  cliente_feedback: string | null
+  cliente_feedback_at: string | null
+  aprovacao: string | null
   created_at: string
   clients?: { name: string }
   team_members?: { name: string }

@@ -5,12 +5,12 @@ import { supabase } from "@/lib/supabase";
 import type { CalendarPost, TeamMember } from "@/lib/supabase";
 import {
   STAGES, STAGE_FIELDS, FORMATOS, PARTICIPANTES, findTag,
-  applicableStages, stageStatus, toPreviewUrl, type StageDef,
+  applicableStages, stageStatus, analyzeLink, aspectFor, type StageDef,
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import {
   CheckCircle2, Clock, Search, ExternalLink, Loader2, ThumbsUp,
-  RotateCcw, FileType2, Film, Send, X, Inbox, User as UserIcon,
+  RotateCcw, FileType2, Film, Send, X, Inbox, User as UserIcon, FolderOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
@@ -36,6 +36,8 @@ export default function AprovacoesPage() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [saving, setSaving] = useState(false);
+  const [trocandoLink, setTrocandoLink] = useState(false);
+  const [novoLink, setNovoLink] = useState("");
 
   const load = () => {
     Promise.all([
@@ -116,7 +118,20 @@ export default function AprovacoesPage() {
     toast.success(`Alteração solicitada para ${item.stage.label}`);
   };
 
-  const previewUrl = toPreviewUrl(sel?.url || null);
+  const salvarLink = async (item: QueueItem) => {
+    if (!novoLink.trim()) { toast.error("Cole o link do arquivo"); return; }
+    const campo = item.stage.key === "roteiro" ? "roteiro_url"
+      : item.stage.key === "gravacao" ? "gravacao_url"
+      : item.stage.key === "edicao" ? "edicao_url" : "post_link";
+    const atualizado = await patch(item.post.id, { [campo]: novoLink.trim() });
+    if (!atualizado) return;
+    setSel({ ...item, post: atualizado, url: novoLink.trim() });
+    setTrocandoLink(false);
+    setNovoLink("");
+    toast.success("Link atualizado");
+  };
+
+  const link = analyzeLink(sel?.url || null);
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -173,7 +188,7 @@ export default function AprovacoesPage() {
             return (
               <button
                 key={`${item.post.id}:${item.stage.key}`}
-                onClick={() => { setSel(item); setShowFeedback(false); setFeedback(""); }}
+                onClick={() => { setSel(item); setShowFeedback(false); setFeedback(""); setTrocandoLink(false); setNovoLink(""); }}
                 className={cn(
                   "w-full text-left rounded-xl border p-3 transition-all",
                   ativo ? "border-nexus-500 bg-nexus-600/10" : "border-border bg-card hover:border-nexus-500/40"
@@ -235,79 +250,167 @@ export default function AprovacoesPage() {
               </button>
             </div>
 
-            {/* Preview */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              <div className="rounded-xl border border-border bg-black/40 overflow-hidden">
-                {previewUrl ? (
-                  <iframe
-                    src={previewUrl}
-                    className="w-full"
-                    style={{ height: 460 }}
-                    allow="autoplay"
-                    title="Prévia do conteúdo"
-                  />
+            {/* Conteúdo */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-4xl mx-auto p-6 space-y-5">
+                {/* --- Prévia --- */}
+                {link.previewUrl ? (
+                  <div className="flex justify-center">
+                    <div
+                      className="rounded-xl border border-border bg-black overflow-hidden w-full"
+                      style={{
+                        aspectRatio: aspectFor(sel.post.type),
+                        maxWidth: sel.post.type === "reel" || sel.post.type === "story" ? 380 : 720,
+                      }}
+                    >
+                      <iframe
+                        src={link.previewUrl}
+                        className="w-full h-full"
+                        allow="autoplay; fullscreen"
+                        allowFullScreen
+                        title="Prévia do conteúdo"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <div className="h-64 flex flex-col items-center justify-center gap-3">
-                    <FileType2 className="w-10 h-10 text-muted-foreground/50" />
-                    <p className="text-sm text-muted-foreground">Sem prévia disponível para este link</p>
-                    {sel.url && (
-                      <a href={sel.url} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs text-nexus-400 hover:underline">
-                        <ExternalLink className="w-3.5 h-3.5" /> Abrir em nova aba
+                  <div className="rounded-xl border border-border bg-card p-8 flex flex-col items-center gap-3 text-center">
+                    {link.kind === "pasta" ? <FolderOpen className="w-10 h-10 text-nexus-400" />
+                      : <FileType2 className="w-10 h-10 text-muted-foreground/50" />}
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {link.kind === "pasta" ? "Este link é uma pasta do Drive" : "Sem prévia para este link"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1 max-w-md">
+                        {link.kind === "pasta"
+                          ? "Pastas não têm player. Abra no Drive para revisar, ou peça o link direto do arquivo para ver aqui dentro."
+                          : "O formato do link não permite visualização embutida."}
+                      </p>
+                    </div>
+                    {link.openUrl && (
+                      <a href={link.openUrl} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-sm font-medium transition-colors">
+                        <ExternalLink className="w-4 h-4" />
+                        {link.kind === "pasta" ? "Abrir pasta no Drive" : "Abrir link"}
                       </a>
+                    )}
+
+                    {/* Corrigir link direto do arquivo */}
+                    {trocandoLink ? (
+                      <div className="w-full max-w-md space-y-2 pt-2">
+                        <input
+                          autoFocus value={novoLink} onChange={e => setNovoLink(e.target.value)}
+                          placeholder="Cole o link direto do arquivo (drive.google.com/file/d/...)"
+                          className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500"
+                        />
+                        <div className="flex justify-center gap-2">
+                          <button onClick={() => { setTrocandoLink(false); setNovoLink(""); }}
+                            className="px-3 py-1.5 text-xs text-muted-foreground border border-border rounded-lg hover:text-foreground transition-colors">
+                            Cancelar
+                          </button>
+                          <button onClick={() => salvarLink(sel)}
+                            className="px-3 py-1.5 text-xs bg-nexus-600 hover:bg-nexus-500 text-white rounded-lg font-medium transition-colors">
+                            Salvar link
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button onClick={() => setTrocandoLink(true)}
+                        className="text-xs text-muted-foreground hover:text-nexus-400 underline transition-colors">
+                        Substituir pelo link direto do arquivo
+                      </button>
                     )}
                   </div>
                 )}
-              </div>
 
-              {sel.url && (
-                <a href={sel.url} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs text-nexus-400 hover:underline">
-                  <ExternalLink className="w-3.5 h-3.5" /> Abrir original em nova aba
-                </a>
-              )}
-
-              {/* Contexto do conteúdo */}
-              <div className="grid grid-cols-4 gap-3">
-                {[
-                  { label: "Formato", value: findTag(FORMATOS, sel.post.type)?.label || "—" },
-                  { label: "Participante", value: findTag(PARTICIPANTES, sel.post.participante)?.label || "—" },
-                  { label: "Captação", value: sel.post.captacao_date ? format(parseISO(sel.post.captacao_date), "dd/MM/yy") : "—" },
-                  { label: "Postagem", value: sel.post.scheduled_date ? format(parseISO(sel.post.scheduled_date), "dd/MM/yy") : "—" },
-                ].map(d => (
-                  <div key={d.label} className="rounded-lg border border-border bg-card p-3">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{d.label}</p>
-                    <p className="text-sm text-foreground mt-0.5">{d.value}</p>
+                {link.openUrl && link.previewUrl && (
+                  <div className="flex justify-center">
+                    <a href={link.openUrl} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-nexus-400 transition-colors">
+                      <ExternalLink className="w-3.5 h-3.5" /> Abrir no Drive
+                    </a>
                   </div>
-                ))}
-              </div>
+                )}
 
-              {/* Etapas anteriores para conferência */}
-              <div className="rounded-lg border border-border bg-card p-4">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2.5">Material das etapas</p>
-                <div className="space-y-1.5">
-                  {[
-                    { label: "Roteiro", url: sel.post.roteiro_url },
-                    { label: "Captação", url: sel.post.gravacao_url },
-                    { label: "Finalizado", url: sel.post.edicao_url },
-                  ].map(l => (
-                    <div key={l.label} className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">{l.label}</span>
-                      {l.url ? (
-                        <a href={l.url} target="_blank" rel="noopener noreferrer"
-                          className="text-xs text-nexus-400 hover:underline truncate max-w-[280px]">{l.url}</a>
-                      ) : <span className="text-xs text-muted-foreground/50">—</span>}
-                    </div>
-                  ))}
+                {/* --- Feedback anterior --- */}
+                {sel.post.feedback && (
+                  <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3.5">
+                    <p className="text-[10px] text-amber-400 uppercase tracking-wider mb-1">Alteração solicitada anteriormente</p>
+                    <p className="text-sm text-foreground">{sel.post.feedback}</p>
+                  </div>
+                )}
+
+                {/* --- Ficha do conteúdo --- */}
+                <div className="rounded-xl border border-border bg-card overflow-hidden">
+                  <p className="px-4 py-2.5 text-[10px] text-muted-foreground uppercase tracking-wider border-b border-border bg-accent/20">
+                    Ficha do conteúdo
+                  </p>
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    {[
+                      [
+                        { label: "Cliente", value: sel.post.clients?.name || "—" },
+                        { label: "Formato", value: findTag(FORMATOS, sel.post.type)?.label || "—" },
+                        { label: "Participante", value: findTag(PARTICIPANTES, sel.post.participante)?.label || "—" },
+                      ],
+                      [
+                        { label: "Responsável", value: memberName(sel.post.responsavel_id) },
+                        { label: "Captação", value: sel.post.captacao_date ? format(parseISO(sel.post.captacao_date), "dd 'de' MMM", { locale: ptBR }) : "—" },
+                        { label: "Postagem", value: sel.post.scheduled_date ? format(parseISO(sel.post.scheduled_date), "dd 'de' MMM", { locale: ptBR }) : "—" },
+                      ],
+                    ].map((col, i) => (
+                      <div key={i} className="divide-y divide-border">
+                        {col.map(d => (
+                          <div key={d.label} className="flex items-center justify-between px-4 py-2.5">
+                            <span className="text-xs text-muted-foreground">{d.label}</span>
+                            <span className="text-xs text-foreground font-medium">{d.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* --- Material das etapas --- */}
+                <div className="rounded-xl border border-border bg-card overflow-hidden">
+                  <p className="px-4 py-2.5 text-[10px] text-muted-foreground uppercase tracking-wider border-b border-border bg-accent/20">
+                    Material das etapas
+                  </p>
+                  <div className="divide-y divide-border">
+                    {[
+                      { label: "Roteiro", url: sel.post.roteiro_url, status: sel.post.roteiro_status, color: STAGES[0].color },
+                      { label: "Captação", url: sel.post.gravacao_url, status: sel.post.gravacao_status, color: STAGES[1].color },
+                      { label: "Finalizado", url: sel.post.edicao_url, status: sel.post.edicao_status, color: STAGES[2].color },
+                    ].map(l => {
+                      const info = analyzeLink(l.url);
+                      return (
+                        <div key={l.label} className="flex items-center gap-3 px-4 py-3">
+                          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: l.color }} />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-medium text-foreground">{l.label}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {info.kind === "vazio" ? "nenhum arquivo" : info.label}
+                            </p>
+                          </div>
+                          <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium",
+                            l.status === "aprovado" ? "bg-emerald-400/10 text-emerald-400"
+                              : l.status === "entregue" ? "bg-amber-400/10 text-amber-400"
+                              : l.status === "ajustes" ? "bg-red-400/10 text-red-400"
+                              : "bg-gray-400/10 text-gray-400")}>
+                            {l.status === "aprovado" ? "aprovado" : l.status === "entregue" ? "entregue" : l.status === "ajustes" ? "ajustes" : "pendente"}
+                          </span>
+                          {info.openUrl ? (
+                            <a href={info.openUrl} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-md border border-border text-[11px] text-muted-foreground hover:text-foreground hover:bg-accent transition-colors flex-shrink-0">
+                              <ExternalLink className="w-3 h-3" /> Abrir
+                            </a>
+                          ) : (
+                            <span className="text-[11px] text-muted-foreground/40 px-2.5">—</span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-
-              {sel.post.feedback && (
-                <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
-                  <p className="text-[10px] text-amber-400 uppercase tracking-wider mb-1">Última solicitação de alteração</p>
-                  <p className="text-xs text-foreground">{sel.post.feedback}</p>
-                </div>
-              )}
             </div>
 
             {/* Ações */}

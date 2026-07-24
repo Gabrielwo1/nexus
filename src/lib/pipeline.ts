@@ -80,31 +80,83 @@ export const PARTICIPANTES: TagOpt[] = [
 export const findTag = (opts: TagOpt[], v: string | null): TagOpt | undefined =>
   opts.find(o => o.value === v);
 
+export type LinkKind = "arquivo" | "pasta" | "documento" | "midia" | "externo" | "vazio";
+
+export type LinkInfo = {
+  kind: LinkKind;
+  /** URL para iframe; null quando não dá para embutir bem */
+  previewUrl: string | null;
+  /** URL para abrir em nova aba */
+  openUrl: string | null;
+  /** Miniatura (só para arquivos do Drive) */
+  thumbUrl: string | null;
+  label: string;
+};
+
 /**
- * Converte links do Google Drive / Docs em URL embutível (iframe).
- * Retorna null quando o link não é previsualizável.
+ * Classifica um link e devolve a melhor forma de exibi-lo.
+ * Boas práticas do Google Drive:
+ *  - arquivo  (/file/d/ID)  -> /preview  (embute vídeo, imagem e PDF)
+ *  - documento (/d/ID/edit) -> /preview
+ *  - pasta (/folders/ID)    -> NÃO embutir: mostrar cartão e abrir no Drive
  */
-export function toPreviewUrl(url: string | null): string | null {
-  if (!url) return null;
-  // Drive: /file/d/<ID>/view  ->  /file/d/<ID>/preview
-  const drive = url.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
-  if (drive) return `https://drive.google.com/file/d/${drive[1]}/preview`;
-  // Docs / Sheets / Slides: /d/<ID>/edit -> /d/<ID>/preview
-  const doc = url.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/([^/?#]+)/);
-  if (doc) return `https://docs.google.com/${doc[1]}/d/${doc[2]}/preview`;
-  // Pasta do Drive: usa o embed de listagem
-  const folder = url.match(/drive\.google\.com\/drive\/(?:u\/\d+\/)?folders\/([^/?#]+)/);
-  if (folder) return `https://drive.google.com/embeddedfolderview?id=${folder[1]}#grid`;
-  // Arquivo direto de vídeo/imagem
-  if (/\.(mp4|webm|mov|jpg|jpeg|png|gif|webp)(\?|$)/i.test(url)) return url;
-  return null;
+export function analyzeLink(url: string | null): LinkInfo {
+  if (!url || !url.trim()) {
+    return { kind: "vazio", previewUrl: null, openUrl: null, thumbUrl: null, label: "Sem link" };
+  }
+  const u = url.trim();
+
+  const file = u.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
+  if (file) {
+    return {
+      kind: "arquivo",
+      previewUrl: `https://drive.google.com/file/d/${file[1]}/preview`,
+      openUrl: u,
+      thumbUrl: `https://drive.google.com/thumbnail?id=${file[1]}&sz=w600`,
+      label: "Arquivo do Drive",
+    };
+  }
+
+  const doc = u.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/([^/?#]+)/);
+  if (doc) {
+    const tipo = doc[1] === "document" ? "Documento" : doc[1] === "spreadsheets" ? "Planilha" : "Apresentação";
+    return {
+      kind: "documento",
+      previewUrl: `https://docs.google.com/${doc[1]}/d/${doc[2]}/preview`,
+      openUrl: u,
+      thumbUrl: null,
+      label: tipo,
+    };
+  }
+
+  const folder = u.match(/drive\.google\.com\/drive\/(?:u\/\d+\/)?folders\/([^/?#]+)/);
+  if (folder) {
+    return {
+      kind: "pasta",
+      previewUrl: null, // pasta não rende preview útil
+      openUrl: u,
+      thumbUrl: null,
+      label: "Pasta do Drive",
+    };
+  }
+
+  if (/\.(mp4|webm|mov|jpg|jpeg|png|gif|webp)(\?|$)/i.test(u)) {
+    return { kind: "midia", previewUrl: u, openUrl: u, thumbUrl: u, label: "Mídia direta" };
+  }
+
+  return { kind: "externo", previewUrl: null, openUrl: u, thumbUrl: null, label: "Link externo" };
 }
 
-export function isVideoUrl(url: string | null): boolean {
-  return !!url && /\.(mp4|webm|mov)(\?|$)/i.test(url);
+/** Proporção ideal do player conforme o formato do conteúdo */
+export function aspectFor(type: string | null): string {
+  if (type === "reel" || type === "story") return "9 / 16";
+  if (type === "carrossel" || type === "foto" || type === "post_estatico") return "4 / 5";
+  return "16 / 9";
 }
-export function isImageUrl(url: string | null): boolean {
-  return !!url && /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(url);
+
+/** @deprecated use analyzeLink */
+export function toPreviewUrl(url: string | null): string | null {
+  return analyzeLink(url).previewUrl;
 }
 
 // Tipo de conteúdo esperado em cada etapa (para upload/acesso)

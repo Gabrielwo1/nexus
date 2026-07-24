@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, Fragment } from "react";
 import type { CalendarPost, TeamMember } from "@/lib/supabase";
 import {
   FORMATOS, COMUNICACOES, TIPOS_CONTEUDO, PARTICIPANTES, findTag, type TagOpt,
@@ -62,7 +62,30 @@ const fmtDate = (d: string | null) =>
 
 export default function NotionTable({ posts, members, onUpdate, onCreate, onDuplicate, onDelete, creating }: Props) {
   const [editing, setEditing] = useState<string | null>(null); // "id:field"
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const key = (id: string, f: string) => `${id}:${f}`;
+
+  // Agrupa por mês da data de postagem
+  const groups = useMemo(() => {
+    const map = new Map<string, CalendarPost[]>();
+    posts.forEach(p => {
+      const k = p.scheduled_date ? p.scheduled_date.slice(0, 7) : "sem-data";
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(p);
+    });
+    const keys = [...map.keys()].sort((a, b) => {
+      if (a === "sem-data") return 1;
+      if (b === "sem-data") return -1;
+      return a.localeCompare(b);
+    });
+    return keys.map(k => ({
+      key: k,
+      label: k === "sem-data"
+        ? "Sem data de postagem"
+        : format(parseISO(`${k}-01`), "MMMM 'de' yyyy", { locale: ptBR }),
+      rows: map.get(k)!.sort((x, y) => (x.scheduled_date || "").localeCompare(y.scheduled_date || "")),
+    }));
+  }, [posts]);
 
   const commit = async (id: string, field: string, value: any) => {
     setEditing(null);
@@ -286,34 +309,58 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
           <tbody>
             {posts.length === 0 ? (
               <tr><td colSpan={COLS.length + 1} className="px-4 py-12 text-center text-sm text-muted-foreground">Nenhum post ainda</td></tr>
-            ) : posts.map(p => (
-              <tr key={p.id} className="border-b border-border/40 hover:bg-accent/10 transition-colors group">
-                {COLS.map(c => (
-                  <td key={c.key} style={{ width: c.w, minWidth: c.w }}
-                    className="px-3 py-2 border-r border-border/20 align-middle">
-                    {cell(p, c.key)}
+            ) : groups.map(g => (
+              <Fragment key={g.key}>
+                {/* Cabeçalho do mês */}
+                <tr className="bg-accent/25 border-y border-border">
+                  <td colSpan={COLS.length + 1} className="px-3 py-2">
+                    <button
+                      onClick={() => setCollapsed(c => ({ ...c, [g.key]: !c[g.key] }))}
+                      className="flex items-center gap-2 text-left group/mes"
+                    >
+                      <ChevronDown className={cn(
+                        "w-3.5 h-3.5 text-muted-foreground transition-transform",
+                        collapsed[g.key] && "-rotate-90"
+                      )} />
+                      <span className="text-xs font-semibold text-foreground capitalize">{g.label}</span>
+                      <span className="text-[10px] text-muted-foreground bg-accent px-1.5 py-0.5 rounded-full">
+                        {g.rows.length}
+                      </span>
+                    </button>
                   </td>
+                </tr>
+
+                {/* Linhas do mês */}
+                {!collapsed[g.key] && g.rows.map(p => (
+                  <tr key={p.id} className="border-b border-border/40 hover:bg-accent/10 transition-colors group">
+                    {COLS.map(c => (
+                      <td key={c.key} style={{ width: c.w, minWidth: c.w }}
+                        className="px-3 py-2 border-r border-border/20 align-middle">
+                        {cell(p, c.key)}
+                      </td>
+                    ))}
+                    {/* Ações da linha */}
+                    <td style={{ width: 72, minWidth: 72 }} className="px-3 py-2 align-middle">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => onDuplicate(p)}
+                          title="Duplicar linha"
+                          className="p-1.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => onDelete(p.id)}
+                          title="Excluir linha"
+                          className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
-                {/* Ações da linha */}
-                <td style={{ width: 72, minWidth: 72 }} className="px-3 py-2 align-middle">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => onDuplicate(p)}
-                      title="Duplicar linha"
-                      className="p-1.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => onDelete(p.id)}
-                      title="Excluir linha"
-                      className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              </Fragment>
             ))}
           </tbody>
         </table>

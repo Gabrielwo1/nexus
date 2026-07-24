@@ -176,7 +176,6 @@ export function Sidebar() {
           alt="YPHE"
           className="h-6 w-auto brightness-0 invert opacity-90"
         />
-        <p className="mt-1.5 text-[10px] text-muted-foreground tracking-[0.2em] uppercase">Nexus</p>
       </div>
 
       {/* Nav */}

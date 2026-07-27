@@ -58,6 +58,19 @@ export default function UsuariosPage() {
 
     // Edição
     if (editando) {
+      // troca de senha, se preenchida
+      if (form.senha) {
+        if (!editando.auth_user_id) { setSaving(false); toast.error("Este usuário não tem login para alterar senha"); return; }
+        if (form.senha.length < 6) { setSaving(false); toast.error("A senha precisa ter ao menos 6 caracteres"); return; }
+        const rs = await fetch("/api/usuarios", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ auth_user_id: editando.auth_user_id, senha: form.senha }),
+        });
+        const j = await rs.json();
+        if (!rs.ok) { setSaving(false); toast.error(j.error || "Erro ao alterar senha"); return; }
+      }
+
       const { error } = await supabase.from("team_members").update({
         name: form.name.trim(),
         role: form.role,
@@ -68,7 +81,7 @@ export default function UsuariosPage() {
       setSaving(false);
       if (error) { toast.error("Erro: " + error.message); return; }
       fechar(); load();
-      toast.success("Usuário atualizado");
+      toast.success(form.senha ? "Usuário e senha atualizados" : "Usuário atualizado");
       return;
     }
 
@@ -201,13 +214,19 @@ export default function UsuariosPage() {
               <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="nome@yphe.com.br"
                 className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
             </div>
-            {!editando && (
+            {!editando ? (
               <div>
                 <label className="block text-xs text-muted-foreground mb-1.5">Senha inicial</label>
                 <input type="text" value={form.senha} onChange={e => setForm({ ...form, senha: e.target.value })} placeholder="mín. 6 caracteres"
                   className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
               </div>
-            )}
+            ) : editando.auth_user_id ? (
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1.5">Nova senha</label>
+                <input type="text" value={form.senha} onChange={e => setForm({ ...form, senha: e.target.value })} placeholder="deixe em branco para manter"
+                  className="w-full bg-accent/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500" />
+              </div>
+            ) : null}
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5">Função</label>
               <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}

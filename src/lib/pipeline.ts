@@ -63,6 +63,7 @@ export const TIPOS_CONTEUDO: TagOpt[] = [
   { value: "cadencia", label: "Cadência", color: "#10b981" },
   { value: "complemento", label: "Complemento", color: "#f59e0b" },
   { value: "livre", label: "Livre", color: "#ef4444" },
+  { value: "fechamento", label: "Fechamento", color: "#a855f7" },
 ];
 
 export const PARTICIPANTES: TagOpt[] = [

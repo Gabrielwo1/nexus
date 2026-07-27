@@ -26,6 +26,7 @@ import {
   KanbanSquare,
   ExternalLink,
   LogOut,
+  Network,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -94,6 +95,12 @@ const nav = [
     href: "/tarefas",
     icon: KanbanSquare,
     module: "tarefas",
+  },
+  {
+    label: "Responsabilidades",
+    href: "/matriz",
+    icon: Network,
+    module: "matriz",
   },
   {
     label: "Usuários",

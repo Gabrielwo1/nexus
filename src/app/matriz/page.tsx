@@ -33,12 +33,12 @@ const SOCIOS = [
 const FRENTES: Frente[] = [
   { area: "Calendário editorial", icon: Calendar, eliab: "R" },
   { area: "Copy & roteiro", icon: PenLine, eliab: "R" },
-  { area: "Publicação (Karyne)", icon: Send, eliab: "O", nota: "Karyne executa" },
+  { area: "Publicação (Karyne)", icon: Send, eliab: "R", nota: "Karyne executa" },
   { area: "Agenda de médicos", icon: Stethoscope, eliab: "R" },
   { area: "Tráfego pago", icon: Megaphone, eliab: "R" },
   { area: "Design", icon: Palette, gabriel: "R" },
   { area: "Edição de vídeos", icon: Clapperboard, gabriel: "R" },
-  { area: "Produção (Guto, Augusto, Pet)", icon: UsersRound, gabriel: "O", nota: "orienta entregáveis" },
+  { area: "Produção (Guto, Augusto, Pet)", icon: UsersRound, gabriel: "R", nota: "orienta entregáveis" },
   { area: "Aprovação interna & do cliente", icon: Circle, gabriel: "R", nota: "revisa e conduz o portal" },
   { area: "Chatbot da clínica", icon: Bot, gabriel: "R" },
   { area: "Site YPHE", icon: Globe, gabriel: "R" },
@@ -67,11 +67,9 @@ const CONTINUAS = [
 
 function PapelBadge({ papel }: { papel?: Papel }) {
   if (!papel) return <span className="text-muted-foreground/30 text-xs">—</span>;
-  const resp = papel === "R";
   return (
-    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium",
-      resp ? "bg-emerald-400/10 text-emerald-400" : "bg-amber-400/10 text-amber-400")}>
-      {resp ? "Responsável" : "Orienta"}
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-400/10 text-emerald-400">
+      Responsável
     </span>
   );
 }
@@ -148,9 +146,6 @@ export default function MatrizPage() {
         <div className="flex items-center gap-4 mt-2.5 px-1">
           <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
             <span className="w-2 h-2 rounded-full bg-emerald-400" /> Responsável — responde pela frente
-          </span>
-          <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            <span className="w-2 h-2 rounded-full bg-amber-400" /> Orienta — direciona quem executa
           </span>
         </div>
       </div>

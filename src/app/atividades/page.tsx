@@ -12,7 +12,7 @@ import { ptBR } from "date-fns/locale";
 /** dias de antecedência que a entrega deve respeitar */
 const ANTECEDENCIA = 4;
 /** formatos que contam como atividade de design */
-const FORMATOS_DESIGN = ["carrossel", "reel"];
+const FORMATOS_DESIGN = ["carrossel", "reel", "post_estatico"];
 
 export default function AtividadesPage() {
   const [posts, setPosts] = useState<CalendarPost[]>([]);
@@ -76,11 +76,20 @@ export default function AtividadesPage() {
       if (!map.has(k)) map.set(k, [] as any);
       (map.get(k) as any).push(a);
     });
-    return [...map.keys()].sort().map(k => ({
-      key: k,
-      label: k === "sem-data" ? "Sem data" : format(parseISO(`${k}-01`), "MMMM 'de' yyyy", { locale: ptBR }),
-      linhas: map.get(k)!,
-    }));
+    return [...map.keys()].sort().map(k => {
+      const linhas = map.get(k)!;
+      // total por formato dentro do mês
+      const porFormato = FORMATOS_DESIGN
+        .map(f => ({ opt: findTag(FORMATOS, f), qtd: linhas.filter(l => l.post.type === f).length }))
+        .filter(x => x.opt && x.qtd > 0);
+      return {
+        key: k,
+        label: k === "sem-data" ? "Sem data" : format(parseISO(`${k}-01`), "MMMM 'de' yyyy", { locale: ptBR }),
+        linhas,
+        porFormato,
+        atrasadasMes: linhas.filter(l => !l.feito && l.faltam !== null && l.faltam < 0).length,
+      };
+    });
   })();
 
   const statusPrazo = (a: typeof atividades[0]) => {
@@ -101,7 +110,7 @@ export default function AtividadesPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Matriz de Atividades</h1>
             <p className="text-sm text-muted-foreground">
-              Design (carrossel e reels) — entrega até {ANTECEDENCIA} dias antes da postagem
+              Design (carrossel, reels e post estático) — entrega até {ANTECEDENCIA} dias antes da postagem
             </p>
           </div>
         </div>
@@ -167,7 +176,31 @@ export default function AtividadesPage() {
             </div>
           ) : grupos.map(g => (
             <div key={g.key}>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 capitalize">{g.label}</p>
+              {/* Cabeçalho do mês com totais por formato */}
+              <div className="flex items-center justify-between gap-4 mb-2 flex-wrap">
+                <div className="flex items-center gap-2.5">
+                  <p className="text-xs font-semibold text-foreground uppercase tracking-wider capitalize">{g.label}</p>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent text-muted-foreground">
+                    {g.linhas.length} {g.linhas.length === 1 ? "atividade" : "atividades"}
+                  </span>
+                  {g.atrasadasMes > 0 && (
+                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-medium">
+                      {g.atrasadasMes} atrasada{g.atrasadasMes > 1 ? "s" : ""}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {g.porFormato.map(({ opt, qtd }) => (
+                    <span key={opt!.value}
+                      className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-lg border"
+                      style={{ borderColor: opt!.color + "40", background: opt!.color + "14", color: opt!.color }}>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: opt!.color }} />
+                      {opt!.label}
+                      <span className="font-bold">{qtd}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
               <div className="glass rounded-xl overflow-hidden">
                 <table className="w-full">
                   <thead>

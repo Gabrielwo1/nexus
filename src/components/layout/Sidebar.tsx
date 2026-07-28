@@ -25,6 +25,7 @@ import {
   FileText,
   KanbanSquare,
   ClipboardList,
+  Video,
   ExternalLink,
   LogOut,
   Network,
@@ -102,6 +103,12 @@ const nav = [
     href: "/atividades",
     icon: ClipboardList,
     module: "atividades",
+  },
+  {
+    label: "Captação",
+    href: "/captacao",
+    icon: Video,
+    module: "captacao",
   },
   {
     label: "Responsabilidades",

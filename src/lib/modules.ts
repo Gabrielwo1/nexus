@@ -35,6 +35,7 @@ export const MODULES: ModuleDef[] = [
   { key: "contratos", label: "Contratos", group: "Gestão", href: "/contratos" },
   { key: "tarefas", label: "Tarefas", group: "Gestão", href: "/tarefas" },
   { key: "atividades", label: "Atividades", group: "Gestão", href: "/atividades" },
+  { key: "captacao", label: "Captação", group: "Gestão", href: "/captacao" },
   { key: "usuarios", label: "Usuários", group: "Sistema", href: "/usuarios" },
 ];
 

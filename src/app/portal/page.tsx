@@ -19,6 +19,16 @@ const CODE_KEY = "nexus.portal-code";
 
 type Cliente = { id: string; name: string };
 
+/**
+ * Grupos de projetos por portal: quem entra com o código de um cliente
+ * enxerga apenas os projetos listados no grupo dele.
+ */
+const GRUPOS_PORTAL: Record<string, string[]> = {
+  "Instituto Mussi": ["Instituto Mussi", "Dr. Mussi"],
+  "Dr. Mussi": ["Instituto Mussi", "Dr. Mussi"],
+  "Dr. Ricardo": ["Dr. Ricardo"],
+};
+
 /** Um conteúdo está pronto para o cliente ver quando a edição foi finalizada */
 function prontoParaCliente(p: CalendarPost): boolean {
   return (
@@ -49,13 +59,18 @@ export default function PortalPage() {
     return (data as Cliente) || null;
   };
 
-  // Carrega todos os projetos e seus conteúdos (o cliente vê tudo por abas)
-  const carregarTudo = async () => {
-    const [{ data: cls }, { data: ps }] = await Promise.all([
-      supabase.from("clients").select("id, name").eq("status", "active").order("name"),
-      supabase.from("calendar_posts").select("*").order("scheduled_date", { ascending: true }),
-    ]);
-    setProjetos((cls as any) || []);
+  // Carrega apenas os projetos do grupo do cliente que entrou
+  const carregarTudo = async (dono: Cliente) => {
+    const nomes = GRUPOS_PORTAL[dono.name] || [dono.name];
+    const { data: cls } = await supabase
+      .from("clients").select("id, name").eq("status", "active")
+      .in("name", nomes).order("name");
+    const projs = (cls as any as Cliente[]) || [];
+    const ids = projs.map(c => c.id);
+    const { data: ps } = ids.length
+      ? await supabase.from("calendar_posts").select("*").in("client_id", ids).order("scheduled_date", { ascending: true })
+      : { data: [] };
+    setProjetos(projs);
     setPosts((ps as any) || []);
   };
 
@@ -63,7 +78,7 @@ export default function PortalPage() {
     const salvo = typeof window !== "undefined" ? localStorage.getItem(CODE_KEY) : null;
     if (!salvo) { setChecando(false); return; }
     validar(salvo).then(async c => {
-      if (c) { setCliente(c); await carregarTudo(); }
+      if (c) { setCliente(c); await carregarTudo(c); }
       else localStorage.removeItem(CODE_KEY);
       setChecando(false);
     });
@@ -76,7 +91,7 @@ export default function PortalPage() {
     if (!c) { setEntrando(false); setErro("Código inválido. Confira com sua agência."); return; }
     localStorage.setItem(CODE_KEY, code.trim());
     setCliente(c);
-    await carregarTudo();
+    await carregarTudo(c);
     setEntrando(false);
   };
 
@@ -318,7 +333,13 @@ export default function PortalPage() {
                             {format(parseISO(p.scheduled_date), "dd/MM")}
                           </span>
                         )}
-                        {fmt && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: fmt.color }} />}
+                        {fmt && (
+                          <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 font-medium w-24 justify-center"
+                            style={{ background: fmt.color + "22", color: fmt.color }}>
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ background: fmt.color }} />
+                            {fmt.label}
+                          </span>
+                        )}
                         <p className="text-sm text-foreground flex-1 min-w-0 truncate">{p.title || "—"}</p>
                         {/* progresso das etapas */}
                         <div className="flex items-center gap-1 flex-shrink-0">

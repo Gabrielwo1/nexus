@@ -28,6 +28,8 @@ type Task = {
   assigned_to: string | null;
   client_id: string | null;
   project_id: string | null;
+  calendar_post_id?: string | null;
+  auto_kind?: string | null;
   created_at: string;
   team_members?: { name: string; role: string };
   clients?: { name: string };
@@ -62,6 +64,7 @@ export default function TarefasPage() {
   const [saving, setSaving] = useState(false);
   const [filterMember, setFilterMember] = useState("todos");
   const [filterPriority, setFilterPriority] = useState("todos");
+  const [filterOrigem, setFilterOrigem] = useState("todas");
   const [ganttStart, setGanttStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [dragging, setDragging] = useState<string | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -92,6 +95,8 @@ export default function TarefasPage() {
   const filtered = tasks.filter(t => {
     if (filterMember !== "todos" && t.assigned_to !== filterMember) return false;
     if (filterPriority !== "todos" && t.priority !== filterPriority) return false;
+    if (filterOrigem === "auto" && !t.auto_kind) return false;
+    if (filterOrigem === "manual" && t.auto_kind) return false;
     return true;
   });
 
@@ -292,6 +297,15 @@ export default function TarefasPage() {
           <option value="todos">Todos os membros</option>
           {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
         </select>
+        <div className="flex gap-1 border border-border rounded-lg p-0.5">
+          {([["todas","Todas"],["auto","Automáticas"],["manual","Manuais"]] as const).map(([k, l]) => (
+            <button key={k} onClick={() => setFilterOrigem(k)}
+              className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all",
+                filterOrigem === k ? "bg-nexus-600 text-white" : "text-muted-foreground hover:text-foreground")}>
+              {l}
+            </button>
+          ))}
+        </div>
         <div className="flex gap-1.5">
           {["todos", "baixa", "normal", "alta", "urgente"].map(p => (
             <button key={p} onClick={() => setFilterPriority(p)} className={cn("px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all", filterPriority === p ? "bg-nexus-600/20 text-nexus-300 border border-nexus-500/30" : "text-muted-foreground hover:text-foreground border border-transparent")}>
@@ -366,6 +380,9 @@ export default function TarefasPage() {
                           <div className="flex flex-wrap gap-1.5 mb-2.5">
                             {task.type && (
                               <span className="text-[10px] bg-accent px-1.5 py-0.5 rounded-full text-muted-foreground capitalize">{task.type}</span>
+                            )}
+                            {task.auto_kind && (
+                              <span className="text-[10px] bg-nexus-500/15 text-nexus-300 px-1.5 py-0.5 rounded-full">auto</span>
                             )}
                             {task.clients?.name && (
                               <span className="text-[10px] bg-accent px-1.5 py-0.5 rounded-full text-muted-foreground">{task.clients.name}</span>

@@ -76,6 +76,8 @@ export const PARTICIPANTES: TagOpt[] = [
   { value: "dr_fabio", label: "Dr. Fábio", color: "#a855f7" },
   { value: "dr_alexandre", label: "Dr. Alexandre", color: "#f43f5e" },
   { value: "dra_m_lara", label: "Dra. M. Lara", color: "#eab308" },
+  { value: "os_5_medicos", label: "Os 5 médicos", color: "#f97316" },
+  { value: "dr_ricardo_paciente", label: "Dr. Ricardo + paciente", color: "#22c55e" },
 ];
 
 export const findTag = (opts: TagOpt[], v: string | null): TagOpt | undefined =>

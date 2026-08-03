@@ -7,7 +7,7 @@ import {
 } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import { Plus, Link2, Calendar as CalIcon, ChevronDown, Type, User, Loader2, Check, Copy, Trash2, Rocket, CheckCircle2 } from "lucide-react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, differenceInCalendarDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 type Props = {
@@ -25,7 +25,7 @@ const COLS = [
   { key: "edicao_range", label: "Edição", icon: CalIcon, w: 165 },
   { key: "participante", label: "Participante", icon: ChevronDown, w: 145 },
   { key: "responsavel_id", label: "Responsável", icon: User, w: 130 },
-  { key: "scheduled_date", label: "Postagem", icon: CalIcon, w: 130 },
+  { key: "scheduled_date", label: "Postagem", icon: CalIcon, w: 235 },
   { key: "type", label: "Formato", icon: ChevronDown, w: 120 },
   { key: "comunicacao", label: "Comunicação", icon: ChevronDown, w: 140 },
   { key: "tipo_conteudo", label: "Tipo", icon: ChevronDown, w: 130 },
@@ -149,6 +149,32 @@ export default function NotionTable({ posts, members, onUpdate, onCreate, onDupl
           className="w-full bg-card border border-nexus-500 rounded px-1.5 py-1 text-xs text-foreground focus:outline-none" />
       );
     }
+
+    // Postagem: data + dia da semana + quanto falta
+    if (field === "scheduled_date" && val) {
+      const d = parseISO(val);
+      const diaSemana = format(d, "EEEE", { locale: ptBR });
+      const falta = differenceInCalendarDays(d, new Date());
+      const faltaTxt = falta === 0 ? "hoje" : falta === 1 ? "amanhã"
+        : falta > 1 ? `${falta} dias` : falta === -1 ? "ontem" : `há ${Math.abs(falta)} dias`;
+      const faltaCls = falta < 0 ? "bg-gray-400/10 text-gray-400"
+        : falta === 0 ? "bg-red-500/15 text-red-400"
+        : falta <= 3 ? "bg-amber-400/15 text-amber-400"
+        : "bg-nexus-400/10 text-nexus-300";
+      return (
+        <div onClick={() => setEditing(key(p.id, field))}
+          className="cursor-pointer min-h-[24px] flex items-center gap-1.5 flex-wrap">
+          <span className="text-xs text-foreground whitespace-nowrap">{fmtDate(val)}</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent text-muted-foreground capitalize whitespace-nowrap">
+            {diaSemana}
+          </span>
+          <span className={"text-[10px] px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap " + faltaCls}>
+            {faltaTxt}
+          </span>
+        </div>
+      );
+    }
+
     return (
       <div onClick={() => setEditing(key(p.id, field))} className="cursor-pointer min-h-[24px] flex items-center text-xs text-foreground">
         {val ? fmtDate(val) : <span className="text-muted-foreground/40">—</span>}

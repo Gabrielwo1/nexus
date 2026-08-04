@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { CalendarPost, Client, TeamMember, StageStatus } from "@/lib/supabase";
 import {
@@ -43,6 +43,9 @@ export default function CalendarioPage() {
   const [filterClient, setFilterClient] = useState("todos");
   const [showSummary, setShowSummary] = useState(true);
   const [resumoMes, setResumoMes] = useState("");
+  const [cellEditing, setCellEditing] = useState(false);
+  const guardaRef = useRef({ cellEditing: false, showForm: false, saving: false });
+  guardaRef.current = { cellEditing, showForm, saving };
 
   const loadAll = () => {
     Promise.all([
@@ -58,6 +61,25 @@ export default function CalendarioPage() {
   };
 
   useEffect(loadAll, []);
+
+  // Auto-refresh: os dados que qualquer pessoa salvar aparecem para todos
+  // (a cada 20s e ao voltar para a aba), pausado enquanto se edita algo.
+  useEffect(() => {
+    const podeAtualizar = () => {
+      const g = guardaRef.current;
+      return !g.cellEditing && !g.showForm && !g.saving;
+    };
+    const tick = () => { if (podeAtualizar() && document.visibilityState === "visible") loadAll(); };
+    const intervalo = setInterval(tick, 20000);
+    const onFocus = () => tick();
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+    return () => {
+      clearInterval(intervalo);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, []);
 
   const ownerOf = (stage: StageDef): TeamMember | undefined =>
     members.find(m => m.name === stage.ownerName) ||
@@ -579,6 +601,7 @@ export default function CalendarioPage() {
                 onCreate={createEmptyRow}
                 onDuplicate={duplicateRow}
                 onDelete={deleteRow}
+                onEditingChange={setCellEditing}
               />
             )}
 

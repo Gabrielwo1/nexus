@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, useEffect, Fragment } from "react";
 import type { CalendarPost, TeamMember } from "@/lib/supabase";
 import {
   FORMATOS, COMUNICACOES, TIPOS_CONTEUDO, PARTICIPANTES, findTag, type TagOpt,
@@ -18,6 +18,7 @@ type Props = {
   onDuplicate: (post: CalendarPost) => void;
   onDelete: (id: string) => void;
   creating?: boolean;
+  onEditingChange?: (editing: boolean) => void;
 };
 
 const COLS = [
@@ -61,10 +62,13 @@ function PersonPill({ name }: { name: string }) {
 const fmtDate = (d: string | null) =>
   d ? format(parseISO(d), "dd MMM yyyy", { locale: ptBR }) : "";
 
-export default function NotionTable({ posts, members, onUpdate, onCreate, onDuplicate, onDelete, creating }: Props) {
+export default function NotionTable({ posts, members, onUpdate, onCreate, onDuplicate, onDelete, creating, onEditingChange }: Props) {
   const [editing, setEditing] = useState<string | null>(null); // "id:field"
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const key = (id: string, f: string) => `${id}:${f}`;
+
+  // avisa a página quando há célula em edição (pausa o auto-refresh)
+  useEffect(() => { onEditingChange?.(editing !== null); }, [editing, onEditingChange]);
 
   // Agrupa por mês da data de postagem
   const groups = useMemo(() => {

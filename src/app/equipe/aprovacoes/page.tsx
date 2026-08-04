@@ -51,6 +51,14 @@ export default function AprovacoesPage() {
   };
   useEffect(load, []);
 
+  // Recarrega ao voltar para a aba e a cada 30s — entregas novas aparecem sozinhas
+  useEffect(() => {
+    const tick = () => { if (document.visibilityState === "visible") load(); };
+    const intervalo = setInterval(tick, 30000);
+    window.addEventListener("focus", tick);
+    return () => { clearInterval(intervalo); window.removeEventListener("focus", tick); };
+  }, []);
+
   const memberName = (id: string | null) => members.find(m => m.id === id)?.name || "Aberto";
 
   // Monta a fila: toda etapa com status "entregue"

@@ -24,8 +24,8 @@ type Cliente = { id: string; name: string };
  * enxerga apenas os projetos listados no grupo dele.
  */
 const GRUPOS_PORTAL: Record<string, string[]> = {
-  "Instituto Mussi": ["Instituto Mussi", "Dr. Mussi"],
-  "Dr. Mussi": ["Instituto Mussi", "Dr. Mussi"],
+  "Instituto Mussi": ["Instituto Mussi", "Dr. Mussi — Pessoal"],
+  "Dr. Mussi — Pessoal": ["Instituto Mussi", "Dr. Mussi — Pessoal"],
   "Dr. Ricardo": ["Dr. Ricardo"],
 };
 

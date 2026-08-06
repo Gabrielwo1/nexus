@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import type { CalendarPost, TeamMember } from "@/lib/supabase";
-import { FORMATOS, findTag } from "@/lib/pipeline";
+import { FORMATOS, findTag, analyzeLink } from "@/lib/pipeline";
 import { cn } from "@/lib/utils";
 import {
   Video, Loader2, AlertTriangle, CheckCircle2, Layers, Camera,
-  Users as UsersIcon, CalendarClock,
+  Users as UsersIcon, CalendarClock, FileText,
 } from "lucide-react";
 import { format, parseISO, differenceInCalendarDays, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -142,6 +142,20 @@ export default function CaptacaoPage() {
     return { txt: `faltam ${i.faltam}d`, cls: "bg-nexus-400/10 text-nexus-300" };
   };
 
+  const celulaRoteiro = (i: Item) => {
+    const info = analyzeLink(i.post.roteiro_url);
+    if (info.kind === "vazio") {
+      return <span className="text-xs text-muted-foreground/40">sem roteiro</span>;
+    }
+    return (
+      <a href={info.openUrl!} target="_blank" rel="noopener noreferrer"
+        onClick={e => e.stopPropagation()}
+        className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-border text-[11px] text-nexus-400 hover:text-nexus-300 hover:bg-accent transition-colors whitespace-nowrap">
+        <FileText className="w-3 h-3" /> Abrir roteiro
+      </a>
+    );
+  };
+
   const linhaTabela = (i: Item) => {
     const fmt = findTag(FORMATOS, i.post.type);
     const sp = statusPrazo(i);
@@ -159,6 +173,7 @@ export default function CaptacaoPage() {
         <td className="px-4 py-2.5 text-sm text-foreground max-w-[340px]"><p className="truncate">{i.post.title || "—"}</p></td>
         <td className="px-4 py-2.5 text-xs text-foreground">{i.postagem ? format(i.postagem, "dd/MM/yyyy") : "—"}</td>
         <td className="px-4 py-2.5 text-xs font-medium text-foreground">{i.prazo ? format(i.prazo, "dd/MM") : "—"}</td>
+        <td className="px-4 py-2.5">{celulaRoteiro(i)}</td>
         <td className="px-4 py-2.5">
           <span className={cn("text-[11px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap", sp.cls)}>{sp.txt}</span>
         </td>
@@ -318,7 +333,7 @@ export default function CaptacaoPage() {
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-border/60">
-                            {["Projeto", "Formato", "Headline", "Postagem", `Gravar até (−${ANTECEDENCIA}d)`, "Prazo"].map(h => (
+                            {["Projeto", "Formato", "Headline", "Postagem", `Gravar até (−${ANTECEDENCIA}d)`, "Roteiro", "Prazo"].map(h => (
                               <th key={h} className="px-4 py-2 text-left text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                             ))}
                           </tr>
@@ -344,7 +359,7 @@ export default function CaptacaoPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border bg-accent/20">
-                        {["Projeto", "Formato", "Headline", "Postagem", `Gravar até (−${ANTECEDENCIA}d)`, "Prazo"].map(h => (
+                        {["Projeto", "Formato", "Headline", "Postagem", `Gravar até (−${ANTECEDENCIA}d)`, "Roteiro", "Prazo"].map(h => (
                           <th key={h} className="px-4 py-2.5 text-left text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                         ))}
                       </tr>

@@ -7,8 +7,9 @@ import {
   Folder, FolderOpen, ChevronRight, Search, UploadCloud, Loader2,
   LayoutGrid, List, FileVideo, FileImage, FileText, FileAudio, File as FileIcon,
   X, Download, Share2, Trash2, HardDrive, Plus, ArrowLeft, RefreshCw,
-  Clock, Info, CheckCircle2, AlertCircle,
+  Clock, Info, CheckCircle2, AlertCircle, Eye,
 } from "lucide-react";
+import Visualizador, { kindOf, ICON, COR, fmtBytes } from "@/components/midias/Visualizador";
 
 /* ============================================================
    Acervo de Mídias — Cloudflare R2
@@ -20,23 +21,6 @@ type Pasta = { name: string; prefix: string };
 type Arquivo = { key: string; name: string; size: number; updatedAt: string | null };
 type Envio = { id: string; nome: string; pct: number; estado: "enviando" | "ok" | "erro"; erro?: string };
 
-const kindOf = (nome: string) => {
-  const e = nome.split(".").pop()?.toLowerCase() || "";
-  if (["mp4", "mov", "webm", "avi", "mkv"].includes(e)) return "video" as const;
-  if (["jpg", "jpeg", "png", "gif", "webp", "svg", "heic"].includes(e)) return "image" as const;
-  if (["mp3", "wav", "aac", "m4a"].includes(e)) return "audio" as const;
-  if (["pdf", "doc", "docx", "txt", "psd", "ai"].includes(e)) return "doc" as const;
-  return "file" as const;
-};
-const ICON = { video: FileVideo, image: FileImage, audio: FileAudio, doc: FileText, file: FileIcon };
-const COR = { video: "#a855f7", image: "#34d399", audio: "#f472b6", doc: "#f59e0b", file: "#8a94a6" };
-
-const fmtBytes = (b: number) => {
-  if (!b) return "—";
-  const u = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(b) / Math.log(1024));
-  return `${(b / Math.pow(1024, i)).toFixed(i ? 1 : 0)} ${u[i]}`;
-};
 const fmtData = (iso: string | null) => {
   if (!iso) return "—";
   const d = new Date(iso);
@@ -57,6 +41,8 @@ export default function MidiasPage() {
   const [sel, setSel] = useState<Arquivo | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [envios, setEnvios] = useState<Envio[]>([]);
+  const [urls, setUrls] = useState<Record<string, string>>({});
+  const [verIndice, setVerIndice] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const carregar = useCallback(async (p: string) => {
@@ -66,6 +52,13 @@ export default function MidiasPage() {
       const j = await r.json();
       if (!r.ok) throw new Error(j.error);
       setPastas(j.pastas); setArquivos(j.arquivos);
+      // assina as URLs para miniaturas e prévia
+      if (j.arquivos.length) {
+        fetch("/api/acervo/urls", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keys: j.arquivos.map((a: Arquivo) => a.key) }),
+        }).then(r => r.json()).then(u => setUrls(prev => ({ ...prev, ...(u.urls || {}) }))).catch(() => {});
+      }
     } catch (e: any) {
       toast.error("Erro ao carregar: " + e.message);
     } finally { setLoading(false); }
@@ -293,13 +286,31 @@ export default function MidiasPage() {
                     {arquivosF.map(a => {
                       const k = kindOf(a.name);
                       const Icon = ICON[k];
+                      const u = urls[a.key];
+                      const idx = arquivosF.findIndex(x => x.key === a.key);
                       return (
-                        <button key={a.key} onClick={() => setSel(a)}
+                        <button key={a.key}
+                          onClick={() => setSel(a)}
+                          onDoubleClick={() => setVerIndice(idx)}
                           className={cn("group rounded-xl border bg-card overflow-hidden text-left transition-all hover:-translate-y-0.5",
                             sel?.key === a.key ? "border-nexus-500" : "border-border hover:border-nexus-500/40")}>
-                          <div className="aspect-video flex items-center justify-center"
+                          <div className="aspect-video flex items-center justify-center relative overflow-hidden"
                             style={{ background: `linear-gradient(135deg, ${COR[k]}14, transparent)` }}>
-                            <Icon className="w-7 h-7" style={{ color: COR[k], opacity: 0.7 }} />
+                            {k === "image" && u ? (
+                              <img src={u} alt="" loading="lazy" className="w-full h-full object-cover" />
+                            ) : k === "video" && u ? (
+                              <video src={`${u}#t=0.5`} preload="metadata" muted playsInline
+                                className="w-full h-full object-cover" />
+                            ) : (
+                              <Icon className="w-7 h-7" style={{ color: COR[k], opacity: 0.7 }} />
+                            )}
+                            {/* botão de abrir prévia */}
+                            <span onClick={e => { e.stopPropagation(); setVerIndice(idx); }}
+                              className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <span className="w-9 h-9 rounded-full bg-white/15 backdrop-blur flex items-center justify-center">
+                                <Eye className="w-4 h-4 text-white" />
+                              </span>
+                            </span>
                           </div>
                           <div className="p-2.5">
                             <p className="text-[12px] text-foreground truncate">{a.name}</p>
@@ -347,11 +358,16 @@ export default function MidiasPage() {
                     const Icon = ICON[k];
                     return (
                       <tr key={a.key} onClick={() => setSel(a)}
+                        onDoubleClick={() => setVerIndice(arquivosF.findIndex(x => x.key === a.key))}
                         className="hover:bg-accent/20 transition-colors cursor-pointer group">
                         <td className="px-4 py-2.5">
                           <div className="flex items-center gap-2.5">
                             <Icon className="w-4 h-4 flex-shrink-0" style={{ color: COR[k] }} />
                             <span className="text-sm text-foreground truncate">{a.name}</span>
+                            <button onClick={e => { e.stopPropagation(); setVerIndice(arquivosF.findIndex(x => x.key === a.key)); }}
+                              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                         </td>
                         <td className="px-4 py-2.5 text-xs text-muted-foreground">{fmtBytes(a.size)}</td>
@@ -402,6 +418,19 @@ export default function MidiasPage() {
         )}
       </div>
 
+      {/* ===== VISUALIZADOR ===== */}
+      {verIndice !== null && arquivosF[verIndice] && (
+        <Visualizador
+          arquivos={arquivosF}
+          indice={verIndice}
+          urls={urls}
+          onFechar={() => setVerIndice(null)}
+          onNavegar={setVerIndice}
+          onBaixar={a => abrirArquivo(a, true)}
+          onCopiarLink={a => abrirArquivo(a, false)}
+        />
+      )}
+
       {/* ===== DETALHE ===== */}
       {sel && (
         <aside className="w-80 border-l border-border bg-card overflow-y-auto flex-shrink-0">
@@ -412,9 +441,20 @@ export default function MidiasPage() {
             </button>
           </div>
 
-          <div className="aspect-video flex items-center justify-center"
+          <div className="aspect-video flex items-center justify-center relative overflow-hidden cursor-pointer group"
+            onClick={() => setVerIndice(arquivosF.findIndex(x => x.key === sel.key))}
             style={{ background: `linear-gradient(135deg, ${COR[kindOf(sel.name)]}18, transparent)` }}>
-            {(() => { const I = ICON[kindOf(sel.name)]; return <I className="w-12 h-12" style={{ color: COR[kindOf(sel.name)], opacity: 0.7 }} />; })()}
+            {(() => {
+              const k = kindOf(sel.name); const u = urls[sel.key]; const I = ICON[k];
+              if (k === "image" && u) return <img src={u} alt="" className="w-full h-full object-cover" />;
+              if (k === "video" && u) return <video src={`${u}#t=0.5`} preload="metadata" muted className="w-full h-full object-cover" />;
+              return <I className="w-12 h-12" style={{ color: COR[k], opacity: 0.7 }} />;
+            })()}
+            <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 backdrop-blur text-white text-xs font-medium">
+                <Eye className="w-3.5 h-3.5" /> Visualizar
+              </span>
+            </span>
           </div>
 
           <div className="p-4 space-y-4">

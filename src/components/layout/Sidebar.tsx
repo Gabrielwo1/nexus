@@ -47,8 +47,9 @@ const nav = [
     children: [
       { label: "Branding", href: "/equipe/branding", icon: Palette, module: "equipe.branding" },
       { label: "Calendário & Copys", href: "/equipe/calendario", icon: CalendarDays, module: "equipe.calendario" },
+      { label: "Acervo de Mídias", href: "/midias", icon: FolderOpen, module: "equipe.midias" },
       {
-        label: "Armazenamento de Mídias",
+        label: "Drive (antigo)",
         href: "https://drive.google.com/drive/u/0/folders/1vH8iS3wZeXvn36qzsFEohn3626IE1QvC",
         icon: FolderOpen,
         external: true,

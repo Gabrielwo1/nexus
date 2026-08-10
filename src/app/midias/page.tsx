@@ -1,160 +1,194 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { ACERVO, USO, type Node } from "@/lib/midias-mock";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import {
-  Folder, FolderOpen, ChevronRight, ChevronDown, Search, UploadCloud,
-  LayoutGrid, List, FileVideo, FileImage, FileText, FileAudio, X,
-  Download, Share2, Trash2, MoreHorizontal, HardDrive, Plus, ArrowLeft,
-  Clock, User as UserIcon, Info,
+  Folder, FolderOpen, ChevronRight, Search, UploadCloud, Loader2,
+  LayoutGrid, List, FileVideo, FileImage, FileText, FileAudio, File as FileIcon,
+  X, Download, Share2, Trash2, HardDrive, Plus, ArrowLeft, RefreshCw,
+  Clock, Info, CheckCircle2, AlertCircle,
 } from "lucide-react";
 
 /* ============================================================
-   Acervo de Mídias — estrutura visual (upload será conectado ao R2)
+   Acervo de Mídias — Cloudflare R2
+   Upload direto do navegador para o bucket (não passa pelo servidor),
+   por isso aguenta vídeo de vários GB.
    ============================================================ */
 
-const ICON: Record<Node["kind"], React.ElementType> = {
-  folder: Folder, video: FileVideo, image: FileImage, doc: FileText, audio: FileAudio,
+type Pasta = { name: string; prefix: string };
+type Arquivo = { key: string; name: string; size: number; updatedAt: string | null };
+type Envio = { id: string; nome: string; pct: number; estado: "enviando" | "ok" | "erro"; erro?: string };
+
+const kindOf = (nome: string) => {
+  const e = nome.split(".").pop()?.toLowerCase() || "";
+  if (["mp4", "mov", "webm", "avi", "mkv"].includes(e)) return "video" as const;
+  if (["jpg", "jpeg", "png", "gif", "webp", "svg", "heic"].includes(e)) return "image" as const;
+  if (["mp3", "wav", "aac", "m4a"].includes(e)) return "audio" as const;
+  if (["pdf", "doc", "docx", "txt", "psd", "ai"].includes(e)) return "doc" as const;
+  return "file" as const;
 };
-const COR: Record<Node["kind"], string> = {
-  folder: "#20bced", video: "#a855f7", image: "#34d399", doc: "#f59e0b", audio: "#f472b6",
+const ICON = { video: FileVideo, image: FileImage, audio: FileAudio, doc: FileText, file: FileIcon };
+const COR = { video: "#a855f7", image: "#34d399", audio: "#f472b6", doc: "#f59e0b", file: "#8a94a6" };
+
+const fmtBytes = (b: number) => {
+  if (!b) return "—";
+  const u = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(b) / Math.log(1024));
+  return `${(b / Math.pow(1024, i)).toFixed(i ? 1 : 0)} ${u[i]}`;
 };
-
-/** encontra o caminho até um nó */
-function acharCaminho(raiz: Node, alvoId: string, trilha: Node[] = []): Node[] | null {
-  const atual = [...trilha, raiz];
-  if (raiz.id === alvoId) return atual;
-  for (const c of raiz.children || []) {
-    const r = acharCaminho(c, alvoId, atual);
-    if (r) return r;
-  }
-  return null;
-}
-
-function contar(n: Node): { pastas: number; arquivos: number } {
-  let pastas = 0, arquivos = 0;
-  (n.children || []).forEach(c => {
-    if (c.kind === "folder") pastas++;
-    else arquivos++;
-  });
-  return { pastas, arquivos };
-}
-
-/* ---------- árvore lateral ---------- */
-function Arvore({ node, atualId, onSelect, nivel = 0 }: {
-  node: Node; atualId: string; onSelect: (n: Node) => void; nivel?: number;
-}) {
-  const [aberto, setAberto] = useState(nivel < 1);
-  const pastas = (node.children || []).filter(c => c.kind === "folder");
-  const ativo = node.id === atualId;
-
-  return (
-    <div>
-      <button
-        onClick={() => { onSelect(node); setAberto(true); }}
-        className={cn(
-          "w-full flex items-center gap-1.5 pr-2 py-1.5 rounded-md text-left transition-colors group",
-          ativo ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-        )}
-        style={{ paddingLeft: 8 + nivel * 12 }}
-      >
-        <span
-          onClick={e => { e.stopPropagation(); setAberto(!aberto); }}
-          className={cn("flex-shrink-0 w-4 h-4 flex items-center justify-center rounded hover:bg-accent",
-            !pastas.length && "invisible")}
-        >
-          {aberto ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-        </span>
-        {aberto && pastas.length
-          ? <FolderOpen className="w-3.5 h-3.5 flex-shrink-0" style={{ color: ativo ? "#20bced" : undefined }} />
-          : <Folder className="w-3.5 h-3.5 flex-shrink-0" style={{ color: ativo ? "#20bced" : undefined }} />}
-        <span className="text-[12.5px] truncate">{node.name}</span>
-      </button>
-      {aberto && pastas.map(p => (
-        <Arvore key={p.id} node={p} atualId={atualId} onSelect={onSelect} nivel={nivel + 1} />
-      ))}
-    </div>
-  );
-}
+const fmtData = (iso: string | null) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  const dias = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (dias === 0) return "hoje";
+  if (dias === 1) return "ontem";
+  if (dias < 30) return `há ${dias} dias`;
+  return d.toLocaleDateString("pt-BR");
+};
 
 export default function MidiasPage() {
-  const [atual, setAtual] = useState<Node>(ACERVO);
-  const [sel, setSel] = useState<Node | null>(null);
+  const [prefix, setPrefix] = useState("");
+  const [pastas, setPastas] = useState<Pasta[]>([]);
+  const [arquivos, setArquivos] = useState<Arquivo[]>([]);
+  const [loading, setLoading] = useState(true);
   const [vista, setVista] = useState<"grid" | "lista">("grid");
   const [busca, setBusca] = useState("");
+  const [sel, setSel] = useState<Arquivo | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [envios, setEnvios] = useState<Envio[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const caminho = useMemo(() => acharCaminho(ACERVO, atual.id) || [ACERVO], [atual]);
-  const itens = (atual.children || []).filter(n =>
-    !busca || n.name.toLowerCase().includes(busca.toLowerCase())
-  );
-  const pastas = itens.filter(n => n.kind === "folder");
-  const arquivos = itens.filter(n => n.kind !== "folder");
-  const { pastas: qtdP, arquivos: qtdA } = contar(atual);
-  const pctUso = Math.round((USO.usadoGB / USO.totalGB) * 100);
+  const carregar = useCallback(async (p: string) => {
+    setLoading(true);
+    try {
+      const r = await fetch(`/api/acervo/listar?prefix=${encodeURIComponent(p)}`);
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error);
+      setPastas(j.pastas); setArquivos(j.arquivos);
+    } catch (e: any) {
+      toast.error("Erro ao carregar: " + e.message);
+    } finally { setLoading(false); }
+  }, []);
 
-  const abrir = (n: Node) => {
-    if (n.kind === "folder") { setAtual(n); setSel(null); }
-    else setSel(n);
+  useEffect(() => { carregar(prefix); setSel(null); }, [prefix, carregar]);
+
+  /* ---------- upload direto para o R2 ---------- */
+  const enviarArquivo = (file: File) => {
+    const id = Math.random().toString(36).slice(2);
+    setEnvios(prev => [...prev, { id, nome: file.name, pct: 0, estado: "enviando" }]);
+
+    fetch("/api/acervo/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prefix, nome: file.name, contentType: file.type }),
+    })
+      .then(r => r.json())
+      .then(({ url, error }) => {
+        if (error) throw new Error(error);
+        return new Promise<void>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("PUT", url);
+          xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+          xhr.upload.onprogress = e => {
+            if (e.lengthComputable) {
+              const pct = Math.round((e.loaded / e.total) * 100);
+              setEnvios(prev => prev.map(x => x.id === id ? { ...x, pct } : x));
+            }
+          };
+          xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`HTTP ${xhr.status}`));
+          xhr.onerror = () => reject(new Error("falha de rede"));
+          xhr.send(file);
+        });
+      })
+      .then(() => {
+        setEnvios(prev => prev.map(x => x.id === id ? { ...x, pct: 100, estado: "ok" } : x));
+        carregar(prefix);
+        setTimeout(() => setEnvios(prev => prev.filter(x => x.id !== id)), 2500);
+      })
+      .catch(e => {
+        setEnvios(prev => prev.map(x => x.id === id ? { ...x, estado: "erro", erro: e.message } : x));
+        toast.error(`${file.name}: ${e.message}`);
+      });
   };
+
+  const receber = (files: FileList | null) => {
+    if (!files?.length) return;
+    Array.from(files).forEach(enviarArquivo);
+  };
+
+  const novaPasta = async () => {
+    const nome = prompt("Nome da nova pasta:");
+    if (!nome?.trim()) return;
+    const r = await fetch("/api/acervo/pasta", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prefix, nome }),
+    });
+    const j = await r.json();
+    if (!r.ok) { toast.error(j.error); return; }
+    toast.success("Pasta criada");
+    carregar(prefix);
+  };
+
+  const abrirArquivo = async (a: Arquivo, baixar = false) => {
+    const r = await fetch(`/api/acervo/upload?key=${encodeURIComponent(a.key)}`);
+    const j = await r.json();
+    if (!r.ok) { toast.error(j.error); return; }
+    if (baixar) { window.location.href = j.url; }
+    else { navigator.clipboard.writeText(j.url); toast.success("Link copiado (válido por 1 hora)"); }
+  };
+
+  const excluirArquivo = async (a: Arquivo) => {
+    if (!confirm(`Excluir "${a.name}"? Esta ação não pode ser desfeita.`)) return;
+    const r = await fetch(`/api/acervo/arquivo?key=${encodeURIComponent(a.key)}`, { method: "DELETE" });
+    if (!r.ok) { toast.error("Erro ao excluir"); return; }
+    toast.success("Arquivo excluído");
+    setSel(null); carregar(prefix);
+  };
+
+  const excluirPasta = async (p: Pasta) => {
+    if (!confirm(`Excluir a pasta "${p.name}" e TODO o conteúdo dela?`)) return;
+    const r = await fetch(`/api/acervo/pasta?prefix=${encodeURIComponent(p.prefix)}`, { method: "DELETE" });
+    const j = await r.json();
+    if (!r.ok) { toast.error(j.error); return; }
+    toast.success(`Pasta excluída (${j.removidos} itens)`);
+    carregar(prefix);
+  };
+
+  /* ---------- navegação ---------- */
+  const partes = prefix ? prefix.replace(/\/$/, "").split("/") : [];
+  const irPara = (i: number) => setPrefix(i < 0 ? "" : partes.slice(0, i + 1).join("/") + "/");
+
+  const pastasF = pastas.filter(p => !busca || p.name.toLowerCase().includes(busca.toLowerCase()));
+  const arquivosF = arquivos.filter(a => !busca || a.name.toLowerCase().includes(busca.toLowerCase()));
+  const totalBytes = arquivos.reduce((s, a) => s + a.size, 0);
 
   return (
     <div className="flex h-full overflow-hidden">
-      {/* ===== ÁRVORE ===== */}
-      <aside className="w-64 border-r border-border bg-card/40 flex flex-col flex-shrink-0">
-        <div className="p-4 border-b border-border">
-          <div className="flex items-center gap-2 mb-3">
-            <HardDrive className="w-4 h-4 text-nexus-400" />
-            <span className="text-sm font-semibold text-foreground">Acervo</span>
-          </div>
-          <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-xs font-medium transition-colors">
-            <UploadCloud className="w-3.5 h-3.5" /> Enviar arquivos
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-2">
-          <Arvore node={ACERVO} atualId={atual.id} onSelect={n => { setAtual(n); setSel(null); }} />
-        </div>
-
-        {/* uso do bucket */}
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] text-muted-foreground">Armazenamento</span>
-            <span className="text-[11px] text-foreground font-medium">{pctUso}%</span>
-          </div>
-          <div className="h-1.5 rounded-full bg-accent overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-nexus-500 to-nexus-300"
-              style={{ width: `${pctUso}%` }} />
-          </div>
-          <p className="text-[10px] text-muted-foreground mt-1.5">
-            {USO.usadoGB} GB de {USO.totalGB / 1024} TB · Cloudflare R2
-          </p>
-        </div>
-      </aside>
-
       {/* ===== CONTEÚDO ===== */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* toolbar */}
         <div className="px-6 py-4 border-b border-border space-y-3">
           <div className="flex items-center justify-between gap-4">
-            {/* breadcrumb */}
             <div className="flex items-center gap-1 min-w-0 flex-wrap">
-              {caminho.length > 1 && (
-                <button onClick={() => setAtual(caminho[caminho.length - 2])}
+              {partes.length > 0 && (
+                <button onClick={() => irPara(partes.length - 2)}
                   className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors mr-1">
                   <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
-              {caminho.map((n, i) => (
-                <span key={n.id} className="flex items-center gap-1 min-w-0">
-                  {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0" />}
-                  <button onClick={() => { setAtual(n); setSel(null); }}
-                    className={cn("px-1.5 py-1 rounded-md text-sm truncate transition-colors",
-                      i === caminho.length - 1
-                        ? "text-foreground font-semibold"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                    {n.name}
+              <button onClick={() => irPara(-1)}
+                className={cn("flex items-center gap-1.5 px-2 py-1 rounded-md text-sm transition-colors",
+                  !partes.length ? "text-foreground font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+                <HardDrive className="w-3.5 h-3.5" /> Acervo
+              </button>
+              {partes.map((p, i) => (
+                <span key={i} className="flex items-center gap-1 min-w-0">
+                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0" />
+                  <button onClick={() => irPara(i)}
+                    className={cn("px-1.5 py-1 rounded-md text-sm truncate max-w-[220px] transition-colors",
+                      i === partes.length - 1 ? "text-foreground font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
+                    {p}
                   </button>
                 </span>
               ))}
@@ -163,104 +197,113 @@ export default function MidiasPage() {
             <div className="flex items-center gap-2 flex-shrink-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <input value={busca} onChange={e => setBusca(e.target.value)}
-                  placeholder="Buscar nesta pasta..."
-                  className="bg-card border border-border rounded-lg pl-9 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 w-56" />
+                <input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar aqui..."
+                  className="bg-card border border-border rounded-lg pl-9 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-nexus-500 w-52" />
               </div>
-              <div className="flex gap-0.5 border border-border rounded-lg p-0.5">
-                <button onClick={() => setVista("grid")}
-                  className={cn("p-1.5 rounded-md transition-colors",
-                    vista === "grid" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground")}>
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                </button>
-                <button onClick={() => setVista("lista")}
-                  className={cn("p-1.5 rounded-md transition-colors",
-                    vista === "lista" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground")}>
-                  <List className="w-3.5 h-3.5" />
-                </button>
-              </div>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                <Plus className="w-3.5 h-3.5" /> Nova pasta
+              <button onClick={() => carregar(prefix)} title="Atualizar"
+                className="p-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                <RefreshCw className={cn("w-3.5 h-3.5", loading && "animate-spin")} />
               </button>
+              <div className="flex gap-0.5 border border-border rounded-lg p-0.5">
+                {(["grid", "lista"] as const).map(v => (
+                  <button key={v} onClick={() => setVista(v)}
+                    className={cn("p-1.5 rounded-md transition-colors",
+                      vista === v ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground")}>
+                    {v === "grid" ? <LayoutGrid className="w-3.5 h-3.5" /> : <List className="w-3.5 h-3.5" />}
+                  </button>
+                ))}
+              </div>
+              <button onClick={novaPasta}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                <Plus className="w-3.5 h-3.5" /> Pasta
+              </button>
+              <button onClick={() => inputRef.current?.click()}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-xs font-medium transition-colors">
+                <UploadCloud className="w-3.5 h-3.5" /> Enviar
+              </button>
+              <input ref={inputRef} type="file" multiple hidden
+                onChange={e => { receber(e.target.files); e.target.value = ""; }} />
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground">
-            {qtdP} {qtdP === 1 ? "pasta" : "pastas"} · {qtdA} {qtdA === 1 ? "arquivo" : "arquivos"}
+            {pastas.length} {pastas.length === 1 ? "pasta" : "pastas"} · {arquivos.length}{" "}
+            {arquivos.length === 1 ? "arquivo" : "arquivos"}
+            {totalBytes > 0 && ` · ${fmtBytes(totalBytes)}`}
           </p>
         </div>
 
         {/* área principal */}
         <div
-          className={cn("flex-1 overflow-y-auto p-6 transition-colors",
-            dragOver && "bg-nexus-600/5")}
+          className={cn("flex-1 overflow-y-auto p-6 transition-colors relative", dragOver && "bg-nexus-600/5")}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={e => { e.preventDefault(); setDragOver(false); }}
+          onDragLeave={e => { if (e.currentTarget === e.target) setDragOver(false); }}
+          onDrop={e => { e.preventDefault(); setDragOver(false); receber(e.dataTransfer.files); }}
         >
-          {itens.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center gap-3">
+          {dragOver && (
+            <div className="absolute inset-4 rounded-2xl border-2 border-dashed border-nexus-500 bg-nexus-600/10 flex items-center justify-center pointer-events-none z-10">
+              <div className="text-center">
+                <UploadCloud className="w-10 h-10 text-nexus-400 mx-auto mb-2" />
+                <p className="text-sm text-nexus-300 font-medium">Solte para enviar para esta pasta</p>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="h-64 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : !pastasF.length && !arquivosF.length ? (
+            <div className="h-full flex flex-col items-center justify-center gap-3 py-20">
               <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-border flex items-center justify-center">
                 <UploadCloud className="w-7 h-7 text-muted-foreground" />
               </div>
-              <p className="text-sm text-foreground font-medium">Pasta vazia</p>
+              <p className="text-sm text-foreground font-medium">
+                {busca ? "Nada encontrado" : "Pasta vazia"}
+              </p>
               <p className="text-xs text-muted-foreground">Arraste arquivos aqui para enviar</p>
             </div>
           ) : vista === "grid" ? (
             <>
-              {pastas.length > 0 && (
+              {pastasF.length > 0 && (
                 <>
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-3">Pastas</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mb-8">
-                    {pastas.map(p => {
-                      const n = contar(p);
-                      return (
-                        <button key={p.id} onDoubleClick={() => abrir(p)} onClick={() => abrir(p)}
-                          className="group flex items-center gap-3 p-3.5 rounded-xl border border-border bg-card hover:border-nexus-500/40 hover:bg-accent/30 transition-all text-left">
-                          <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                            style={{ background: "#20bced1a" }}>
-                            <Folder className="w-4.5 h-4.5" style={{ color: "#20bced" }} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[13px] font-medium text-foreground truncate">{p.name}</p>
-                            <p className="text-[10px] text-muted-foreground">
-                              {n.pastas > 0 && `${n.pastas} pastas`}
-                              {n.pastas > 0 && n.arquivos > 0 && " · "}
-                              {n.arquivos > 0 && `${n.arquivos} arquivos`}
-                              {n.pastas === 0 && n.arquivos === 0 && "vazia"}
-                            </p>
-                          </div>
+                    {pastasF.map(p => (
+                      <div key={p.prefix} onClick={() => setPrefix(p.prefix)}
+                        className="group relative flex items-center gap-3 p-3.5 rounded-xl border border-border bg-card hover:border-nexus-500/40 hover:bg-accent/30 transition-all cursor-pointer">
+                        <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-nexus-500/10">
+                          <Folder className="w-4 h-4 text-nexus-400" />
+                        </div>
+                        <p className="text-[13px] font-medium text-foreground truncate flex-1">{p.name}</p>
+                        <button onClick={e => { e.stopPropagation(); excluirPasta(p); }}
+                          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all">
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      );
-                    })}
+                      </div>
+                    ))}
                   </div>
                 </>
               )}
 
-              {arquivos.length > 0 && (
+              {arquivosF.length > 0 && (
                 <>
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-3">Arquivos</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3">
-                    {arquivos.map(a => {
-                      const Icon = ICON[a.kind];
-                      const cor = COR[a.kind];
+                    {arquivosF.map(a => {
+                      const k = kindOf(a.name);
+                      const Icon = ICON[k];
                       return (
-                        <button key={a.id} onClick={() => setSel(a)}
+                        <button key={a.key} onClick={() => setSel(a)}
                           className={cn("group rounded-xl border bg-card overflow-hidden text-left transition-all hover:-translate-y-0.5",
-                            sel?.id === a.id ? "border-nexus-500" : "border-border hover:border-nexus-500/40")}>
-                          {/* preview */}
-                          <div className="aspect-video relative flex items-center justify-center"
-                            style={{ background: `linear-gradient(135deg, ${cor}14, transparent)` }}>
-                            <Icon className="w-7 h-7" style={{ color: cor, opacity: 0.7 }} />
-                            {a.duration && (
-                              <span className="absolute bottom-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/60 text-white">
-                                {a.duration}
-                              </span>
-                            )}
+                            sel?.key === a.key ? "border-nexus-500" : "border-border hover:border-nexus-500/40")}>
+                          <div className="aspect-video flex items-center justify-center"
+                            style={{ background: `linear-gradient(135deg, ${COR[k]}14, transparent)` }}>
+                            <Icon className="w-7 h-7" style={{ color: COR[k], opacity: 0.7 }} />
                           </div>
                           <div className="p-2.5">
                             <p className="text-[12px] text-foreground truncate">{a.name}</p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">{a.size}</p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{fmtBytes(a.size)}</p>
                           </div>
                         </button>
                       );
@@ -270,40 +313,53 @@ export default function MidiasPage() {
               )}
             </>
           ) : (
-            /* ---------- lista ---------- */
             <div className="rounded-xl border border-border bg-card overflow-hidden">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border bg-accent/20">
-                    {["Nome", "Tamanho", "Modificado", "Por", ""].map(h => (
+                    {["Nome", "Tamanho", "Modificado", ""].map(h => (
                       <th key={h} className="px-4 py-2.5 text-left text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {itens.map(n => {
-                    const Icon = ICON[n.kind];
-                    const cor = COR[n.kind];
+                  {pastasF.map(p => (
+                    <tr key={p.prefix} onClick={() => setPrefix(p.prefix)}
+                      className="hover:bg-accent/20 transition-colors cursor-pointer group">
+                      <td className="px-4 py-2.5">
+                        <div className="flex items-center gap-2.5">
+                          <Folder className="w-4 h-4 text-nexus-400 flex-shrink-0" />
+                          <span className="text-sm text-foreground truncate">{p.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2.5 text-xs text-muted-foreground">—</td>
+                      <td className="px-4 py-2.5 text-xs text-muted-foreground">—</td>
+                      <td className="px-4 py-2.5">
+                        <button onClick={e => { e.stopPropagation(); excluirPasta(p); }}
+                          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {arquivosF.map(a => {
+                    const k = kindOf(a.name);
+                    const Icon = ICON[k];
                     return (
-                      <tr key={n.id} onClick={() => abrir(n)}
+                      <tr key={a.key} onClick={() => setSel(a)}
                         className="hover:bg-accent/20 transition-colors cursor-pointer group">
                         <td className="px-4 py-2.5">
                           <div className="flex items-center gap-2.5">
-                            <Icon className="w-4 h-4 flex-shrink-0" style={{ color: cor }} />
-                            <span className="text-sm text-foreground truncate">{n.name}</span>
-                            {n.duration && (
-                              <span className="text-[10px] text-muted-foreground">{n.duration}</span>
-                            )}
+                            <Icon className="w-4 h-4 flex-shrink-0" style={{ color: COR[k] }} />
+                            <span className="text-sm text-foreground truncate">{a.name}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 text-xs text-muted-foreground">
-                          {n.kind === "folder" ? "—" : n.size}
-                        </td>
-                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{n.updatedAt || "—"}</td>
-                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{n.by || "—"}</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{fmtBytes(a.size)}</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{fmtData(a.updatedAt)}</td>
                         <td className="px-4 py-2.5">
-                          <button className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-accent transition-all">
-                            <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
+                          <button onClick={e => { e.stopPropagation(); excluirArquivo(a); }}
+                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all">
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </td>
                       </tr>
@@ -313,23 +369,41 @@ export default function MidiasPage() {
               </table>
             </div>
           )}
-
-          {/* zona de upload no rodapé da área */}
-          <div className={cn(
-            "mt-8 rounded-xl border-2 border-dashed p-6 flex items-center justify-center gap-3 transition-colors",
-            dragOver ? "border-nexus-500 bg-nexus-600/10" : "border-border"
-          )}>
-            <UploadCloud className={cn("w-5 h-5", dragOver ? "text-nexus-400" : "text-muted-foreground")} />
-            <p className="text-sm text-muted-foreground">
-              Arraste vídeos e imagens aqui, ou{" "}
-              <span className="text-nexus-400 font-medium cursor-pointer">selecione do computador</span>
-            </p>
-          </div>
         </div>
+
+        {/* fila de upload */}
+        {envios.length > 0 && (
+          <div className="border-t border-border bg-card px-6 py-3 space-y-2 max-h-48 overflow-y-auto">
+            <p className="text-[11px] text-muted-foreground uppercase tracking-wider">
+              Enviando ({envios.filter(e => e.estado === "enviando").length})
+            </p>
+            {envios.map(e => (
+              <div key={e.id} className="flex items-center gap-3">
+                {e.estado === "ok" ? <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  : e.estado === "erro" ? <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                  : <Loader2 className="w-4 h-4 text-nexus-400 animate-spin flex-shrink-0" />}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-foreground truncate">{e.nome}</span>
+                    <span className={cn("text-[10px] flex-shrink-0 ml-2",
+                      e.estado === "erro" ? "text-red-400" : "text-muted-foreground")}>
+                      {e.estado === "erro" ? e.erro : `${e.pct}%`}
+                    </span>
+                  </div>
+                  <div className="h-1 rounded-full bg-accent overflow-hidden">
+                    <div className={cn("h-full rounded-full transition-all",
+                      e.estado === "ok" ? "bg-emerald-500" : e.estado === "erro" ? "bg-red-500" : "bg-nexus-500")}
+                      style={{ width: `${e.pct}%` }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ===== PAINEL DE DETALHE ===== */}
-      {sel && sel.kind !== "folder" && (
+      {/* ===== DETALHE ===== */}
+      {sel && (
         <aside className="w-80 border-l border-border bg-card overflow-y-auto flex-shrink-0">
           <div className="p-4 border-b border-border flex items-center justify-between">
             <span className="text-sm font-semibold text-foreground">Detalhes</span>
@@ -338,59 +412,49 @@ export default function MidiasPage() {
             </button>
           </div>
 
-          {/* preview grande */}
-          <div className="aspect-video flex items-center justify-center relative"
-            style={{ background: `linear-gradient(135deg, ${COR[sel.kind]}18, transparent)` }}>
-            {(() => { const I = ICON[sel.kind]; return <I className="w-12 h-12" style={{ color: COR[sel.kind], opacity: 0.7 }} />; })()}
-            {sel.duration && (
-              <span className="absolute bottom-2 right-2 text-[10px] px-2 py-0.5 rounded bg-black/60 text-white">
-                {sel.duration}
-              </span>
-            )}
+          <div className="aspect-video flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, ${COR[kindOf(sel.name)]}18, transparent)` }}>
+            {(() => { const I = ICON[kindOf(sel.name)]; return <I className="w-12 h-12" style={{ color: COR[kindOf(sel.name)], opacity: 0.7 }} />; })()}
           </div>
 
           <div className="p-4 space-y-4">
             <div>
               <p className="text-sm font-medium text-foreground break-words">{sel.name}</p>
-              <p className="text-xs text-muted-foreground mt-0.5 capitalize">{sel.kind}</p>
+              <p className="text-xs text-muted-foreground mt-0.5 capitalize">{kindOf(sel.name)}</p>
             </div>
 
             <div className="space-y-2">
               {[
-                { icon: Info, label: "Tamanho", value: sel.size },
-                { icon: Clock, label: "Modificado", value: sel.updatedAt },
-                { icon: UserIcon, label: "Enviado por", value: sel.by },
+                { icon: Info, label: "Tamanho", value: fmtBytes(sel.size) },
+                { icon: Clock, label: "Modificado", value: fmtData(sel.updatedAt) },
               ].map(d => (
                 <div key={d.label} className="flex items-center justify-between py-1.5 border-b border-border/50">
                   <span className="flex items-center gap-2 text-xs text-muted-foreground">
                     <d.icon className="w-3.5 h-3.5" /> {d.label}
                   </span>
-                  <span className="text-xs text-foreground font-medium">{d.value || "—"}</span>
+                  <span className="text-xs text-foreground font-medium">{d.value}</span>
                 </div>
               ))}
             </div>
 
             <div className="flex flex-col gap-2 pt-1">
-              <button className="flex items-center justify-center gap-2 py-2 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-sm font-medium transition-colors">
+              <button onClick={() => abrirArquivo(sel, true)}
+                className="flex items-center justify-center gap-2 py-2 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-sm font-medium transition-colors">
                 <Download className="w-4 h-4" /> Baixar
               </button>
-              <button className="flex items-center justify-center gap-2 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <button onClick={() => abrirArquivo(sel, false)}
+                className="flex items-center justify-center gap-2 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <Share2 className="w-4 h-4" /> Copiar link
               </button>
-              <button className="flex items-center justify-center gap-2 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 text-sm transition-colors">
+              <button onClick={() => excluirArquivo(sel)}
+                className="flex items-center justify-center gap-2 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 text-sm transition-colors">
                 <Trash2 className="w-4 h-4" /> Excluir
               </button>
             </div>
 
-            {/* vínculo com o calendário */}
             <div className="rounded-lg border border-border bg-accent/20 p-3">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1.5">Vincular ao calendário</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Ligue este arquivo a um conteúdo do calendário para ele aparecer na aprovação.
-              </p>
-              <button className="mt-2 w-full py-1.5 rounded-md border border-nexus-500/30 text-nexus-300 text-xs font-medium hover:bg-nexus-500/10 transition-colors">
-                Escolher conteúdo
-              </button>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1.5">Caminho</p>
+              <p className="text-[11px] text-muted-foreground break-all font-mono">{sel.key}</p>
             </div>
           </div>
         </aside>

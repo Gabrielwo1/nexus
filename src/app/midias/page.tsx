@@ -7,9 +7,10 @@ import {
   Folder, FolderOpen, ChevronRight, Search, UploadCloud, Loader2,
   LayoutGrid, List, FileVideo, FileImage, FileText, FileAudio, File as FileIcon,
   X, Download, Share2, Trash2, HardDrive, Plus, ArrowLeft, RefreshCw,
-  Clock, Info, CheckCircle2, AlertCircle, Eye, Pencil,
+  Clock, Info, CheckCircle2, AlertCircle, Eye, Pencil, Link2,
 } from "lucide-react";
 import Visualizador, { kindOf, ICON, COR, fmtBytes } from "@/components/midias/Visualizador";
+import VincularModal from "@/components/midias/VincularModal";
 
 /* ============================================================
    Acervo de Mídias — Cloudflare R2
@@ -43,6 +44,7 @@ export default function MidiasPage() {
   const [envios, setEnvios] = useState<Envio[]>([]);
   const [urls, setUrls] = useState<Record<string, string>>({});
   const [verIndice, setVerIndice] = useState<number | null>(null);
+  const [vincular, setVincular] = useState<Arquivo | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const carregar = useCallback(async (p: string) => {
@@ -350,8 +352,12 @@ export default function MidiasPage() {
                             <div className="flex items-center gap-1">
                               <p className="text-[12px] text-foreground truncate flex-1">{a.name}</p>
                               <span onClick={e => { e.stopPropagation(); renomearArquivo(a); }} title="Renomear arquivo"
-                                className="opacity-0 group-hover:opacity-100 p-1 -mr-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                                className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
                                 <Pencil className="w-3 h-3" />
+                              </span>
+                              <span onClick={e => { e.stopPropagation(); setVincular(a); }} title="Vincular ao calendário"
+                                className="opacity-0 group-hover:opacity-100 p-1 -mr-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                                <Link2 className="w-3 h-3" />
                               </span>
                             </div>
                             <p className="text-[10px] text-muted-foreground mt-0.5">{fmtBytes(a.size)}</p>
@@ -416,6 +422,10 @@ export default function MidiasPage() {
                               className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
+                            <button onClick={e => { e.stopPropagation(); setVincular(a); }} title="Vincular ao calendário"
+                              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                              <Link2 className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                         </td>
                         <td className="px-4 py-2.5 text-xs text-muted-foreground">{fmtBytes(a.size)}</td>
@@ -479,6 +489,8 @@ export default function MidiasPage() {
         />
       )}
 
+      {vincular && <VincularModal arquivo={vincular} onFechar={() => setVincular(null)} />}
+
       {/* ===== DETALHE ===== */}
       {sel && (
         <aside className="w-80 border-l border-border bg-card overflow-y-auto flex-shrink-0">
@@ -535,6 +547,10 @@ export default function MidiasPage() {
               <button onClick={() => abrirArquivo(sel, true)}
                 className="flex items-center justify-center gap-2 py-2 rounded-lg bg-nexus-600 hover:bg-nexus-500 text-white text-sm font-medium transition-colors">
                 <Download className="w-4 h-4" /> Baixar
+              </button>
+              <button onClick={() => setVincular(sel)}
+                className="flex items-center justify-center gap-2 py-2 rounded-lg border border-nexus-500/40 text-nexus-400 hover:bg-nexus-500/10 text-sm font-medium transition-colors">
+                <Link2 className="w-4 h-4" /> Vincular ao calendário
               </button>
               <button onClick={() => abrirArquivo(sel, false)}
                 className="flex items-center justify-center gap-2 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground transition-colors">

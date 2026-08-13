@@ -12,6 +12,7 @@ export type StageDef = {
   color: string;
   statusField: keyof CalendarPost;
   approvedField: keyof CalendarPost;
+  urlField: keyof CalendarPost;   // onde fica o link da entrega
   onlyTypes?: string[]; // se definido, etapa só aplica a esses tipos
 };
 
@@ -19,23 +20,23 @@ export const STAGES: StageDef[] = [
   {
     key: "roteiro", label: "Roteiro", short: "R",
     ownerName: "", ownerRole: "copywriter", color: "#20bced",
-    statusField: "roteiro_status", approvedField: "roteiro_approved_at",
+    statusField: "roteiro_status", approvedField: "roteiro_approved_at", urlField: "roteiro_url",
   },
   {
     key: "gravacao", label: "Gravação", short: "G",
     ownerName: "Guto", ownerRole: "videomaker", color: "#a78bfa",
-    statusField: "gravacao_status", approvedField: "gravacao_approved_at",
+    statusField: "gravacao_status", approvedField: "gravacao_approved_at", urlField: "gravacao_url",
     onlyTypes: ["reel", "story"],
   },
   {
     key: "edicao", label: "Edição", short: "E",
     ownerName: "Pet", ownerRole: "social_media", color: "#34d399",
-    statusField: "edicao_status", approvedField: "edicao_approved_at",
+    statusField: "edicao_status", approvedField: "edicao_approved_at", urlField: "edicao_url",
   },
   {
     key: "publicacao", label: "Publicação", short: "P",
     ownerName: "Karyne", ownerRole: "social_media", color: "#fb923c",
-    statusField: "publicacao_status", approvedField: "publicacao_approved_at",
+    statusField: "publicacao_status", approvedField: "publicacao_approved_at", urlField: "post_link",
   },
 ];
 

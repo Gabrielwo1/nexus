@@ -7,7 +7,7 @@ import {
   Folder, FolderOpen, ChevronRight, Search, UploadCloud, Loader2,
   LayoutGrid, List, FileVideo, FileImage, FileText, FileAudio, File as FileIcon,
   X, Download, Share2, Trash2, HardDrive, Plus, ArrowLeft, RefreshCw,
-  Clock, Info, CheckCircle2, AlertCircle, Eye,
+  Clock, Info, CheckCircle2, AlertCircle, Eye, Pencil,
 } from "lucide-react";
 import Visualizador, { kindOf, ICON, COR, fmtBytes } from "@/components/midias/Visualizador";
 
@@ -136,6 +136,34 @@ export default function MidiasPage() {
     const r = await fetch(`/api/acervo/arquivo?key=${encodeURIComponent(a.key)}`, { method: "DELETE" });
     if (!r.ok) { toast.error("Erro ao excluir"); return; }
     toast.success("Arquivo excluído");
+    setSel(null); carregar(prefix);
+  };
+
+  const renomearPasta = async (p: Pasta) => {
+    const nome = prompt("Novo nome da pasta:", p.name);
+    if (!nome?.trim() || nome.trim() === p.name) return;
+    const t = toast.loading("Renomeando pasta...");
+    const r = await fetch("/api/acervo/pasta", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prefix: p.prefix, novoNome: nome }),
+    });
+    const j = await r.json();
+    toast.dismiss(t);
+    if (!r.ok) { toast.error(j.error); return; }
+    toast.success(j.movidos ? `Pasta renomeada (${j.movidos} itens)` : "Pasta renomeada");
+    carregar(prefix);
+  };
+
+  const renomearArquivo = async (a: Arquivo) => {
+    const nome = prompt("Novo nome do arquivo:", a.name);
+    if (!nome?.trim() || nome.trim() === a.name) return;
+    const r = await fetch("/api/acervo/arquivo", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: a.key, novoNome: nome }),
+    });
+    const j = await r.json();
+    if (!r.ok) { toast.error(j.error); return; }
+    toast.success("Arquivo renomeado");
     setSel(null); carregar(prefix);
   };
 
@@ -269,10 +297,16 @@ export default function MidiasPage() {
                           <Folder className="w-4 h-4 text-nexus-400" />
                         </div>
                         <p className="text-[13px] font-medium text-foreground truncate flex-1">{p.name}</p>
-                        <button onClick={e => { e.stopPropagation(); excluirPasta(p); }}
-                          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all">
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+                          <button onClick={e => { e.stopPropagation(); renomearPasta(p); }} title="Renomear pasta"
+                            className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-colors">
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button onClick={e => { e.stopPropagation(); excluirPasta(p); }} title="Excluir pasta"
+                            className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -313,7 +347,13 @@ export default function MidiasPage() {
                             </span>
                           </div>
                           <div className="p-2.5">
-                            <p className="text-[12px] text-foreground truncate">{a.name}</p>
+                            <div className="flex items-center gap-1">
+                              <p className="text-[12px] text-foreground truncate flex-1">{a.name}</p>
+                              <span onClick={e => { e.stopPropagation(); renomearArquivo(a); }} title="Renomear arquivo"
+                                className="opacity-0 group-hover:opacity-100 p-1 -mr-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                                <Pencil className="w-3 h-3" />
+                              </span>
+                            </div>
                             <p className="text-[10px] text-muted-foreground mt-0.5">{fmtBytes(a.size)}</p>
                           </div>
                         </button>
@@ -341,12 +381,16 @@ export default function MidiasPage() {
                         <div className="flex items-center gap-2.5">
                           <Folder className="w-4 h-4 text-nexus-400 flex-shrink-0" />
                           <span className="text-sm text-foreground truncate">{p.name}</span>
+                          <button onClick={e => { e.stopPropagation(); renomearPasta(p); }} title="Renomear pasta"
+                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       </td>
                       <td className="px-4 py-2.5 text-xs text-muted-foreground">—</td>
                       <td className="px-4 py-2.5 text-xs text-muted-foreground">—</td>
                       <td className="px-4 py-2.5">
-                        <button onClick={e => { e.stopPropagation(); excluirPasta(p); }}
+                        <button onClick={e => { e.stopPropagation(); excluirPasta(p); }} title="Excluir pasta"
                           className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -364,9 +408,13 @@ export default function MidiasPage() {
                           <div className="flex items-center gap-2.5">
                             <Icon className="w-4 h-4 flex-shrink-0" style={{ color: COR[k] }} />
                             <span className="text-sm text-foreground truncate">{a.name}</span>
-                            <button onClick={e => { e.stopPropagation(); setVerIndice(arquivosF.findIndex(x => x.key === a.key)); }}
+                            <button onClick={e => { e.stopPropagation(); setVerIndice(arquivosF.findIndex(x => x.key === a.key)); }} title="Ver prévia"
                               className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
                               <Eye className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={e => { e.stopPropagation(); renomearArquivo(a); }} title="Renomear arquivo"
+                              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-all">
+                              <Pencil className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </td>
@@ -459,7 +507,13 @@ export default function MidiasPage() {
 
           <div className="p-4 space-y-4">
             <div>
-              <p className="text-sm font-medium text-foreground break-words">{sel.name}</p>
+              <div className="flex items-start gap-1.5">
+                <p className="text-sm font-medium text-foreground break-words flex-1">{sel.name}</p>
+                <button onClick={() => renomearArquivo(sel)} title="Renomear arquivo"
+                  className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-nexus-400 transition-colors flex-shrink-0">
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              </div>
               <p className="text-xs text-muted-foreground mt-0.5 capitalize">{kindOf(sel.name)}</p>
             </div>
 

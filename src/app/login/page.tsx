@@ -4,8 +4,17 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase, getManterConectado, setManterConectado } from "@/lib/supabase";
 import { Loader2, LogIn, AlertCircle } from "lucide-react";
+import { paginaInicial } from "@/lib/modules";
 
 const EMAIL_KEY = "nexus.ultimo-email";
+
+/** Destino após entrar — respeita os módulos liberados para a pessoa */
+async function destino(email: string | undefined): Promise<string> {
+  if (!email) return "/";
+  const { data } = await supabase
+    .from("team_members").select("modules").eq("email", email).maybeSingle();
+  return paginaInicial((data as any)?.modules ?? null);
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,7 +32,7 @@ export default function LoginPage() {
     if (lembrado) setEmail(lembrado);
 
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.replace("/");
+      if (data.session) destino(data.session.user.email).then(d => router.replace(d));
       else setChecando(false);
     });
   }, [router]);
@@ -36,7 +45,7 @@ export default function LoginPage() {
     // define onde a sessão será guardada ANTES de logar
     setManterConectado(manterConectado);
 
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
+    const { data: sessao, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
     setLoading(false);
     if (error) {
       setErro(
@@ -53,7 +62,7 @@ export default function LoginPage() {
     if (manterConectado) localStorage.setItem(EMAIL_KEY, email.trim());
     else localStorage.removeItem(EMAIL_KEY);
 
-    router.replace("/");
+    router.replace(await destino(sessao.user?.email));
   };
 
   if (checando) {

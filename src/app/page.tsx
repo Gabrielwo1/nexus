@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useCurrentUser } from "@/lib/useCurrentUser";
+import { canSee, paginaInicial } from "@/lib/modules";
+
 import { cn, formatCurrency } from "@/lib/utils";
 import {
   TrendingUp,
@@ -91,6 +96,15 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function Dashboard() {
+  // quem não tem o Dashboard liberado é levado ao primeiro módulo que pode ver
+  const router = useRouter();
+  const { user, loading } = useCurrentUser();
+  useEffect(() => {
+    if (!loading && user && !canSee(user.modules, "dashboard")) {
+      router.replace(paginaInicial(user.modules));
+    }
+  }, [loading, user, router]);
+
   return (
     <div className="p-8 space-y-8">
       {/* Header com fundo da marca */}

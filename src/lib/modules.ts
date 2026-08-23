@@ -76,3 +76,15 @@ export function moduleForPath(pathname: string): ModuleDef | undefined {
     .filter(m => m.href !== "/" && pathname.startsWith(m.href!))
     .sort((a, b) => b.href!.length - a.href!.length)[0];
 }
+
+/**
+ * Para onde mandar a pessoa ao entrar. Quem não enxerga o Dashboard cairia
+ * numa página em branco, então usamos o Calendário e, se nem ele estiver
+ * liberado, o primeiro módulo com página que a pessoa pode ver.
+ */
+export function paginaInicial(modules: string[] | null | undefined): string {
+  if (canSee(modules, "dashboard")) return "/";
+  if (canSee(modules, "equipe.calendario")) return "/equipe/calendario";
+  const primeiro = MODULES.find(m => m.href && m.href !== "/" && canSee(modules, m.key));
+  return primeiro?.href || "/";
+}

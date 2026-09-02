@@ -204,7 +204,14 @@
     .people-3{grid-template-columns:1fr}
     .gap3{grid-template-columns:1fr;gap:16px} .gdash{width:100%}
     .steps{grid-template-columns:1fr 1fr}
-    .mapa td{padding:11px 14px;font-size:13.5px}
+    /* no celular cada linha vira bloco: nome em cima, produto embaixo */
+    .mapa,.mapa tbody,.mapa tr,.mapa td{display:block;width:auto}
+    .mapa tr{border-bottom:1px solid var(--line-2);padding:2px 0}
+    .mapa tr:last-child{border-bottom:0}
+    .mapa td{padding:9px 14px 3px;font-size:14px;border-bottom:0}
+    .mapa td:last-child{padding:0 14px 10px}
+    .mapa td:first-child{width:auto;color:var(--txt)}
+    .mapa .tag{white-space:normal;display:inline-block}
     .hint{display:none}
   }
 

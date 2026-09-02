@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Documento com os cinco produtos da YPHE organizados pela jornada do paciente.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YPHE — Os cinco produtos">
+<meta property="og:description" content="Documento com os cinco produtos da YPHE organizados pela jornada do paciente.">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+<title>Cinco Sistemas YPHE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+  :root{
+    --ink:#0B1220;
+    --ink-soft:#33404F;
+    --grey:#5D6B7C;
+    --grey-faint:#8695A6;
+    --line:#DCE3EB;
+    --line-soft:#EDF1F5;
+    --paper:#FBFCFD;
+    --surface:#FFFFFF;
+    --surface-alt:#F2F6F9;
+    --deep:#052699;
+    --deep-tint:#E7ECFA;
+    --brand:#1195C0;
+    --brand-bright:#20BCED;
+    --brand-tint:#E4F5FC;
+    --warn:#B45309;
+    --warn-tint:#FDF2E3;
+    --shadow:0 1px 2px rgba(11,18,32,.05), 0 8px 24px -12px rgba(11,18,32,.14);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#EEF3F8;
+      --ink-soft:#C3CEDA;
+      --grey:#93A2B3;
+      --grey-faint:#6D7E90;
+      --line:#26303D;
+      --line-soft:#1B242F;
+      --paper:#0C111A;
+      --surface:#121926;
+      --surface-alt:#161F2C;
+      --deep:#7B96F0;
+      --deep-tint:#161F3A;
+      --brand:#3FC4EE;
+      --brand-bright:#20BCED;
+      --brand-tint:#0E2735;
+      --warn:#E9A94B;
+      --warn-tint:#2A2113;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#EEF3F8;
+    --ink-soft:#C3CEDA;
+    --grey:#93A2B3;
+    --grey-faint:#6D7E90;
+    --line:#26303D;
+    --line-soft:#1B242F;
+    --paper:#0C111A;
+    --surface:#121926;
+    --surface-alt:#161F2C;
+    --deep:#7B96F0;
+    --deep-tint:#161F3A;
+    --brand:#3FC4EE;
+    --brand-bright:#20BCED;
+    --brand-tint:#0E2735;
+    --warn:#E9A94B;
+    --warn-tint:#2A2113;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:16px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+  .narrow{max-width:680px}
+
+  h1,h2,h3,.display{
+    font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+    text-wrap:balance;
+    letter-spacing:-.022em;
+    line-height:1.1;
+    margin:0;
+  }
+  p{margin:0}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--brand);
+    font-weight:500;
+  }
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+
+  /* ---------- topo ---------- */
+  header.masthead{
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .masthead-in{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:24px;padding:18px 32px;max-width:1080px;margin:0 auto;
+  }
+  .logo{
+    font-family:Archivo,sans-serif;font-weight:800;font-size:19px;
+    letter-spacing:.42em;color:var(--deep);
+  }
+  .masthead-note{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--grey-faint);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:88px 0 72px}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:34px}
+  .hero h1{
+    font-size:clamp(38px,6.2vw,64px);
+    font-weight:700;
+    max-width:17ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--deep)}
+  .hero-lede{
+    font-size:19px;color:var(--ink-soft);max-width:60ch;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:10px;
+  }
+  .chip{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    letter-spacing:.06em;color:var(--grey);
+    border:1px solid var(--line);border-radius:999px;
+    padding:5px 12px;background:var(--surface);
+  }
+
+  /* ---------- secoes ---------- */
+  section{padding:64px 0}
+  .sec-head{display:flex;flex-direction:column;gap:12px;margin-bottom:34px}
+  .sec-head h2{font-size:clamp(26px,3.4vw,36px);font-weight:700}
+  .sec-head .sub{color:var(--grey);font-size:17px;max-width:62ch}
+
+  .band{background:var(--surface-alt);border-block:1px solid var(--line)}
+
+  /* ---------- a distancia ---------- */
+  .gapline{
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    gap:20px;margin:8px 0 30px;
+  }
+  .gapline .side{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:4px;padding:20px 22px;
+  }
+  .gapline .side strong{
+    display:block;font-family:Archivo,sans-serif;font-size:17px;
+    font-weight:600;margin-bottom:5px;
+  }
+  .gapline .side span{font-size:14.5px;color:var(--grey);line-height:1.5}
+  .gapline .void{
+    text-align:center;padding:0 4px;
+  }
+  .gapline .void b{
+    display:block;font-family:"IBM Plex Mono",monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--warn);margin-bottom:6px;font-weight:500;
+  }
+  .gapline .void .dashes{
+    height:1px;width:78px;
+    background:repeating-linear-gradient(to right,var(--grey-faint) 0 5px,transparent 5px 11px);
+  }
+
+  /* ---------- jornada (spine) ---------- */
+  .spine{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:0;
+    border:1px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+    background:var(--surface);
+  }
+  .stop{
+    padding:22px 18px 24px;
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;gap:9px;
+    position:relative;
+  }
+  .stop:last-child{border-right:0}
+  .stop::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--brand-bright);
+    opacity:calc(.35 + var(--i) * .16);
+  }
+  .stop .num{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    color:var(--grey-faint);letter-spacing:.1em;
+  }
+  .stop .who{
+    font-family:Archivo,sans-serif;font-weight:600;font-size:15.5px;
+    line-height:1.25;color:var(--ink);
+  }
+  .stop .sys{
+    font-family:Archivo,sans-serif;
+    font-size:13px;color:var(--deep);font-weight:700;
+    letter-spacing:.04em;line-height:1.3;
+    margin-top:2px;
+  }
+  .stop .sys-pt{
+    font-size:12px;color:var(--grey);line-height:1.35;
+  }
+
+  /* ---------- comparativo ---------- */
+  .cut{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;
+    border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  }
+  .cut > div{padding:24px 26px;background:var(--surface)}
+  .cut > div:first-child{
+    border-right:1px solid var(--line);
+    background:var(--surface-alt);
+  }
+  .cut h3{
+    font-size:14px;font-weight:600;margin-bottom:14px;
+    letter-spacing:.01em;
+  }
+  .cut ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+  .cut li{
+    font-size:14.5px;color:var(--ink-soft);
+    padding-left:17px;position:relative;line-height:1.45;
+  }
+  .cut li::before{
+    content:"";position:absolute;left:0;top:8px;
+    width:6px;height:6px;border-radius:1px;
+  }
+  .cut .disc li::before{background:var(--grey-faint)}
+  .cut .jour li::before{background:var(--brand)}
+  .cut li b{color:var(--ink);font-weight:600}
+
+  /* ---------- diagnostico ---------- */
+  .gate{
+    border:1px solid var(--deep);
+    border-left:4px solid var(--deep);
+    border-radius:4px;
+    background:var(--deep-tint);
+    padding:28px 30px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .gate h3{font-size:22px;font-weight:700;color:var(--deep)}
+  .gate p{font-size:16px;color:var(--ink-soft);max-width:64ch}
+  .gate .asks{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:2px;
+  }
+  .gate .asks span{
+    font-size:13px;background:var(--surface);color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:3px;padding:5px 11px;
+  }
+
+  /* ---------- sistemas ---------- */
+  .systems{display:flex;flex-direction:column;gap:0}
+  .sys-block{
+    border-top:1px solid var(--line);
+    padding:44px 0;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,340px);
+    gap:44px;
+    align-items:start;
+  }
+  .sys-block:last-child{border-bottom:1px solid var(--line)}
+  .sys-id{
+    display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+  }
+  .sys-id .n{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--brand);letter-spacing:.1em;font-weight:500;
+  }
+  .sys-id .label{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--grey-faint);
+  }
+  .ask{
+    font-family:Archivo,sans-serif;
+    font-size:clamp(23px,3vw,31px);
+    font-weight:700;line-height:1.16;
+    letter-spacing:-.02em;
+    margin-bottom:16px;
+    text-wrap:balance;
+  }
+  .ask::before{content:"\201C";color:var(--brand);margin-right:1px}
+  .ask::after{content:"\201D";color:var(--brand)}
+  .plain{font-size:16.5px;color:var(--ink-soft);max-width:56ch;margin-bottom:14px}
+  .proof{
+    font-size:14.5px;color:var(--grey);max-width:56ch;
+    border-left:2px solid var(--line);padding-left:14px;
+  }
+  .inside{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:4px;padding:20px 22px;box-shadow:var(--shadow);
+  }
+  .inside h4{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--grey-faint);
+    margin:0 0 13px;font-weight:500;
+  }
+  .inside ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .inside li{
+    font-size:14px;color:var(--ink-soft);line-height:1.45;
+    padding-left:16px;position:relative;
+  }
+  .inside li::before{
+    content:"";position:absolute;left:0;top:9px;width:7px;height:1px;
+    background:var(--brand);
+  }
+  .inside .mod{
+    margin-top:15px;padding-top:13px;border-top:1px solid var(--line-soft);
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    color:var(--grey-faint);letter-spacing:.05em;line-height:1.5;
+  }
+
+  /* ---------- ciclo ---------- */
+  .loop{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+  }
+  .loop .node{
+    background:var(--surface);border:1px solid var(--line);border-radius:4px;
+    padding:16px 17px;display:flex;flex-direction:column;gap:5px;
+  }
+  .loop .node .k{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    letter-spacing:.11em;text-transform:uppercase;color:var(--brand);
+  }
+  .loop .node .v{font-size:14px;color:var(--ink-soft);line-height:1.45}
+
+  /* ---------- etica ---------- */
+  .ethics{
+    border:1px solid var(--warn);
+    background:var(--warn-tint);
+    border-radius:4px;padding:26px 28px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .ethics h3{font-size:20px;font-weight:700;color:var(--warn)}
+  .ethics p{font-size:15.5px;color:var(--ink-soft);max-width:66ch}
+  .ethics ul{margin:4px 0 0;padding-left:19px;display:flex;flex-direction:column;gap:6px}
+  .ethics li{font-size:15px;color:var(--ink-soft)}
+
+  /* ---------- passos ---------- */
+  .steps{display:flex;flex-direction:column}
+  .step{
+    display:grid;grid-template-columns:56px 1fr;gap:22px;
+    padding:20px 0;border-top:1px solid var(--line);align-items:start;
+  }
+  .step:last-child{border-bottom:1px solid var(--line)}
+  .step .idx{
+    font-family:Archivo,sans-serif;font-size:30px;font-weight:700;
+    color:var(--brand);line-height:1;letter-spacing:-.03em;
+  }
+  .step h4{font-family:Archivo,sans-serif;font-size:17px;font-weight:600;margin:0 0 4px}
+  .step p{font-size:15px;color:var(--grey);max-width:60ch}
+  .step .when{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    color:var(--grey-faint);letter-spacing:.06em;margin-top:5px;
+  }
+
+  /* ---------- fecho ---------- */
+  .close{
+    background:var(--deep);
+    color:#fff;
+    border-radius:4px;
+    padding:52px 48px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .close h2{font-size:clamp(26px,3.6vw,38px);font-weight:700;color:#fff;max-width:22ch}
+  .close p{font-size:17px;color:#D6E0FA;max-width:58ch}
+  .close .sig{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    letter-spacing:.13em;text-transform:uppercase;color:#8FA9F2;margin-top:6px;
+  }
+
+  footer{padding:40px 0 64px;color:var(--grey-faint);font-size:13px}
+
+  @media (max-width:860px){
+    .wrap{padding:0 22px}
+    .masthead-in{padding:16px 22px}
+    .sys-block{grid-template-columns:1fr;gap:26px}
+    .cut{grid-template-columns:1fr}
+    .cut > div:first-child{border-right:0;border-bottom:1px solid var(--line)}
+    .gapline{grid-template-columns:1fr;gap:14px}
+    .gapline .void{display:flex;align-items:center;gap:12px;justify-content:flex-start}
+    .gapline .void b{margin:0}
+    .spine{grid-template-columns:1fr}
+    .stop{border-right:0;border-bottom:1px solid var(--line)}
+    .stop:last-child{border-bottom:0}
+    .close{padding:36px 26px}
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="logo">YPHE</div>
+    <div class="masthead-note">Apresentação comercial &middot; Clínicas e consultórios</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-grid">
+      <p class="eyebrow">O que a YPHE constrói</p>
+      <h1>O paciente que precisa de você <em>já existe</em>. O que falta é o caminho até a sua porta.</h1>
+      <p class="hero-lede">
+        Não vendemos posts, anúncios ou sites. Construímos os cinco sistemas que
+        levam alguém que sente uma dor no joelho hoje até a sua sala de consulta —
+        e mostram, com número, qual parte do caminho está funcionando.
+      </p>
+      <div class="hero-meta">
+        <span class="chip">Diagnóstico antes de proposta</span>
+        <span class="chip">Módulos, não pacote fechado</span>
+        <span class="chip">Dentro das normas do CFM</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="band">
+  <div class="wrap">
+    <section>
+      <div class="sec-head">
+        <p class="eyebrow">O problema</p>
+        <h2>Existe uma distância entre quem sabe e quem precisa</h2>
+        <p class="sub">
+          Você passou anos construindo um conhecimento que resolve o problema de alguém.
+          Essa pessoa está a três quilômetros daqui, com dor, procurando no Google. E não chega até você.
+        </p>
+      </div>
+
+      <div class="gapline">
+        <div class="side">
+          <strong>O paciente</strong>
+          <span>Tem a dor. Não sabe o nome dela, quem trata, nem em quem confiar.</span>
+        </div>
+        <div class="void">
+          <b>a distância</b>
+          <div class="dashes"></div>
+        </div>
+        <div class="side">
+          <strong>Você</strong>
+          <span>Tem a solução, a formação e o resultado. E uma agenda com espaços vazios.</span>
+        </div>
+      </div>
+
+      <p class="narrow" style="color:var(--ink-soft);font-size:16.5px">
+        Quando essa distância não é construída, conhecimento de valor real simplesmente
+        não chega a quem precisa dele. A YPHE existe para projetar essa ponte — e ela
+        tem cinco trechos.
+      </p>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A lógica</p>
+      <h2>Organizamos pela jornada do paciente, não pela nossa estrutura interna</h2>
+      <p class="sub">
+        A maioria das agências vende pelo próprio organograma: um time de social, um de
+        tráfego, um de tecnologia. O paciente não vive nada disso. Ele vive uma sequência.
+      </p>
+    </div>
+
+    <div class="spine">
+      <div class="stop" style="--i:0">
+        <span class="num">01</span>
+        <span class="who">Não sabe por que você, e não o médico do lado</span>
+        <span class="sys">YPHE BRANDING</span><span class="sys-pt">marca e posicionamento</span>
+      </div>
+      <div class="stop" style="--i:1">
+        <span class="num">02</span>
+        <span class="who">Não lembra de você entre uma consulta e outra</span>
+        <span class="sys">YPHE CONTENT</span><span class="sys-pt">narrativa e produção</span>
+      </div>
+      <div class="stop" style="--i:2">
+        <span class="num">03</span>
+        <span class="who">Está procurando agora e não te encontra</span>
+        <span class="sys">YPHE LEADS</span><span class="sys-pt">mídia e captação</span>
+      </div>
+      <div class="stop" style="--i:3">
+        <span class="num">04</span>
+        <span class="who">Te achou, mandou mensagem e desistiu de esperar</span>
+        <span class="sys">YPHE CONNECT</span><span class="sys-pt">site, WhatsApp e agenda</span>
+      </div>
+      <div class="stop" style="--i:4">
+        <span class="num">05</span>
+        <span class="who">Você não sabe qual desses trechos falhou</span>
+        <span class="sys">YPHE INTELLIGENCE</span><span class="sys-pt">dados e decisão</span>
+      </div>
+    </div>
+
+    <p class="narrow" style="color:var(--ink-soft);font-size:16.5px;margin-top:26px">
+      Cada trecho perdido derruba todos os seguintes. Uma marca forte não salva um
+      WhatsApp que ninguém responde. Um anúncio caro não salva um perfil que não
+      explica quem você é. É por isso que vendemos sistemas conectados, e não peças soltas.
+    </p>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A porta de entrada</p>
+      <h2>Nenhum sistema é vendido antes do diagnóstico</h2>
+    </div>
+
+    <div class="gate">
+      <h3>Diagnóstico e Arquitetura Estratégica</h3>
+      <p>
+        Antes de qualquer proposta, entendemos o seu negócio: mercado, público, ticket médio,
+        capacidade real de atendimento, o que já foi tentado e o que já existe funcionando.
+        Só depois definimos <em>quais</em> dos cinco produtos fazem sentido para o seu momento.
+      </p>
+      <p style="font-weight:600;color:var(--deep)">
+        Nem toda clínica precisa dos cinco. Vender todos para todo mundo seria catálogo, não diagnóstico.
+      </p>
+      <div class="asks">
+        <span>Quantos pacientes cabem na sua agenda?</span>
+        <span>Quanto vale um paciente novo?</span>
+        <span>Quem responde o WhatsApp?</span>
+        <span>O que já foi tentado antes?</span>
+        <span>Qual procedimento você quer crescer?</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="sec-head">
+      <p class="eyebrow">Os cinco sistemas</p>
+      <h2>Cada um responde a uma pergunta que você já se fez</h2>
+    </div>
+
+    <div class="systems">
+
+      <article class="sys-block">
+        <div>
+          <div class="sys-id">
+            <span class="n">01</span>
+            <span class="label">YPHE BRANDING</span>
+          </div>
+          <p class="ask">Por que eu, e não o ortopedista do andar de cima?</p>
+          <p class="plain">
+            Se o paciente não consegue completar essa frase sozinho, ele decide por preço
+            ou por proximidade — os dois piores critérios para você. Este sistema define
+            o que você representa, para quem, e traduz isso em como você aparece: nome,
+            identidade visual, forma de falar, posicionamento.
+          </p>
+          <p class="proof">
+            Não é "fazer uma logo". É decidir qual é o seu lugar no mercado antes de
+            gastar um real comunicando qualquer coisa.
+          </p>
+        </div>
+        <aside class="inside">
+          <h4>O que entra</h4>
+          <ul>
+            <li>Posicionamento e diferenciais reais</li>
+            <li>Identidade visual e aplicações</li>
+            <li>Identidade verbal — como a clínica fala</li>
+            <li>Arquitetura de marca (clínica × médico)</li>
+          </ul>
+          <div class="mod">Módulo 2 do Manual YPHE</div>
+        </aside>
+      </article>
+
+      <article class="sys-block">
+        <div>
+          <div class="sys-id">
+            <span class="n">02</span>
+            <span class="label">YPHE CONTENT</span>
+          </div>
+          <p class="ask">Como eu apareço toda semana sem virar influenciador?</p>
+          <p class="plain">
+            O paciente raramente decide no primeiro contato. Ele acompanha, reconhece,
+            confia — e só então marca. Este sistema transforma o seu posicionamento em
+            uma narrativa contínua: um calendário editorial planejado, gravações
+            agrupadas para ocupar pouco do seu tempo, e produção completa até a publicação.
+          </p>
+          <p class="proof">
+            Você grava em blocos. Nós escrevemos, editamos, publicamos e cuidamos do
+            calendário. Sua tarefa é aparecer e falar o que você já sabe.
+          </p>
+        </div>
+        <aside class="inside">
+          <h4>O que entra</h4>
+          <ul>
+            <li>Calendário editorial mensal</li>
+            <li>Roteiros escritos antes da gravação</li>
+            <li>Captação agrupada — poucas idas, muito material</li>
+            <li>Edição, design e publicação</li>
+            <li>Aprovação sua antes de ir ao ar</li>
+          </ul>
+          <div class="mod">Módulos 3 e 4 — Jornada da Marca® e Conteúdo Vivo®</div>
+        </aside>
+      </article>
+
+      <article class="sys-block">
+        <div>
+          <div class="sys-id">
+            <span class="n">03</span>
+            <span class="label">YPHE LEADS</span>
+          </div>
+          <p class="ask">E quem está procurando um médico como eu agora, hoje?</p>
+          <p class="plain">
+            Conteúdo constrói confiança ao longo do tempo. Mídia paga faz duas coisas:
+            captura quem já está decidido e digitando no Google, e apresenta você a
+            quem ainda nem procurou, no Instagram e no Facebook. Aqui entram as
+            campanhas, as páginas para onde elas levam, e o registro de cada contato.
+          </p>
+          <p class="proof">
+            Toda verba investida vira uma linha rastreável: quanto entrou, de onde veio,
+            quanto custou cada contato. Sem isso, mídia é aposta.
+          </p>
+        </div>
+        <aside class="inside">
+          <h4>O que entra</h4>
+          <ul>
+            <li>Google Ads e campanhas de busca</li>
+            <li>Meta Ads — Instagram e Facebook</li>
+            <li>Google Meu Negócio e avaliações</li>
+            <li>Landing pages por procedimento</li>
+            <li>Remarketing para quem já visitou</li>
+            <li>Painel de leads — cada contato registrado</li>
+          </ul>
+          <div class="mod">Módulo 5 do Manual YPHE</div>
+        </aside>
+      </article>
+
+      <article class="sys-block">
+        <div>
+          <div class="sys-id">
+            <span class="n">04</span>
+            <span class="label">YPHE CONNECT</span>
+          </div>
+          <p class="ask">Quantos pacientes eu perco antes mesmo de marcar?</p>
+          <p class="plain">
+            Este é o trecho mais caro e o menos olhado. O paciente te achou, mandou
+            mensagem às 21h e ninguém respondeu até o dia seguinte — quando ele já
+            marcou com outro. O site, o WhatsApp e o agendamento são a porta física
+            da clínica no digital.
+          </p>
+          <p class="proof">
+            A automação existe para que a conversa humana, quando acontecer, chegue
+            mais qualificada — nunca para substituir sua secretária por um robô.
+          </p>
+        </div>
+        <aside class="inside">
+          <h4>O que entra</h4>
+          <ul>
+            <li>Site próprio, rápido e claro</li>
+            <li>Atendimento automatizado no WhatsApp</li>
+            <li>Triagem e encaminhamento de primeiro contato</li>
+            <li>Integração com a agenda da clínica</li>
+            <li>Confirmação e lembrete para reduzir falta</li>
+          </ul>
+          <div class="mod">Módulos 6 e 7 — Tecnologia e Experiência</div>
+        </aside>
+      </article>
+
+      <article class="sys-block">
+        <div>
+          <div class="sys-id">
+            <span class="n">05</span>
+            <span class="label">YPHE INTELLIGENCE</span>
+          </div>
+          <p class="ask">Estou gastando ou investindo? Como eu sei?</p>
+          <p class="plain">
+            Sem o INTELLIGENCE, os outros quatro viram fé. Aqui os dados de todos os
+            trechos se juntam num painel só: quantos contatos entraram, quantos viraram
+            consulta, quanto custou cada um, qual conteúdo trouxe paciente e qual só
+            trouxe curtida.
+          </p>
+          <p class="proof">
+            Trabalhamos com projeções e metas, atualizadas conforme o dado real chega.
+            Elas são hipóteses de trabalho — nunca promessas de resultado.
+          </p>
+        </div>
+        <aside class="inside">
+          <h4>O que entra</h4>
+          <ul>
+            <li>Painel com acesso próprio da clínica</li>
+            <li>Custo por contato e por paciente</li>
+            <li>Leitura mensal com recomendação</li>
+            <li>Projeções revisadas com dado real</li>
+            <li>Acompanhamento consultivo das decisões</li>
+          </ul>
+          <div class="mod">Módulos 8 e 9 — Inteligência e Consultoria</div>
+        </aside>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+
+<div class="band">
+  <div class="wrap">
+    <section>
+      <div class="sec-head">
+        <p class="eyebrow">Como os sistemas se sustentam</p>
+        <h2>Não é uma escada com fim. É um ciclo que se corrige</h2>
+        <p class="sub">
+          O que o YPHE INTELLIGENCE aprende volta e muda o conteúdo, a mídia e às
+          vezes o próprio posicionamento. Por isso o trabalho não "termina" — ele fica mais preciso.
+        </p>
+      </div>
+
+      <div class="loop">
+        <div class="node">
+          <span class="k">BRANDING define</span>
+          <span class="v">o que faz sentido você dizer</span>
+        </div>
+        <div class="node">
+          <span class="k">CONTENT distribui</span>
+          <span class="v">isso ao longo dos meses</span>
+        </div>
+        <div class="node">
+          <span class="k">LEADS amplifica</span>
+          <span class="v">o que já provou funcionar</span>
+        </div>
+        <div class="node">
+          <span class="k">CONNECT converte</span>
+          <span class="v">interesse em consulta marcada</span>
+        </div>
+        <div class="node">
+          <span class="k">INTELLIGENCE corrige</span>
+          <span class="v">e o ciclo recomeça melhor</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Um compromisso, não um detalhe</p>
+      <h2>Marketing médico tem regra — e nós trabalhamos dentro dela</h2>
+    </div>
+
+    <div class="ethics">
+      <h3>O que nunca faremos com o seu CRM</h3>
+      <p>
+        As normas do Conselho Federal de Medicina sobre publicidade médica existem para
+        proteger o paciente e o profissional. Muita agência as ignora por desconhecimento
+        e deixa o médico exposto. Nós tratamos isso como critério de produção, não como
+        revisão de última hora.
+      </p>
+      <ul>
+        <li>Nenhuma promessa ou garantia de resultado</li>
+        <li>Nada de sensacionalismo ou apelo ao medo</li>
+        <li>Nenhuma reivindicação que não se sustente em evidência</li>
+        <li>Nenhuma peça publicada sem a sua aprovação</li>
+      </ul>
+      <p style="font-size:14px;color:var(--grey)">
+        As normas do CFM são revisadas periodicamente. Acompanhamos as atualizações e
+        ajustamos a produção sempre que necessário.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Transparência</p>
+      <h2>Você acompanha tudo, sem depender de reunião</h2>
+      <p class="sub">
+        Cada cliente recebe acesso a um portal próprio, onde vê o andamento real da
+        produção e aprova o que vai ao ar.
+      </p>
+    </div>
+
+    <div class="loop">
+      <div class="node">
+        <span class="k">Calendário</span>
+        <span class="v">o que será publicado, e quando</span>
+      </div>
+      <div class="node">
+        <span class="k">Aprovações</span>
+        <span class="v">você aprova ou pede ajuste, direto na peça</span>
+      </div>
+      <div class="node">
+        <span class="k">Andamento</span>
+        <span class="v">em que etapa cada conteúdo está</span>
+      </div>
+      <div class="node">
+        <span class="k">Resultados</span>
+        <span class="v">os números, atualizados</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Como começa</p>
+      <h2>Quatro passos até o primeiro conteúdo no ar</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="idx">1</span>
+        <div>
+          <h4>Conversa de diagnóstico</h4>
+          <p>Entendemos a clínica, a agenda, o que já foi tentado e o que você quer crescer. Sem proposta ainda.</p>
+          <p class="when">Uma reunião</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">2</span>
+        <div>
+          <h4>Arquitetura e proposta</h4>
+          <p>Apresentamos quais produtos fazem sentido, em que ordem, com projeção e investimento. Você decide o escopo.</p>
+          <p class="when">Até uma semana depois</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">3</span>
+        <div>
+          <h4>Construção</h4>
+          <p>Montamos o que foi contratado — marca, calendário, site, campanhas — e definimos o calendário de gravações.</p>
+          <p class="when">Conforme o escopo</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">4</span>
+        <div>
+          <h4>Operação e leitura</h4>
+          <p>O sistema entra em movimento. Todo mês você recebe os números e a recomendação do que ajustar.</p>
+          <p class="when">Contínuo</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="close">
+      <h2>Nosso sucesso é medido pela força da sua marca — não pela nossa exposição.</h2>
+      <p>
+        Ficamos nos bastidores, estruturando o que sustenta o seu crescimento.
+        O protagonismo é sempre seu.
+      </p>
+      <p class="sig">YPHE &middot; Tecnologia, Branding e Marketing Ortopédico</p>
+    </div>
+  </section>
+
+  <footer>
+    Documento comercial YPHE. Os sistemas descritos são módulos independentes —
+    a combinação recomendada para cada clínica é definida no diagnóstico.
+  </footer>
+
+</div>
+</body>
+</html>

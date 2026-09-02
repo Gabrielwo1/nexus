@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Método, produtos e time da YPHE. Projetamos a ponte entre quem tem a solução e quem precisa dela.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YPHE — Apresentação Institucional">
+<meta property="og:description" content="Método, produtos e time da YPHE. Projetamos a ponte entre quem tem a solução e quem precisa dela.">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔹</text></svg>">
+<title>YPHE Institucional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#070B12; --line:rgba(126,160,200,.16); --line-2:rgba(126,160,200,.09);
+    --txt:#E9F1F9; --txt-2:#A9BCD0; --txt-3:#6F8299;
+    --cy:#20BCED; --cy-2:#61D6FA; --blue:#2B4FE0; --gold:#E9A94B;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--txt);font-family:"IBM Plex Sans",-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;margin:0;letter-spacing:-.025em;line-height:1.06;text-wrap:balance}
+  p{margin:0}
+
+  #deck{display:flex;height:100vh;width:100%;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+  #deck::-webkit-scrollbar{display:none}
+  .slide{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:center;scroll-snap-stop:always;
+    position:relative;display:flex;align-items:center;justify-content:center;padding:94px 7vw 92px;
+    background:
+      radial-gradient(120% 90% at 50% -20%, rgba(43,79,224,.16), transparent 62%),
+      radial-gradient(80% 70% at 108% 110%, rgba(32,188,237,.10), transparent 60%),
+      var(--bg);}
+  .inner{width:100%;max-width:1180px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--cy);font-weight:500}
+
+  /* capa */
+  .s-cover .inner{display:flex;flex-direction:column;gap:28px}
+  .cover-mark{font-family:Archivo,sans-serif;font-weight:900;font-size:clamp(40px,7vw,88px);
+    letter-spacing:.34em;color:#fff;line-height:1}
+  .cover-tag{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--txt-3);margin-top:-12px}
+  .s-cover h1{font-size:clamp(28px,4.3vw,56px);font-weight:700;max-width:21ch}
+  .s-cover h1 em{font-style:normal;color:var(--cy)}
+  .s-cover .sub{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:58ch;line-height:1.6}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.07em;color:var(--txt-2);
+    border:1px solid var(--line);border-radius:999px;padding:7px 15px;background:rgba(255,255,255,.03)}
+
+  .s-head{display:flex;flex-direction:column;gap:13px;margin-bottom:40px}
+  .s-head h2{font-size:clamp(26px,3.7vw,48px);font-weight:700;max-width:21ch}
+  .s-head .sub{font-size:clamp(15px,1.4vw,19px);color:var(--txt-2);max-width:64ch;line-height:1.6}
+
+  /* distancia */
+  .gap3{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:30px}
+  .gcard{border:1px solid var(--line);border-radius:6px;padding:30px 32px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012))}
+  .gcard strong{display:block;font-family:Archivo,sans-serif;font-size:21px;font-weight:700;margin-bottom:9px}
+  .gcard span{font-size:16px;color:var(--txt-2);line-height:1.55}
+  .gvoid{text-align:center}
+  .gvoid b{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:500}
+  .gdash{height:1px;width:120px;background:repeating-linear-gradient(to right,var(--txt-3) 0 6px,transparent 6px 13px)}
+
+  /* metodo */
+  .met-grid{display:grid;grid-template-columns:minmax(0,.6fr) minmax(0,1.4fr);gap:5vw;align-items:center}
+  .met-art{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;max-height:46vh}
+  .fases{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fase{border-left:2px solid var(--cy);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:3px;
+    opacity:calc(.62 + var(--i) * .07)}
+  .fn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--cy);letter-spacing:.14em}
+  .ft{font-family:Archivo,sans-serif;font-size:17px;font-weight:600;color:#fff}
+  .fd{font-size:13.5px;color:var(--txt-2);line-height:1.45}
+
+  /* produto */
+  .prod-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:6vw;align-items:center;width:100%;max-width:1180px}
+  .prod-art{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;max-height:54vh}
+  .halo{position:absolute;inset:6%;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%, rgba(32,188,237,.34), rgba(43,79,224,.16) 45%, transparent 68%);filter:blur(26px)}
+  .ico{position:relative;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 30px 55px rgba(4,14,40,.75));animation:float 7s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(-9px)}50%{transform:translateY(9px)}}
+  .prod-copy{display:flex;flex-direction:column;gap:15px;min-width:0}
+  .prod-name{font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:.01em;color:#fff}
+  .ask{font-family:Archivo,sans-serif;font-size:clamp(18px,1.95vw,26px);font-weight:600;
+    line-height:1.22;color:var(--cy-2);letter-spacing:-.02em}
+  .ask::before{content:"\201C"} .ask::after{content:"\201D"}
+  .lede{font-size:clamp(14px,1.24vw,16.5px);color:var(--txt-2);line-height:1.6;max-width:54ch}
+  .feat{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:9px 22px}
+  .feat li{font-size:13.5px;color:var(--txt-2);line-height:1.45;padding-left:18px;position:relative}
+  .feat li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:1px;background:var(--cy)}
+
+  /* gate */
+  .gate-grid{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);gap:5vw;align-items:center}
+  .gate{border:1px solid rgba(32,188,237,.4);border-left:4px solid var(--cy);border-radius:6px;padding:34px 38px;
+    background:linear-gradient(135deg,rgba(43,79,224,.15),rgba(32,188,237,.05));display:flex;flex-direction:column;gap:16px}
+  .gate h3{font-size:clamp(21px,2.4vw,30px);font-weight:700;color:#fff}
+  .gate p{font-size:clamp(14.5px,1.3vw,17px);color:var(--txt-2);max-width:64ch;line-height:1.6}
+  .gate .hi{color:var(--cy-2);font-weight:600}
+  .asks{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+  .asks span{font-size:13px;color:var(--txt-2);border:1px solid var(--line);border-radius:4px;
+    padding:6px 13px;background:rgba(255,255,255,.03)}
+
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+  .card{border:1px solid var(--line);border-radius:6px;padding:24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));
+    display:flex;flex-direction:column;gap:9px}
+  .card .k{font-family:Archivo,sans-serif;font-size:16px;font-weight:600;color:var(--cy)}
+  .card .v{font-size:14.5px;color:var(--txt-2);line-height:1.55}
+
+  /* mapa */
+  .mapa{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .mapa td{padding:13px 22px;border-bottom:1px solid var(--line-2);font-size:15px;color:var(--txt-2)}
+  .mapa tr:last-child td{border-bottom:0}
+  .mapa tr:nth-child(odd) td{background:rgba(255,255,255,.022)}
+  .mapa td:first-child{color:var(--txt);width:52%}
+  .tag{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.05em;
+    color:var(--cy);border:1px solid rgba(32,188,237,.32);border-radius:3px;padding:4px 10px;
+    background:rgba(32,188,237,.07);white-space:nowrap}
+
+  /* pessoas */
+  .people{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .people-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pcard{border:1px solid var(--line);border-radius:6px;padding:20px 22px;display:flex;gap:16px;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.008))}
+  .pcard-lead{border-color:rgba(32,188,237,.34);
+    background:linear-gradient(135deg,rgba(43,79,224,.16),rgba(32,188,237,.04))}
+  .pini{flex:0 0 44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:Archivo,sans-serif;font-weight:800;font-size:18px;color:#fff;
+    background:linear-gradient(140deg,var(--blue),var(--cy));}
+  .pcard > div{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .pnome{font-family:Archivo,sans-serif;font-size:19px;font-weight:700;color:#fff;line-height:1.15}
+  .pfunc{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--cy)}
+  .pdesc{font-size:13.5px;color:var(--txt-2);line-height:1.5;margin-top:4px}
+  .people-3 .pdesc{font-size:13px}
+  .people-3 .pnome{font-size:17px}
+  .people-3 .pini{flex:0 0 38px;height:38px;font-size:16px}
+
+  /* vetos */
+  .veto{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  .vbox{border:1px solid var(--line);border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:12px}
+  .vbox.no{border-color:rgba(233,169,75,.4);background:linear-gradient(135deg,rgba(233,169,75,.09),transparent)}
+  .vbox h3{font-size:19px;font-weight:700}
+  .vbox.no h3{color:var(--gold)} .vbox.si h3{color:var(--cy)}
+  .vbox ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:8px}
+  .vbox li{font-size:14.5px;color:var(--txt-2);line-height:1.45}
+
+  /* passos */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .step{border-top:2px solid var(--cy);padding:20px 18px 0;display:flex;flex-direction:column;gap:8px}
+  .step .idx{font-family:Archivo,sans-serif;font-size:36px;font-weight:800;color:var(--cy);line-height:1;letter-spacing:-.04em}
+  .step h4{font-family:Archivo,sans-serif;font-size:17px;font-weight:600;margin:0}
+  .step p{font-size:14px;color:var(--txt-2);line-height:1.5}
+  .step .when{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-3);letter-spacing:.1em;margin-top:auto;padding-top:8px}
+
+  /* fecho */
+  .s-close .inner{display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+  .s-close h2{font-size:clamp(27px,4.2vw,54px);font-weight:700;max-width:20ch}
+  .s-close h2 em{font-style:normal;color:var(--cy)}
+  .s-close p{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:57ch;line-height:1.6}
+  .s-close .sig{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--txt-3);margin-top:8px}
+
+  /* chrome */
+  .chrome{position:fixed;inset:0;pointer-events:none;z-index:20}
+  .top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:22px 7vw}
+  .mark{font-family:Archivo,sans-serif;font-weight:800;font-size:15px;letter-spacing:.4em;color:#fff;opacity:.92}
+  .count{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;color:var(--txt-3)}
+  .count b{color:var(--cy);font-weight:500}
+  .bottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
+    gap:24px;padding:20px 7vw 24px}
+  .dots{display:flex;gap:6px;pointer-events:auto;flex-wrap:wrap}
+  .dot{width:20px;height:4px;border-radius:2px;border:0;padding:0;cursor:pointer;
+    background:rgba(169,188,208,.26);transition:background .25s,width .25s}
+  .dot:hover{background:rgba(169,188,208,.5)}
+  .dot[aria-current="true"]{background:var(--cy);width:38px}
+  .dot:focus-visible{outline:2px solid var(--cy-2);outline-offset:3px}
+  .navs{display:flex;gap:10px;pointer-events:auto}
+  .nav{width:42px;height:42px;border-radius:50%;cursor:pointer;border:1px solid var(--line);
+    background:rgba(255,255,255,.045);color:var(--txt-2);display:flex;align-items:center;justify-content:center;
+    transition:background .2s,color .2s,border-color .2s}
+  .nav:hover:not(:disabled){background:rgba(32,188,237,.14);color:#fff;border-color:var(--cy)}
+  .nav:disabled{opacity:.3;cursor:default}
+  .nav:focus-visible{outline:2px solid var(--cy-2);outline-offset:2px}
+  .nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--txt-3);transition:opacity .5s}
+
+  @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .ico{animation:none} }
+
+  @media (max-width:900px){
+    .slide{padding:82px 6vw 96px;align-items:flex-start;overflow-y:auto}
+    .prod-grid,.met-grid,.gate-grid{grid-template-columns:1fr;gap:22px}
+    .prod-art,.met-art{max-height:24vh;order:-1}
+    .feat,.fases,.people,.veto{grid-template-columns:1fr}
+    .people-3{grid-template-columns:1fr}
+    .gap3{grid-template-columns:1fr;gap:16px} .gdash{width:100%}
+    .steps{grid-template-columns:1fr 1fr}
+    .mapa td{padding:11px 14px;font-size:13.5px}
+    .hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <section class="slide s-cover" data-title="Capa">
+    <div class="inner">
+      <div>
+        <div class="cover-mark">YPHE</div>
+        <p class="cover-tag">Tecnologia, Branding e Marketing</p>
+      </div>
+      <h1>Projetamos a ponte entre quem tem a solução e <em>quem precisa dela</em>.</h1>
+      <p class="sub">Não entregamos peças soltas de conteúdo. Diagnosticamos primeiro, depois construímos o sistema certo, com os módulos certos, no ritmo certo.</p>
+      <div class="chips">
+        <span class="chip">Diagnóstico antes de proposta</span>
+        <span class="chip">Método próprio, aplicação modular</span>
+        <span class="chip">Tecnologia desenvolvida em casa</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="A filosofia">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Por que existimos</p>
+        <h2>Existe uma distância entre quem sabe e quem precisa</h2>
+        <p class="sub">Quando essa distância não é bem construída, conhecimento de valor real simplesmente não chega a quem precisa dele. Não começamos perguntando "que campanha podemos fazer?" — começamos perguntando que valor existe aqui, e por que ele ainda não chegou.</p>
+      </div>
+      <div class="gap3">
+        <div class="gcard"><strong>Quem precisa</strong>
+          <span>Tem o problema. Não sabe nomeá-lo, quem resolve, nem em quem confiar.</span></div>
+        <div class="gvoid"><b>a distância</b><div class="gdash"></div></div>
+        <div class="gcard"><strong>Quem resolve</strong>
+          <span>Tem a solução, a competência e o resultado. E capacidade ociosa.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="O método">
+    <div class="inner">
+      <div class="met-grid">
+        <div class="met-art"><div class="halo"></div>
+          <img class="ico" src="/apresentacao/ico/ciclo.png" alt="Ícone do ciclo do método"></div>
+        <div>
+          <div class="s-head" style="margin-bottom:28px">
+            <p class="eyebrow">O método</p>
+            <h2>Seis fases que não mudam de projeto para projeto</h2>
+            <p class="sub">O que muda é a profundidade e os instrumentos de cada fase — nunca a lógica. Fundamento constante, aplicação modular.</p>
+          </div>
+          <div class="fases">
+        <div class="fase" style="--i:0">
+          <span class="fn">1</span>
+          <span class="ft">Diagnóstico</span>
+          <span class="fd">Entender a organização antes de propor qualquer solução.</span>
+        </div>
+        <div class="fase" style="--i:1">
+          <span class="fn">2</span>
+          <span class="ft">Arquitetura</span>
+          <span class="fd">Traduzir o diagnóstico em decisões: posicionamento, canais, metas.</span>
+        </div>
+        <div class="fase" style="--i:2">
+          <span class="fn">3</span>
+          <span class="ft">Construção</span>
+          <span class="fd">Produzir os ativos definidos — marca, sistemas, conteúdo, tecnologia.</span>
+        </div>
+        <div class="fase" style="--i:3">
+          <span class="fn">4</span>
+          <span class="ft">Ativação</span>
+          <span class="fd">Colocar o sistema em movimento: publicação, distribuição, campanhas.</span>
+        </div>
+        <div class="fase" style="--i:4">
+          <span class="fn">5</span>
+          <span class="ft">Inteligência</span>
+          <span class="fd">Ler o que os dados dizem, sem julgamento prematuro.</span>
+        </div>
+        <div class="fase" style="--i:5">
+          <span class="fn">6</span>
+          <span class="ft">Evolução</span>
+          <span class="fd">Ajustar a arquitetura e reiniciar o ciclo em nível mais informado.</span>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Setores">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Escala sem diluição</p>
+        <h2>O mesmo método, aplicações completamente diferentes</h2>
+        <p class="sub">Nossa marca nasceu no ortopédico, mas o método não é do setor — é da lógica. O que muda de um segmento para outro são os indicadores e a linguagem, não o rigor do processo.</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <span class="k">Clínica e consultório</span>
+          <span class="v">autoridade profissional, jornada do paciente, aquisição, conversão, ticket médio, receita</span>
+        </div>
+        <div class="card">
+          <span class="k">Instituição e serviço público</span>
+          <span class="v">acessibilidade, educação, impacto social, alcance, participação da comunidade</span>
+        </div>
+        <div class="card">
+          <span class="k">Varejo e serviço</span>
+          <span class="v">reconhecimento de marca, recorrência de compra, ticket, retenção e valor no tempo</span>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:26px;font-size:15px;color:var(--txt-3);max-width:70ch">
+        A escala ocorre pela padronização do processo — não pela padronização da solução final.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Diagnóstico">
+    <div class="inner">
+      <div class="gate-grid">
+        <div class="met-art"><div class="halo"></div>
+          <img class="ico" src="/apresentacao/ico/diag.png" alt="Ícone do diagnóstico"></div>
+        <div>
+          <div class="s-head" style="margin-bottom:26px">
+            <p class="eyebrow">A porta de entrada</p>
+            <h2>Nenhum produto é vendido antes do diagnóstico</h2>
+          </div>
+          <div class="gate">
+            <h3>Diagnóstico e Arquitetura Estratégica</h3>
+            <p>Antes de qualquer proposta: mercado, público, ticket médio, faturamento, verba, capacidade operacional, tecnologia existente e o que já foi tentado. Só então definimos quais dos cinco produtos fazem sentido.</p>
+            <p class="hi">Nem toda organização precisa dos cinco. Vender todos para todo mundo seria catálogo, não diagnóstico.</p>
+            <div class="asks">
+              <span>Qual a capacidade real de atendimento?</span>
+              <span>Quanto vale um cliente novo?</span>
+              <span>O que já foi tentado antes?</span>
+              <span>Que tecnologia já existe?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="slide" data-title="YPHE BRANDING">
+  <div class="prod-grid">
+    <div class="prod-art"><div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/branding.png" alt="Ícone YPHE BRANDING"></div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 01 &nbsp;·&nbsp; Marca e posicionamento</p>
+      <h2 class="prod-name">YPHE BRANDING</h2>
+      <p class="ask">Por que você, e não o concorrente ao lado?</p>
+      <p class="lede">Se o cliente não consegue completar essa frase sozinho, ele decide por preço. Definimos o que a organização representa, para quem, e traduzimos isso em como ela aparece — antes de gastar um real comunicando qualquer coisa.</p>
+      <ul class="feat"><li>Posicionamento e diferenciais reais</li><li>Identidade visual e aplicações</li><li>Identidade verbal — como a marca fala</li><li>Arquitetura de marca e submarcas</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide" data-title="YPHE CONTENT">
+  <div class="prod-grid">
+    <div class="prod-art"><div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/content.png" alt="Ícone YPHE CONTENT"></div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 02 &nbsp;·&nbsp; Narrativa e produção</p>
+      <h2 class="prod-name">YPHE CONTENT</h2>
+      <p class="ask">Como aparecer com consistência sem depender de inspiração?</p>
+      <p class="lede">Ninguém decide no primeiro contato. Acompanha, reconhece, confia — e só então compra. Transformamos o posicionamento em narrativa contínua, com produção agrupada para ocupar pouco do tempo de quem aparece.</p>
+      <ul class="feat"><li>Calendário editorial mensal</li><li>Roteiro e copy antes da produção</li><li>Captação agrupada em blocos</li><li>Edição, design e publicação</li><li>Gestão dos canais</li><li>Aprovação do cliente antes do ar</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide" data-title="YPHE LEADS">
+  <div class="prod-grid">
+    <div class="prod-art"><div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/leads.png" alt="Ícone YPHE LEADS"></div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 03 &nbsp;·&nbsp; Mídia e captação</p>
+      <h2 class="prod-name">YPHE LEADS</h2>
+      <p class="ask">Quem já procura o que você faz chega até você?</p>
+      <p class="lede">Mídia paga faz duas coisas: captura quem já está decidido e digitando no Google, e apresenta a marca a quem ainda nem procurou, no Instagram e no Facebook. Toda verba vira linha rastreável.</p>
+      <ul class="feat"><li>Google Ads e campanhas de busca</li><li>Meta Ads — Instagram e Facebook</li><li>Google Meu Negócio e avaliações</li><li>Landing pages por oferta</li><li>Remarketing para quem já visitou</li><li>Painel de leads — cada contato registrado</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide" data-title="YPHE CONNECT">
+  <div class="prod-grid">
+    <div class="prod-art"><div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/connect.png" alt="Ícone YPHE CONNECT"></div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 04 &nbsp;·&nbsp; Tecnologia e experiência</p>
+      <h2 class="prod-name">YPHE CONNECT</h2>
+      <p class="ask">Quantas pessoas desistem antes de falar com alguém?</p>
+      <p class="lede">O trecho mais caro e o menos olhado. A pessoa encontrou, mandou mensagem às 21h e ninguém respondeu até o dia seguinte. Site, WhatsApp e agendamento são a porta da operação no digital.</p>
+      <ul class="feat"><li>Sites, landing pages e ambientes digitais</li><li>Automação e atendimento no WhatsApp</li><li>Integrações, CRM e agenda</li><li>Inteligência artificial aplicada</li><li>Experiências interativas e gamificação</li><li>Confirmação e lembrete automáticos</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide" data-title="YPHE INTELLIGENCE">
+  <div class="prod-grid">
+    <div class="prod-art"><div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/intel.png" alt="Ícone YPHE INTELLIGENCE"></div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 05 &nbsp;·&nbsp; Dados, evolução e consultoria</p>
+      <h2 class="prod-name">YPHE INTELLIGENCE</h2>
+      <p class="ask">Isso é gasto ou investimento? Como saber?</p>
+      <p class="lede">Sem este produto, os outros quatro viram fé. Os dados de todos os trechos se juntam num painel só — e a estratégia passa a evoluir por evidência, não por suposição.</p>
+      <ul class="feat"><li>Painel com acesso próprio do cliente</li><li>Custo por contato e por venda</li><li>Leitura mensal com recomendação</li><li>Projeções revisadas com dado real</li><li>Testes e hipóteses estruturadas</li><li>Acompanhamento consultivo das decisões</li></ul>
+    </div>
+  </div>
+</section>
+
+  <section class="slide" data-title="Mapa de módulos">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Nada fica de fora</p>
+        <h2>Os nove módulos do método, agrupados em cinco produtos</h2>
+        <p class="sub">Os produtos são a forma comercial. Por dentro, cada um carrega os módulos da metodologia — contratados juntos ou separados, conforme o diagnóstico apontar.</p>
+      </div>
+      <table class="mapa"><tbody>
+          <tr><td>Diagnóstico e Arquitetura Estratégica</td><td><span class="tag">Porta de entrada — obrigatória</span></td></tr>
+          <tr><td>Sistema de Marca</td><td><span class="tag">YPHE BRANDING</span></td></tr>
+          <tr><td>Jornada da Marca®</td><td><span class="tag">YPHE CONTENT</span></td></tr>
+          <tr><td>Sistema de Conteúdo Vivo®</td><td><span class="tag">YPHE CONTENT</span></td></tr>
+          <tr><td>Sistema de Aquisição</td><td><span class="tag">YPHE LEADS</span></td></tr>
+          <tr><td>Tecnologia e Automação</td><td><span class="tag">YPHE CONNECT</span></td></tr>
+          <tr><td>Experiência e Inovação</td><td><span class="tag">YPHE CONNECT</span></td></tr>
+          <tr><td>Inteligência e Evolução</td><td><span class="tag">YPHE INTELLIGENCE</span></td></tr>
+          <tr><td>Consultoria Estratégica</td><td><span class="tag">YPHE INTELLIGENCE</span></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Direção">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Quem conduz</p>
+        <h2>Dois sócios, duas frentes que se completam</h2>
+        <p class="sub">Toda conta tem um responsável por comunicação e um responsável por produção e tecnologia. Nenhuma decisão fica sem dono.</p>
+      </div>
+      <div class="people">
+        <div class="pcard pcard-lead">
+          <span class="pini">G</span>
+          <div>
+            <span class="pnome">Gabriel</span>
+            <span class="pfunc">Produção, produto e tecnologia</span>
+            <span class="pdesc">Design, edição, sistemas e a tecnologia própria da agência. Conduz a produção e a validação do que é entregue.</span>
+          </div>
+        </div>
+        <div class="pcard pcard-lead">
+          <span class="pini">E</span>
+          <div>
+            <span class="pnome">Eliab</span>
+            <span class="pfunc">Conteúdo, comercial e mídia</span>
+            <span class="pdesc">Calendário editorial, copy e roteiro, relação com o cliente e tráfego pago. Conduz a estratégia de comunicação.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="O time">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Quem executa</p>
+        <h2>Um time fixo por especialidade — não freelancers rotativos</h2>
+        <p class="sub">Cada etapa da produção tem um profissional dedicado. Quem escreve não é quem grava; quem grava não é quem edita. Especialização em cada trecho da cadeia.</p>
+      </div>
+      <div class="people-3">
+        <div class="pcard">
+          <span class="pini">F</span>
+          <div>
+            <span class="pnome">Fernando</span>
+            <span class="pfunc">Branding e design</span>
+            <span class="pdesc">Identidade visual, aplicações e consistência da marca em cada peça.</span>
+          </div>
+        </div>
+        <div class="pcard">
+          <span class="pini">G</span>
+          <div>
+            <span class="pnome">Gerval</span>
+            <span class="pfunc">Copy e roteiro</span>
+            <span class="pdesc">Escreve os roteiros e a linha de comunicação antes de qualquer gravação.</span>
+          </div>
+        </div>
+        <div class="pcard">
+          <span class="pini">G</span>
+          <div>
+            <span class="pnome">Guto</span>
+            <span class="pfunc">Captação e vídeo</span>
+            <span class="pdesc">Grava o material bruto em blocos agrupados, otimizando a agenda do cliente.</span>
+          </div>
+        </div>
+        <div class="pcard">
+          <span class="pini">A</span>
+          <div>
+            <span class="pnome">Augusto</span>
+            <span class="pfunc">Captação e stories</span>
+            <span class="pdesc">Cobertura contínua e formatos curtos do dia a dia.</span>
+          </div>
+        </div>
+        <div class="pcard">
+          <span class="pini">P</span>
+          <div>
+            <span class="pnome">Pet</span>
+            <span class="pfunc">Edição e social media</span>
+            <span class="pdesc">Edita, monta as artes e prepara cada peça para publicação.</span>
+          </div>
+        </div>
+        <div class="pcard">
+          <span class="pini">K</span>
+          <div>
+            <span class="pnome">Karyne</span>
+            <span class="pfunc">Publicação e canais</span>
+            <span class="pdesc">Publica, mantém o calendário em dia e cuida da presença nos canais.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Tecnologia própria">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O que nos diferencia</p>
+        <h2>Construímos a nossa própria tecnologia — e o cliente entra nela</h2>
+        <p class="sub">Não operamos em planilhas soltas. Desenvolvemos o sistema que roda a agência, e cada cliente recebe um acesso próprio dentro dele.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Calendário editorial</span><span class="v">o que será publicado, quando, e em que etapa está cada peça</span></div>
+        <div class="card"><span class="k">Aprovações</span><span class="v">o cliente aprova ou pede ajuste direto na peça, sem reunião</span></div>
+        <div class="card"><span class="k">Acervo de mídias</span><span class="v">todo o material bruto e final guardado e acessível</span></div>
+        <div class="card"><span class="k">Painel de resultados</span><span class="v">leads, custo por contato e desempenho atualizados</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Padrões">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Padrões de qualidade</p>
+        <h2>O que aceitamos publicar — e o que é vetado, sem exceção</h2>
+      </div>
+      <div class="veto">
+        <div class="vbox si">
+          <h3>Toda peça precisa ter</h3>
+          <ul>
+            <li>Conexão clara com uma decisão de estratégia</li>
+            <li>Coerência com a identidade visual e verbal</li>
+            <li>Função declarada antes da produção</li>
+            <li>Reivindicações apoiadas em fato verificável</li>
+          </ul>
+        </div>
+        <div class="vbox no">
+          <h3>Nunca fazemos</h3>
+          <ul>
+            <li>Prometer resultado irreal ou não verificável</li>
+            <li>Copiar diretamente um concorrente</li>
+            <li>Aderir a tendência sem propósito conectado</li>
+            <li>Implementar tecnologia sem necessidade diagnosticada</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Como começa">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Como começa</p>
+        <h2>Quatro passos até o sistema em movimento</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="idx">1</span><h4>Conversa de diagnóstico</h4><p>Entendemos o negócio, a capacidade e o objetivo. Sem proposta ainda.</p><span class="when">Uma reunião</span></div>
+        <div class="step"><span class="idx">2</span><h4>Arquitetura e proposta</h4><p>Quais produtos, em que ordem, com projeção e investimento definidos.</p><span class="when">Até uma semana</span></div>
+        <div class="step"><span class="idx">3</span><h4>Construção</h4><p>Produzimos os ativos contratados e montamos o calendário de operação.</p><span class="when">Conforme o escopo</span></div>
+        <div class="step"><span class="idx">4</span><h4>Ativação e leitura</h4><p>O sistema entra no ar. Todo mês, números e recomendação do que ajustar.</p><span class="when">Contínuo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide s-close" data-title="Fecho">
+    <div class="inner">
+      <p class="eyebrow">O nosso lugar</p>
+      <h2>Nosso sucesso é medido pela força da <em>sua</em> marca — não pela nossa exposição.</h2>
+      <p>Ficamos nos bastidores, estruturando o que sustenta o crescimento. O protagonismo é sempre de quem atende.</p>
+      <p class="sig">YPHE · Tecnologia, Branding e Marketing</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="chrome">
+  <div class="top">
+    <span class="mark">YPHE</span>
+    <span class="count"><b id="cur">01</b> / <span id="tot">00</span></span>
+  </div>
+  <div class="bottom">
+    <div class="dots" id="dots"></div>
+    <div class="navs">
+      <button class="nav" id="prev" aria-label="Slide anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="nav" id="next" aria-label="Próximo slide"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+  <div class="hint" id="hint">use &larr; &rarr; para navegar</div>
+</div>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck');
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var dots=document.getElementById('dots'),cur=document.getElementById('cur'),tot=document.getElementById('tot');
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),hint=document.getElementById('hint');
+  var idx=0;
+  tot.textContent=String(slides.length).padStart(2,'0');
+  slides.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='dot'; b.type='button';
+    b.setAttribute('aria-label','Ir para '+(s.dataset.title||('slide '+(i+1))));
+    b.addEventListener('click',function(){go(i);});
+    dots.appendChild(b);
+  });
+  var dotEls=Array.prototype.slice.call(dots.children);
+  function paint(){
+    cur.textContent=String(idx+1).padStart(2,'0');
+    dotEls.forEach(function(d,i){ if(i===idx) d.setAttribute('aria-current','true'); else d.removeAttribute('aria-current'); });
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    if(hint) hint.style.opacity = idx>0 ? '0' : '1';
+  }
+  function go(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides[idx].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    paint();
+  }
+  prev.addEventListener('click',function(){go(idx-1);});
+  next.addEventListener('click',function(){go(idx+1);});
+  window.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}
+    else if(e.key==='Home'){e.preventDefault();go(0);}
+    else if(e.key==='End'){e.preventDefault();go(slides.length-1);}
+  });
+  var tick;
+  deck.addEventListener('scroll',function(){
+    clearTimeout(tick);
+    tick=setTimeout(function(){
+      var w=deck.clientWidth||1, n=Math.round(deck.scrollLeft/w);
+      if(n!==idx){ idx=Math.max(0,Math.min(slides.length-1,n)); paint(); }
+    },90);
+  },{passive:true});
+  paint();
+})();
+</script>
+</body>
+</html>

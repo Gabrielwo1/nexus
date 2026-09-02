@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="O paciente que precisa de você já existe. O que falta é o caminho até a sua porta.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YPHE — Cinco produtos para clínicas">
+<meta property="og:description" content="O paciente que precisa de você já existe. O que falta é o caminho até a sua porta.">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔷</text></svg>">
+<title>Deck YPHE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#070B12;
+    --bg-2:#0C1420;
+    --panel:#101A28;
+    --line:rgba(126,160,200,.16);
+    --line-2:rgba(126,160,200,.09);
+    --txt:#E9F1F9;
+    --txt-2:#A9BCD0;
+    --txt-3:#6F8299;
+    --cy:#20BCED;
+    --cy-2:#61D6FA;
+    --blue:#2B4FE0;
+    --deep:#052699;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--bg);color:var(--txt);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.disp{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;margin:0;letter-spacing:-.025em;line-height:1.05;text-wrap:balance}
+  p{margin:0}
+
+  /* ================= filmstrip ================= */
+  #deck{
+    display:flex;height:100vh;width:100%;
+    overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+  }
+  #deck::-webkit-scrollbar{display:none}
+  .slide{
+    flex:0 0 100vw;width:100vw;height:100vh;
+    scroll-snap-align:center;scroll-snap-stop:always;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    padding:96px 7vw 92px;
+    background:
+      radial-gradient(120% 90% at 50% -20%, rgba(43,79,224,.16), transparent 62%),
+      radial-gradient(80% 70% at 108% 110%, rgba(32,188,237,.10), transparent 60%),
+      var(--bg);
+  }
+  .inner{width:100%;max-width:1180px}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--cy);font-weight:500;
+  }
+
+  /* ================= capa ================= */
+  .s-cover .inner{display:flex;flex-direction:column;gap:30px}
+  .cover-mark{
+    font-family:Archivo,sans-serif;font-weight:900;font-size:clamp(40px,7vw,88px);
+    letter-spacing:.34em;color:#fff;line-height:1;
+  }
+  .cover-tag{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--txt-3);margin-top:-14px;
+  }
+  .s-cover h1{font-size:clamp(30px,4.6vw,60px);font-weight:700;max-width:20ch}
+  .s-cover h1 em{font-style:normal;color:var(--cy)}
+  .s-cover .sub{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:56ch;line-height:1.6}
+  .cover-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .chip{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.07em;
+    color:var(--txt-2);border:1px solid var(--line);border-radius:999px;
+    padding:7px 15px;background:rgba(255,255,255,.03);
+  }
+
+  /* ================= titulos de secao ================= */
+  .s-head{display:flex;flex-direction:column;gap:14px;margin-bottom:44px}
+  .s-head h2{font-size:clamp(28px,3.9vw,50px);font-weight:700;max-width:20ch}
+  .s-head .sub{font-size:clamp(15px,1.4vw,19px);color:var(--txt-2);max-width:62ch;line-height:1.6}
+
+  /* ================= distancia ================= */
+  .gap3{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:30px}
+  .gcard{
+    border:1px solid var(--line);border-radius:6px;padding:30px 32px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  }
+  .gcard strong{display:block;font-family:Archivo,sans-serif;font-size:22px;font-weight:700;margin-bottom:10px}
+  .gcard span{font-size:16px;color:var(--txt-2);line-height:1.6}
+  .gvoid{text-align:center}
+  .gvoid b{
+    display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;color:#E9A94B;margin-bottom:12px;font-weight:500;
+  }
+  .gdash{height:1px;width:120px;background:repeating-linear-gradient(to right,var(--txt-3) 0 6px,transparent 6px 13px)}
+
+  /* ================= jornada ================= */
+  .jrow{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .jstop{
+    padding:28px 22px 30px;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;gap:12px;position:relative;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  }
+  .jstop:last-child{border-right:0}
+  .jstop::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--cy);opacity:calc(.3 + var(--i) * .17);
+  }
+  .jn{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--txt-3);letter-spacing:.15em}
+  .jwho{font-family:Archivo,sans-serif;font-weight:600;font-size:17px;line-height:1.3;color:var(--txt)}
+  .jsys{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--cy);margin-top:auto;padding-top:8px}
+
+  /* ================= produto ================= */
+  .prod-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:6vw;align-items:center;width:100%;max-width:1180px}
+  .prod-art{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;max-height:56vh}
+  .halo{
+    position:absolute;inset:6%;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%, rgba(32,188,237,.34), rgba(43,79,224,.16) 45%, transparent 68%);
+    filter:blur(26px);
+  }
+  .ico{
+    position:relative;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 30px 55px rgba(4,14,40,.75));
+    animation:float 7s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(-9px)}50%{transform:translateY(9px)}}
+  .prod-copy{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .prod-name{font-size:clamp(28px,3.5vw,46px);font-weight:800;letter-spacing:.01em;color:#fff}
+  .ask{
+    font-family:Archivo,sans-serif;font-size:clamp(19px,2.05vw,28px);font-weight:600;
+    line-height:1.22;color:var(--cy-2);letter-spacing:-.02em;
+  }
+  .ask::before{content:"\201C"}
+  .ask::after{content:"\201D"}
+  .lede{font-size:clamp(14.5px,1.28vw,17px);color:var(--txt-2);line-height:1.62;max-width:54ch}
+  .feat{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+  .feat li{
+    font-size:14px;color:var(--txt-2);line-height:1.45;padding-left:18px;position:relative;
+  }
+  .feat li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:1px;background:var(--cy)}
+
+  /* ================= diagnostico ================= */
+  .gate{
+    border:1px solid rgba(32,188,237,.4);border-left:4px solid var(--cy);
+    border-radius:6px;padding:40px 44px;
+    background:linear-gradient(135deg,rgba(43,79,224,.15),rgba(32,188,237,.05));
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .gate h3{font-size:clamp(22px,2.5vw,32px);font-weight:700;color:#fff}
+  .gate p{font-size:clamp(15px,1.35vw,18px);color:var(--txt-2);max-width:66ch;line-height:1.6}
+  .gate .hi{color:var(--cy-2);font-weight:600}
+  .asks{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px}
+  .asks span{font-size:13.5px;color:var(--txt-2);border:1px solid var(--line);border-radius:4px;padding:7px 14px;background:rgba(255,255,255,.03)}
+
+  /* ================= grid generico ================= */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+  .card{
+    border:1px solid var(--line);border-radius:6px;padding:24px 24px 26px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .card .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cy)}
+  .card .v{font-size:15px;color:var(--txt-2);line-height:1.5}
+
+  /* ================= etica ================= */
+  .eth{
+    border:1px solid rgba(233,169,75,.4);border-radius:6px;padding:36px 40px;
+    background:linear-gradient(135deg,rgba(233,169,75,.1),transparent);
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .eth h3{font-size:clamp(20px,2.2vw,28px);font-weight:700;color:#E9A94B}
+  .eth p{font-size:16px;color:var(--txt-2);max-width:68ch;line-height:1.6}
+  .eth ul{margin:2px 0 0;padding-left:20px;display:grid;grid-template-columns:1fr 1fr;gap:9px 26px}
+  .eth li{font-size:15.5px;color:var(--txt-2)}
+
+  /* ================= passos ================= */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .step{
+    border-top:2px solid var(--cy);padding:22px 20px 0;
+    display:flex;flex-direction:column;gap:9px;
+  }
+  .step .idx{font-family:Archivo,sans-serif;font-size:38px;font-weight:800;color:var(--cy);line-height:1;letter-spacing:-.04em}
+  .step h4{font-family:Archivo,sans-serif;font-size:18px;font-weight:600;margin:0}
+  .step p{font-size:14.5px;color:var(--txt-2);line-height:1.5}
+  .step .when{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-3);letter-spacing:.1em;margin-top:auto;padding-top:8px}
+
+  /* ================= fecho ================= */
+  .s-close .inner{display:flex;flex-direction:column;gap:24px;align-items:flex-start}
+  .s-close h2{font-size:clamp(28px,4.4vw,58px);font-weight:700;max-width:19ch}
+  .s-close h2 em{font-style:normal;color:var(--cy)}
+  .s-close p{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:56ch;line-height:1.6}
+  .s-close .sig{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--txt-3);margin-top:10px;
+  }
+
+  /* ================= chrome ================= */
+  .chrome{position:fixed;inset:0;pointer-events:none;z-index:20}
+  .top{
+    position:absolute;top:0;left:0;right:0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 7vw;
+  }
+  .mark{font-family:Archivo,sans-serif;font-weight:800;font-size:15px;letter-spacing:.4em;color:#fff;opacity:.92}
+  .count{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;color:var(--txt-3)}
+  .count b{color:var(--cy);font-weight:500}
+
+  .bottom{
+    position:absolute;bottom:0;left:0;right:0;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:20px 7vw 24px;
+  }
+  .dots{display:flex;gap:7px;pointer-events:auto;flex-wrap:wrap}
+  .dot{
+    width:22px;height:4px;border-radius:2px;border:0;padding:0;cursor:pointer;
+    background:rgba(169,188,208,.26);transition:background .25s, width .25s;
+  }
+  .dot:hover{background:rgba(169,188,208,.5)}
+  .dot[aria-current="true"]{background:var(--cy);width:40px}
+  .dot:focus-visible{outline:2px solid var(--cy-2);outline-offset:3px}
+
+  .navs{display:flex;gap:10px;pointer-events:auto}
+  .nav{
+    width:42px;height:42px;border-radius:50%;cursor:pointer;
+    border:1px solid var(--line);background:rgba(255,255,255,.045);
+    color:var(--txt-2);display:flex;align-items:center;justify-content:center;
+    transition:background .2s,color .2s,border-color .2s;
+  }
+  .nav:hover:not(:disabled){background:rgba(32,188,237,.14);color:#fff;border-color:var(--cy)}
+  .nav:disabled{opacity:.3;cursor:default}
+  .nav:focus-visible{outline:2px solid var(--cy-2);outline-offset:2px}
+  .nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  .hint{
+    position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--txt-3);transition:opacity .5s;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #deck{scroll-behavior:auto}
+    .ico{animation:none}
+  }
+
+  @media (max-width:900px){
+    .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
+    .prod-grid{grid-template-columns:1fr;gap:22px}
+    .prod-art{max-height:26vh;order:-1}
+    .feat{grid-template-columns:1fr}
+    .jrow{grid-template-columns:1fr}
+    .jstop{border-right:0;border-bottom:1px solid var(--line)}
+    .gap3{grid-template-columns:1fr;gap:16px}
+    .gdash{width:100%}
+    .steps{grid-template-columns:1fr 1fr}
+    .eth ul{grid-template-columns:1fr}
+    .hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <section class="slide s-cover" data-title="Capa">
+    <div class="inner">
+      <div>
+        <div class="cover-mark">YPHE</div>
+        <p class="cover-tag">Tecnologia, Branding e Marketing Ortopédico</p>
+      </div>
+      <h1>O paciente que precisa de você <em>já existe</em>. O que falta é o caminho até a sua porta.</h1>
+      <p class="sub">Cinco produtos que levam alguém com dor no joelho hoje até a sua sala de consulta — e mostram, com número, qual parte do caminho está funcionando.</p>
+      <div class="cover-chips">
+        <span class="chip">Diagnóstico antes de proposta</span>
+        <span class="chip">Módulos, não pacote fechado</span>
+        <span class="chip">Dentro das normas do CFM</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="O problema">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O problema</p>
+        <h2>Existe uma distância entre quem sabe e quem precisa</h2>
+        <p class="sub">Você passou anos construindo um conhecimento que resolve o problema de alguém. Essa pessoa está a três quilômetros daqui, com dor, procurando no Google. E não chega até você.</p>
+      </div>
+      <div class="gap3">
+        <div class="gcard">
+          <strong>O paciente</strong>
+          <span>Tem a dor. Não sabe o nome dela, quem trata, nem em quem confiar.</span>
+        </div>
+        <div class="gvoid">
+          <b>a distância</b>
+          <div class="gdash"></div>
+        </div>
+        <div class="gcard">
+          <strong>Você</strong>
+          <span>Tem a solução, a formação e o resultado. E uma agenda com espaços vazios.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="A jornada">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">A lógica</p>
+        <h2>Organizamos pela jornada do paciente, não pela nossa estrutura interna</h2>
+        <p class="sub">Cada trecho perdido derruba todos os seguintes. Uma marca forte não salva um WhatsApp que ninguém responde.</p>
+      </div>
+      <div class="jrow">
+      <div class="jstop" style="--i:0">
+        <span class="jn">01</span>
+        <p class="jwho">Não sabe por que você, e não o médico do lado</p>
+        <span class="jsys">YPHE BRANDING</span>
+      </div>
+      <div class="jstop" style="--i:1">
+        <span class="jn">02</span>
+        <p class="jwho">Não lembra de você entre uma consulta e outra</p>
+        <span class="jsys">YPHE CONTENT</span>
+      </div>
+      <div class="jstop" style="--i:2">
+        <span class="jn">03</span>
+        <p class="jwho">Está procurando agora e não te encontra</p>
+        <span class="jsys">YPHE LEADS</span>
+      </div>
+      <div class="jstop" style="--i:3">
+        <span class="jn">04</span>
+        <p class="jwho">Te achou, mandou mensagem e desistiu de esperar</p>
+        <span class="jsys">YPHE CONNECT</span>
+      </div>
+      <div class="jstop" style="--i:4">
+        <span class="jn">05</span>
+        <p class="jwho">Você não sabe qual desses trechos falhou</p>
+        <span class="jsys">YPHE INTELLIGENCE</span>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Diagnóstico">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">A porta de entrada</p>
+        <h2>Nenhum produto é vendido antes do diagnóstico</h2>
+      </div>
+      <div class="gate">
+        <h3>Diagnóstico e Arquitetura Estratégica</h3>
+        <p>Antes de qualquer proposta, entendemos o seu negócio: mercado, público, ticket médio, capacidade real de atendimento, o que já foi tentado e o que já existe funcionando. Só depois definimos <em>quais</em> dos cinco produtos fazem sentido para o seu momento.</p>
+        <p class="hi">Nem toda clínica precisa dos cinco. Vender todos para todo mundo seria catálogo, não diagnóstico.</p>
+        <div class="asks">
+          <span>Quantos pacientes cabem na sua agenda?</span>
+          <span>Quanto vale um paciente novo?</span>
+          <span>Quem responde o WhatsApp?</span>
+          <span>O que já foi tentado antes?</span>
+          <span>Qual procedimento você quer crescer?</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="slide s-prod" data-title="YPHE BRANDING">
+  <div class="prod-grid">
+    <div class="prod-art">
+      <div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/branding.png" alt="Ícone YPHE BRANDING">
+    </div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 01 &nbsp;·&nbsp; Marca e posicionamento</p>
+      <h2 class="prod-name">YPHE BRANDING</h2>
+      <p class="ask">Por que eu, e não o ortopedista do andar de cima?</p>
+      <p class="lede">Se o paciente não consegue completar essa frase sozinho, ele decide por preço ou por proximidade — os dois piores critérios para você. Aqui definimos o que a sua clínica representa, para quem, e traduzimos isso em como ela aparece.</p>
+      <ul class="feat"><li>Posicionamento e diferenciais reais</li><li>Identidade visual e aplicações</li><li>Identidade verbal — como a clínica fala</li><li>Arquitetura de marca: clínica × médico</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide s-prod" data-title="YPHE CONTENT">
+  <div class="prod-grid">
+    <div class="prod-art">
+      <div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/content.png" alt="Ícone YPHE CONTENT">
+    </div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 02 &nbsp;·&nbsp; Narrativa e produção</p>
+      <h2 class="prod-name">YPHE CONTENT</h2>
+      <p class="ask">Como eu apareço toda semana sem virar influenciador?</p>
+      <p class="lede">O paciente raramente decide no primeiro contato. Ele acompanha, reconhece, confia — e só então marca. Transformamos o seu posicionamento em uma narrativa contínua, com gravações agrupadas para ocupar pouco do seu tempo.</p>
+      <ul class="feat"><li>Calendário editorial mensal</li><li>Roteiros escritos antes da gravação</li><li>Captação agrupada — poucas idas, muito material</li><li>Edição, design, publicação e sua aprovação</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide s-prod" data-title="YPHE LEADS">
+  <div class="prod-grid">
+    <div class="prod-art">
+      <div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/leads.png" alt="Ícone YPHE LEADS">
+    </div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 03 &nbsp;·&nbsp; Mídia e captação</p>
+      <h2 class="prod-name">YPHE LEADS</h2>
+      <p class="ask">E quem está procurando um médico como eu agora, hoje?</p>
+      <p class="lede">Conteúdo constrói confiança ao longo do tempo. Mídia paga faz duas coisas: captura quem já está decidido e digitando no Google, e apresenta você a quem ainda nem procurou, no Instagram e no Facebook.</p>
+      <ul class="feat"><li>Google Ads e campanhas de busca</li><li>Meta Ads — Instagram e Facebook</li><li>Google Meu Negócio e avaliações</li><li>Landing pages por procedimento</li><li>Remarketing para quem já visitou</li><li>Painel de leads — cada contato registrado</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide s-prod" data-title="YPHE CONNECT">
+  <div class="prod-grid">
+    <div class="prod-art">
+      <div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/connect.png" alt="Ícone YPHE CONNECT">
+    </div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 04 &nbsp;·&nbsp; Site, WhatsApp e agenda</p>
+      <h2 class="prod-name">YPHE CONNECT</h2>
+      <p class="ask">Quantos pacientes eu perco antes mesmo de marcar?</p>
+      <p class="lede">Este é o trecho mais caro e o menos olhado. O paciente te achou, mandou mensagem às 21h, ninguém respondeu até o dia seguinte — e ele já marcou com outro. O site e o WhatsApp são a porta da clínica no digital.</p>
+      <ul class="feat"><li>Site próprio, rápido e claro</li><li>Atendimento automatizado no WhatsApp</li><li>Integração com a agenda da clínica</li><li>Confirmação e lembrete para reduzir falta</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide s-prod" data-title="YPHE INTELLIGENCE">
+  <div class="prod-grid">
+    <div class="prod-art">
+      <div class="halo"></div>
+      <img class="ico" src="/apresentacao/ico/intel.png" alt="Ícone YPHE INTELLIGENCE">
+    </div>
+    <div class="prod-copy">
+      <p class="eyebrow">Produto 05 &nbsp;·&nbsp; Dados e decisão</p>
+      <h2 class="prod-name">YPHE INTELLIGENCE</h2>
+      <p class="ask">Estou gastando ou investindo? Como eu sei?</p>
+      <p class="lede">Sem este produto, os outros quatro viram fé. Aqui os dados de todos os trechos se juntam num painel só — e você vê qual conteúdo trouxe paciente e qual só trouxe curtida.</p>
+      <ul class="feat"><li>Painel com acesso próprio da clínica</li><li>Custo por contato e por paciente</li><li>Leitura mensal com recomendação</li><li>Projeções revisadas com dado real</li></ul>
+    </div>
+  </div>
+</section>
+
+  <section class="slide" data-title="O ciclo">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Como se sustentam</p>
+        <h2>Não é uma escada com fim. É um ciclo que se corrige</h2>
+        <p class="sub">O que o INTELLIGENCE aprende volta e muda o conteúdo, a mídia e às vezes o próprio posicionamento. Por isso o trabalho não termina — ele fica mais preciso.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">BRANDING define</span><span class="v">o que faz sentido você dizer</span></div>
+        <div class="card"><span class="k">CONTENT distribui</span><span class="v">isso ao longo dos meses</span></div>
+        <div class="card"><span class="k">LEADS amplifica</span><span class="v">o que já provou funcionar</span></div>
+        <div class="card"><span class="k">CONNECT converte</span><span class="v">interesse em consulta marcada</span></div>
+        <div class="card"><span class="k">INTELLIGENCE corrige</span><span class="v">e o ciclo recomeça melhor</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Ética médica">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Um compromisso, não um detalhe</p>
+        <h2>Marketing médico tem regra — e nós trabalhamos dentro dela</h2>
+      </div>
+      <div class="eth">
+        <h3>O que nunca faremos com o seu CRM</h3>
+        <p>As normas do Conselho Federal de Medicina sobre publicidade médica existem para proteger o paciente e o profissional. Muita agência as ignora por desconhecimento e deixa o médico exposto. Tratamos isso como critério de produção, não como revisão de última hora.</p>
+        <ul>
+          <li>Nenhuma promessa ou garantia de resultado</li>
+          <li>Nada de sensacionalismo ou apelo ao medo</li>
+          <li>Nenhuma reivindicação sem evidência</li>
+          <li>Nenhuma peça publicada sem a sua aprovação</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Portal">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Transparência</p>
+        <h2>Você acompanha tudo, sem depender de reunião</h2>
+        <p class="sub">Cada cliente recebe acesso a um portal próprio, onde vê o andamento real da produção e aprova o que vai ao ar.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Calendário</span><span class="v">o que será publicado, e quando</span></div>
+        <div class="card"><span class="k">Aprovações</span><span class="v">você aprova ou pede ajuste, direto na peça</span></div>
+        <div class="card"><span class="k">Andamento</span><span class="v">em que etapa cada conteúdo está</span></div>
+        <div class="card"><span class="k">Resultados</span><span class="v">os números, atualizados</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Como começa">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Como começa</p>
+        <h2>Quatro passos até o primeiro conteúdo no ar</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="idx">1</span><h4>Conversa de diagnóstico</h4><p>Entendemos a clínica, a agenda e o que você quer crescer. Sem proposta ainda.</p><span class="when">Uma reunião</span></div>
+        <div class="step"><span class="idx">2</span><h4>Arquitetura e proposta</h4><p>Apresentamos quais produtos fazem sentido, em que ordem, com projeção e investimento.</p><span class="when">Até uma semana</span></div>
+        <div class="step"><span class="idx">3</span><h4>Construção</h4><p>Montamos o que foi contratado e definimos o calendário de gravações.</p><span class="when">Conforme o escopo</span></div>
+        <div class="step"><span class="idx">4</span><h4>Operação e leitura</h4><p>O sistema entra em movimento. Todo mês você recebe os números e a recomendação.</p><span class="when">Contínuo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide s-close" data-title="Fecho">
+    <div class="inner">
+      <p class="eyebrow">O nosso lugar</p>
+      <h2>Nosso sucesso é medido pela força da <em>sua</em> marca — não pela nossa exposição.</h2>
+      <p>Ficamos nos bastidores, estruturando o que sustenta o seu crescimento. O protagonismo é sempre seu.</p>
+      <p class="sig">YPHE · Tecnologia, Branding e Marketing Ortopédico</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="chrome">
+  <div class="top">
+    <span class="mark">YPHE</span>
+    <span class="count"><b id="cur">01</b> / <span id="tot">14</span></span>
+  </div>
+  <div class="bottom">
+    <div class="dots" id="dots"></div>
+    <div class="navs">
+      <button class="nav" id="prev" aria-label="Slide anterior">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="nav" id="next" aria-label="Próximo slide">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="hint" id="hint">use &larr; &rarr; para navegar</div>
+</div>
+
+<script>
+(function(){
+  var deck   = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var dots   = document.getElementById('dots');
+  var cur    = document.getElementById('cur');
+  var tot    = document.getElementById('tot');
+  var prev   = document.getElementById('prev');
+  var next   = document.getElementById('next');
+  var hint   = document.getElementById('hint');
+  var idx = 0;
+
+  tot.textContent = String(slides.length).padStart(2,'0');
+
+  slides.forEach(function(s,i){
+    var b = document.createElement('button');
+    b.className = 'dot';
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Ir para ' + (s.dataset.title || ('slide ' + (i+1))));
+    b.addEventListener('click', function(){ go(i); });
+    dots.appendChild(b);
+  });
+  var dotEls = Array.prototype.slice.call(dots.children);
+
+  function paint(){
+    cur.textContent = String(idx+1).padStart(2,'0');
+    dotEls.forEach(function(d,i){
+      if (i === idx) d.setAttribute('aria-current','true');
+      else d.removeAttribute('aria-current');
+    });
+    prev.disabled = idx === 0;
+    next.disabled = idx === slides.length - 1;
+    if (hint && idx > 0) { hint.style.opacity = '0'; }
+    else if (hint) { hint.style.opacity = '1'; }
+  }
+
+  function go(n){
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    paint();
+  }
+
+  prev.addEventListener('click', function(){ go(idx - 1); });
+  next.addEventListener('click', function(){ go(idx + 1); });
+
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(idx + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(idx - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+  });
+
+  var tick;
+  deck.addEventListener('scroll', function(){
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      var w = deck.clientWidth || 1;
+      var n = Math.round(deck.scrollLeft / w);
+      if (n !== idx) { idx = Math.max(0, Math.min(slides.length - 1, n)); paint(); }
+    }, 90);
+  }, { passive: true });
+
+  paint();
+})();
+</script>
+</body>
+</html>

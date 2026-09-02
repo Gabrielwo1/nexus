@@ -1,0 +1,9 @@
+Fotos do time.
+
+Salve cada foto aqui com o nome exato, em .jpg:
+
+  gabriel.jpg    fernando.jpg   guto.jpg     pet.jpg
+  eliab.jpg      gerval.jpg     augusto.jpg  karyne.jpg
+
+Recorte quadrado, rosto centralizado, 400x400 px basta.
+Quem não tiver foto aparece com a inicial do nome — nada quebra.

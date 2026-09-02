@@ -238,7 +238,8 @@
   @media (max-width:900px){ .cta-who{grid-template-columns:1fr} }
 
   .pini{position:relative;overflow:hidden}
-  .pini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+  .pini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .pini:has(img){background:none;box-shadow:0 0 0 2px rgba(32,188,237,.55)}
   .cta-card .pini img,.pcard .pini img{border-radius:50%}
 
   .zap{display:inline-flex;align-items:center;gap:12px;text-decoration:none;

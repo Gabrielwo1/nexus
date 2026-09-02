@@ -342,6 +342,12 @@
     #intro{display:none}
     .lock-emb,.lock-word,.lock-rule,.lock-tag,.intro-skip{animation:none}
   }
+
+  .mapa td{padding:9px 20px;font-size:14px}
+  .mapa .tag{font-size:11.5px;padding:3px 9px}
+  .slide-mapa .s-head{margin-bottom:26px}
+  .slide-mapa .s-head h2{font-size:clamp(24px,3vw,38px)}
+  .slide-mapa .s-head .sub{font-size:clamp(14px,1.25vw,16px)}
 </style>
 </head>
 <body>
@@ -725,6 +731,30 @@
   }, { passive: true });
 
   paint();
+
+  function ajustarAltura(){
+    if (window.innerWidth <= 900) {
+      slides.forEach(function(s){
+        var c = s.firstElementChild; if(c) c.style.transform='';
+      });
+      return;
+    }
+    slides.forEach(function(s){
+      var c = s.firstElementChild; if(!c) return;
+      c.style.transform = '';
+      var est = getComputedStyle(s);
+      var livre = s.clientHeight - parseFloat(est.paddingTop) - parseFloat(est.paddingBottom);
+      var alt = c.scrollHeight;
+      if (alt > livre && alt > 0) {
+        var k = Math.max(0.62, livre / alt);
+        c.style.transformOrigin = 'center center';
+        c.style.transform = 'scale(' + k.toFixed(4) + ')';
+      }
+    });
+  }
+  ajustarAltura();
+  window.addEventListener('resize', ajustarAltura);
+  window.addEventListener('load', ajustarAltura);
 })();
 </script>
 </body>

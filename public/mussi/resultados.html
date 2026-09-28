@@ -193,6 +193,34 @@
     text-transform:uppercase;color:var(--txt-3);display:flex;align-items:center;gap:8px;margin-top:16px}
   .selo i{width:6px;height:6px;border-radius:50%;background:var(--gold);display:block}
   @media (max-width:980px){ .provas.p3,.provas.p4{grid-template-columns:1fr 1fr} }
+
+  /* divisor de ato */
+  .ato .inner{display:flex;flex-direction:column;gap:20px;align-items:flex-start}
+  .ato-n{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--gold)}
+  .ato h2{font-size:clamp(34px,5.4vw,70px);font-weight:800;max-width:15ch;color:#fff}
+  .ato .quem{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--line);
+    border-radius:999px;padding:9px 20px;margin-top:6px}
+  .ato .quem i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:block}
+  .ato .quem span{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--txt-2)}
+  .ato .res{font-size:clamp(16px,1.5vw,19px);color:var(--txt-2);max-width:54ch;line-height:1.6}
+  /* citação forte */
+  .cit{border-left:3px solid var(--gold);padding-left:clamp(20px,3vw,34px)}
+  .cit .q{font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-size:clamp(27px,4.3vw,54px);font-weight:700;line-height:1.14;color:#fff;
+    letter-spacing:-.03em;max-width:17ch}
+  .cit .quem{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gold);margin-top:20px}
+  /* barra de proporção */
+  .barra{display:flex;height:42px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:6px 0 14px}
+  .barra i{display:block;height:100%}
+  .barra .b1{background:var(--gold);flex:79.1}
+  .barra .b2{background:rgba(180,193,214,.26);flex:11.4}
+  .barra .b3{background:rgba(180,193,214,.13);flex:9.5}
+  .leg{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--txt-2)}
+  .leg span{display:flex;align-items:center;gap:8px}
+  .leg i{width:11px;height:11px;border-radius:3px;display:block}
   @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .art img{animation:none} }
   @media (max-width:980px){
     .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
@@ -224,6 +252,33 @@
         <span class="chip">Performance</span>
         <span class="chip">Mussi 2030</span>
       </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="A frase">
+    <div class="inner">
+      <div class="cit">
+        <p class="q">&ldquo;Eu não sabia que o Dr. Mussi ainda atendia.&rdquo;</p>
+        <p class="quem">Dito por mais de uma pessoa, antes do ciclo</p>
+      </div>
+      <p style="font-size:clamp(16px,1.5vw,19px);color:var(--txt-2);max-width:60ch;line-height:1.62;margin-top:34px">
+        O problema nunca foi reputação. Era <span style="color:var(--gold);font-weight:600">presença</span>.
+        Cinquenta anos de trajetória, um hospital com o nome da família — e mesmo assim havia
+        gente na cidade em dúvida se ainda dava para marcar consulta.
+      </p>
+      <p style="font-size:clamp(16px,1.5vw,19px);color:var(--txt-2);max-width:60ch;line-height:1.62;margin-top:14px">
+        Quem não aparece, desaparece. Não da memória de quem já conhece —
+        mas do caminho de quem está decidindo agora.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide ato" data-t="Ato 1">
+    <div class="inner">
+      <p class="ato-n">Ato 1 de 3</p>
+      <h2>O ciclo</h2>
+      <span class="quem"><i></i><span>Eliab · condução e estratégia</span></span>
+      <p class="res">O que o Instituto contratou construir, de onde partimos e o que passou a existir.</p>
     </div>
   </section>
 
@@ -259,6 +314,39 @@
         <p>A publicação começou em <span class="hi">27 de julho</span>. A comparação é de dois
           meses no ar (27/07 a 24/09) contra os dois meses anteriores (27/05 a 26/07).</p>
       </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Boca a boca">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">A tese do ciclo</p>
+        <h2>O boca a boca não é <em style="font-style:normal;color:var(--gold)">um</em> canal do Instituto. É <em style="font-style:normal;color:var(--gold)">o</em> canal.</h2>
+        <p class="sub">Dos 10.854 agendamentos registrados no sistema, 79,1% entram marcados
+          como indicação. Nenhuma estratégia sensata tentaria substituir isso.</p>
+      </div>
+      <div class="barra"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+      <div class="leg">
+        <span><i style="background:var(--gold)"></i> Indicação · 79,1%</span>
+        <span><i style="background:rgba(180,193,214,.26)"></i> Convênio · 11,4%</span>
+        <span><i style="background:rgba(180,193,214,.13)"></i> Demais origens · 9,5%</span>
+      </div>
+      <div class="box" style="margin-top:30px">
+        <h3>O trabalho não foi substituir o boca a boca. Foi dar munição para ele.</h3>
+        <p>Quem recebe uma indicação hoje procura o nome antes de ligar. Até junho, encontrava
+          pouca coisa — e a dúvida sobre se o Dr. Mussi ainda atendia sobrevivia à indicação.</p>
+        <p><span class="hi">Agora encontra um Instituto presente, ativo e reconhecível</span> —
+          e a indicação chega inteira do outro lado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide ato" data-t="Ato 2">
+    <div class="inner">
+      <p class="ato-n">Ato 2 de 3</p>
+      <h2>Os dados</h2>
+      <span class="quem"><i></i><span>Social Media · redes e percepção</span></span>
+      <p class="res">Alcance, interações, cliques e — principalmente — o que as pessoas passaram a comentar.</p>
     </div>
   </section>
 
@@ -316,6 +404,28 @@
     </div>
   </section>
 
+  <section class="slide" data-t="Comentários">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">A prova de que funcionou</p>
+        <h2>Os comentários são o boca a boca acontecendo à vista de todos</h2>
+        <p class="sub">Alcance mostra quantos viram. Comentário mostra quem se sentiu à vontade
+          para falar — e, num perfil de saúde, isso é sinal de confiança, não de vaidade.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Dúvidas reais</span>
+          <span class="v">Pessoas perguntando sobre procedimento, convênio e como marcar. Antes elas não tinham onde perguntar.</span></div>
+        <div class="card"><span class="k">Marcações</span>
+          <span class="v">Gente marcando parente e amigo nos posts. É indicação pública e rastreável.</span></div>
+        <div class="card"><span class="k">Reconhecimento</span>
+          <span class="v">Ex-pacientes comentando lembranças de atendimento. Cinquenta anos de história voltando à superfície.</span></div>
+        <div class="card"><span class="k">A equipe aparecendo</span>
+          <span class="v">Quando as secretárias entram no conteúdo, o engajamento sobe. O cuidado comunica tanto quanto a técnica.</span></div>
+      </div>
+      <p class="selo" style="margin-top:22px"><i></i> Espaço reservado para os prints de comentários selecionados</p>
+    </div>
+  </section>
+
   <section class="slide" data-t="O que funcionou">
     <div class="inner">
       <div class="s-head">
@@ -336,6 +446,15 @@
         <div class="card"><span class="k">Bastidores e secretárias</span>
           <span class="v">Nos stories, o que mais engaja é gente. O cuidado do atendimento comunica tanto quanto a medicina.</span></div>
       </div>
+    </div>
+  </section>
+
+  <section class="slide ato" data-t="Ato 3">
+    <div class="inner">
+      <p class="ato-n">Ato 3 de 3</p>
+      <h2>A tecnologia</h2>
+      <span class="quem"><i></i><span>Gabriel · implantação e integração</span></span>
+      <p class="res">O que foi implantado, testado e ajustado para funcionar dentro da rotina real do Instituto.</p>
     </div>
   </section>
 

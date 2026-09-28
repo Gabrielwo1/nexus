@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="Instituto Mussi — Primeiro ciclo">
-<meta property="og:description" content="O que existe hoje que não existia em junho.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
 <title>Mussi Ciclo 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -221,6 +220,31 @@
   .leg{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--txt-2)}
   .leg span{display:flex;align-items:center;gap:8px}
   .leg i{width:11px;height:11px;border-radius:3px;display:block}
+
+  /* escopo contratado */
+  .escopo{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  .ebox{border:1px solid var(--line);border-radius:12px;padding:20px 22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));
+    display:flex;flex-direction:column;gap:9px}
+  .ebox .et{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:14.5px;
+    font-weight:700;color:var(--gold)}
+  .ebox ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .ebox li{font-size:13.5px;color:var(--txt-2);line-height:1.45;padding-left:15px;position:relative}
+  .ebox li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:1px;background:var(--gold)}
+  .num-forte{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .num-forte b{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(38px,5vw,62px);
+    font-weight:800;color:#fff;line-height:1;letter-spacing:-.04em}
+  .num-forte span{font-size:16px;color:var(--txt-2)}
+  /* etapas do processo */
+  .etapas{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden}
+  .etp{padding:20px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+  .etp:last-child{border-right:0}
+  .etp .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold);letter-spacing:.14em}
+  .etp .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.22}
+  .etp .d{font-size:13px;color:var(--txt-2);line-height:1.45}
+  @media (max-width:980px){ .etapas{grid-template-columns:1fr}
+    .etp{border-right:0;border-bottom:1px solid var(--line)} }
   @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .art img{animation:none} }
   @media (max-width:980px){
     .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
@@ -282,21 +306,56 @@
     </div>
   </section>
 
-  <section class="slide" data-t="O combinado">
+  <section class="slide" data-t="O contratado">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:30px">
+        <p class="eyebrow">O que foi contratado</p>
+        <h2>Uma operação inteira, não um pacote de posts</h2>
+        <div class="num-forte" style="margin-top:8px">
+          <b>42</b><span>entregas mensais &nbsp;·&nbsp; <b style="font-size:inherit;font-weight:600;color:var(--txt);font-family:inherit">8</b> profissionais, 5 sêniores</span>
+        </div>
+      </div>
+      <div class="escopo">
+        <div class="ebox"><span class="et">Conteúdo</span>
+          <ul><li>30 stories por mês</li><li>8 reels institucionais</li>
+            <li>4 posts estáticos no feed</li><li>Calendário editorial completo</li></ul></div>
+        <div class="ebox"><span class="et">Marca</span>
+          <ul><li>Branding e narrativa</li><li>Roteirista dedicado</li>
+            <li>Design em todas as peças</li><li>Identidade aplicada em todo formato</li></ul></div>
+        <div class="ebox"><span class="et">Produção</span>
+          <ul><li>3 visitas mensais ao Instituto</li><li>Banco de imagens profissional</li>
+            <li>Captação e edição de vídeo</li><li>Gestão de Instagram e Facebook</li></ul></div>
+        <div class="ebox"><span class="et">Aquisição</span>
+          <ul><li>Google Ads e tráfego pago</li><li>CRO — otimização de conversão</li>
+            <li>Site e identidade digital</li><li>Landing pages e testes</li></ul></div>
+        <div class="ebox"><span class="et">Inteligência</span>
+          <ul><li>ORUS — IA nativa na operação</li><li>Gestão de projeto e logística</li>
+            <li>Relatório mensal de resultados</li><li>Reuniões de alinhamento</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Como operamos">
     <div class="inner">
       <div class="s-head">
-        <p class="eyebrow">O que combinamos construir</p>
-        <h2>O primeiro ciclo não foi para vender. Foi para existir.</h2>
-        <p class="sub">Em junho, o Instituto tinha reputação médica consolidada e presença digital
-          quase nula. A decisão do ciclo 1 foi estruturar a base: posicionamento, narrativa,
-          produção contínua, páginas, mensuração e tecnologia de atendimento.</p>
+        <p class="eyebrow">Como combinamos operar</p>
+        <h2>Cinco etapas, sempre um mês à frente</h2>
+        <p class="sub">A operação foi desenhada para não tomar o tempo do médico e para que
+          nada vá ao ar sem aprovação do Instituto.</p>
       </div>
-      <div class="cards">
-        <div class="card"><span class="k">Posicionar</span><span class="v">Definir o que o Instituto representa e traduzir isso em como ele aparece.</span></div>
-        <div class="card"><span class="k">Produzir</span><span class="v">Sair do conteúdo esporádico para um calendário contínuo com processo.</span></div>
-        <div class="card"><span class="k">Instrumentar</span><span class="v">Páginas, rastreamento e tecnologia de atendimento para poder medir.</span></div>
-        <div class="card"><span class="k">Aprender</span><span class="v">Descobrir o que funciona com este público específico, não com a média do mercado.</span></div>
+      <div class="etapas">
+        <div class="etp"><span class="n">01</span><span class="t">Imersão</span>
+          <span class="d">Reunião estratégica com o responsável de marketing e os sêniores da operação.</span></div>
+        <div class="etp"><span class="n">02</span><span class="t">Produção</span>
+          <span class="d">Captação feita pela equipe no Instituto. O médico recebe o roteiro pronto e só aparece.</span></div>
+        <div class="etp"><span class="n">03</span><span class="t">Aprovação</span>
+          <span class="d">Tudo enviado com no mínimo 48h de antecedência. Ajuste entregue em 24h.</span></div>
+        <div class="etp"><span class="n">04</span><span class="t">Resultados</span>
+          <span class="d">Relatório mensal até o 5º dia útil, em formato visual, com contexto e análise.</span></div>
+        <div class="etp"><span class="n">05</span><span class="t">Alinhamento</span>
+          <span class="d">Reuniões recorrentes entre a agência e o ponto focal do Instituto.</span></div>
       </div>
+      <p class="selo" style="margin-top:22px"><i></i> Operação sempre um mês à frente — o Instituto nunca fica sem conteúdo pronto</p>
     </div>
   </section>
 

@@ -4,11 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Resultados do primeiro ciclo do Instituto Mussi com a YPHE.">
-<meta property="og:type" content="website">
 <meta property="og:title" content="Instituto Mussi — Primeiro ciclo">
 <meta property="og:description" content="O que existe hoje que não existia em junho.">
-<meta property="og:locale" content="pt_BR">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
 <title>Mussi Ciclo 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,6 +178,21 @@
   .nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;
     stroke-linecap:round;stroke-linejoin:round}
 
+
+  /* provas: prints do painel, em cartão branco — evidência parece evidência */
+  .provas{display:grid;gap:14px;margin-top:8px}
+  .provas.p2{grid-template-columns:1fr 1fr}
+  .provas.p3{grid-template-columns:repeat(3,1fr)}
+  .provas.p4{grid-template-columns:repeat(4,1fr)}
+  .prova{margin:0;background:#fff;border:1px solid rgba(180,193,214,.3);border-radius:10px;
+    padding:9px;box-shadow:0 14px 34px -18px rgba(0,0,0,.65);display:flex;flex-direction:column;gap:7px}
+  .prova img{width:100%;height:auto;display:block;border-radius:5px}
+  .prova figcaption{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;
+    text-transform:uppercase;color:#56617a;text-align:center;padding-bottom:2px}
+  .selo{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--txt-3);display:flex;align-items:center;gap:8px;margin-top:16px}
+  .selo i{width:6px;height:6px;border-radius:50%;background:var(--gold);display:block}
+  @media (max-width:980px){ .provas.p3,.provas.p4{grid-template-columns:1fr 1fr} }
   @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .art img{animation:none} }
   @media (max-width:980px){
     .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
@@ -256,16 +268,12 @@
         <p class="eyebrow">Redes &middot; Instagram</p>
         <h2>Dois meses no ar</h2>
       </div>
-      <div class="stats">
-        <div class="st"><span class="sv">144,7 mil</span><span class="sr">visualizações no Instagram</span></div>
-        <div class="st"><span class="sv">25,4 mil</span><span class="sr">pessoas alcançadas</span><span class="sd ">+185%</span></div>
-        <div class="st"><span class="sv">4,3 mil</span><span class="sr">interações com o conteúdo</span><span class="sd ">+539,9%</span></div>
-        <div class="st"><span class="sv">2,6 mil</span><span class="sr">visitas ao perfil</span><span class="sd ">+145,3%</span></div>
+      <div class="provas p3">
+        <figure class="prova"><img src="/mussi/provas/ig-alcance.png" alt="Alcance · 25,4 mil pessoas"><figcaption>Alcance · 25,4 mil pessoas</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/ig-interacoes.png" alt="Interações · 4,3 mil"><figcaption>Interações · 4,3 mil</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/ig-visitas.png" alt="Visitas ao perfil · 2,6 mil"><figcaption>Visitas ao perfil · 2,6 mil</figcaption></figure>
       </div>
-      <p style="margin-top:26px;font-size:15.5px;color:var(--txt-3);max-width:70ch">
-        Alcance é quantas pessoas diferentes viram. Interação é quantas reagiram, salvaram,
-        comentaram ou compartilharam. Visita ao perfil é quem quis saber mais depois de ver.
-      </p>
+      <p class="selo"><i></i> Prints diretos do painel da Meta, sem edição · 144,7 mil visualizações no período</p>
     </div>
   </section>
 
@@ -275,36 +283,36 @@
         <p class="eyebrow">Redes &middot; Facebook</p>
         <h2>O canal que estava parado</h2>
       </div>
-      <div class="stats">
-        <div class="st"><span class="sv">206,5 mil</span><span class="sr">visualizações</span></div>
-        <div class="st"><span class="sv">60,5 mil</span><span class="sr">pessoas alcançadas</span></div>
-        <div class="st"><span class="sv">3,6 mil</span><span class="sr">interações</span><span class="sd ">+736,5%</span></div>
-        <div class="st"><span class="sv">1,3 mil</span><span class="sr">visitas à página</span><span class="sd ">+47,7%</span></div>
+      <div class="provas p4">
+        <figure class="prova"><img src="/mussi/provas/fb-visualizacoes.png" alt="Visualizações · 206,5 mil"><figcaption>Visualizações · 206,5 mil</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-pessoas.png" alt="Pessoas · 60,5 mil"><figcaption>Pessoas · 60,5 mil</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-interacoes.png" alt="Interações · 3,6 mil"><figcaption>Interações · 3,6 mil</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-visitas.png" alt="Visitas · 1,3 mil"><figcaption>Visitas · 1,3 mil</figcaption></figure>
       </div>
-      <p style="margin-top:26px;font-size:15.5px;color:var(--txt-3);max-width:70ch">
-        O Facebook alcança um público mais velho — e, em ortopedia, é exatamente onde está
-        boa parte de quem decide operar.
-      </p>
+      <p class="selo"><i></i> O Facebook alcança o público que decide operar — e era o canal que estava parado</p>
     </div>
   </section>
 
   <section class="slide" data-t="Cliques">
-    <div class="inner mono-grid">
-      <div class="art"><span class="halo"></span><img src="/brand/produtos/leads.png" alt=""></div>
-      <div>
-        <p class="eyebrow">O número que mais importa</p>
-        <p class="big" style="margin:14px 0 6px"><em>1.468</em></p>
-        <h2 style="font-size:clamp(22px,2.6vw,32px);font-weight:700;margin-bottom:16px">
-          pessoas clicaram para chegar até vocês</h2>
-        <p style="font-size:17px;color:var(--txt-2);max-width:48ch;line-height:1.6">
-          726 pelo Instagram e 742 pelo Facebook. Antes do ciclo, esse número era
-          praticamente zero — não havia caminho do conteúdo até o agendamento.
-        </p>
-        <p style="font-size:15px;color:var(--txt-3);max-width:48ch;margin-top:16px">
-          Cada clique é uma pessoa que parou, se interessou e deu um passo em direção
-          ao Instituto por conta própria.
-        </p>
+    <div class="inner">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:5vw;align-items:center">
+        <div>
+          <p class="eyebrow">O número que mais importa</p>
+          <p class="big" style="margin:14px 0 6px"><em>1.468</em></p>
+          <h2 style="font-size:clamp(21px,2.5vw,30px);font-weight:700;margin-bottom:16px">
+            pessoas clicaram para chegar até vocês</h2>
+          <p style="font-size:16.5px;color:var(--txt-2);max-width:44ch;line-height:1.6">
+            Antes do ciclo esse número era praticamente zero — não havia caminho do
+            conteúdo até o agendamento. Cada clique é uma pessoa que parou, se interessou
+            e deu um passo em direção ao Instituto por conta própria.
+          </p>
+        </div>
+        <div class="provas p2">
+          <figure class="prova"><img src="/mussi/provas/ig-cliques.png" alt="Cliques no link do Instagram: 726"><figcaption>Instagram · 726 cliques</figcaption></figure>
+          <figure class="prova"><img src="/mussi/provas/fb-cliques.png" alt="Cliques no link do Facebook: 742"><figcaption>Facebook · 742 cliques</figcaption></figure>
+        </div>
       </div>
+      <p class="selo"><i></i> Prints diretos do painel da Meta, sem edição</p>
     </div>
   </section>
 

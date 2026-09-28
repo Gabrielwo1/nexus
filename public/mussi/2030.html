@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mussi 2030 — Próximo Ciclo</title>
+<meta name="description" content="Instituto Mussi × Hospital Tereza Mussi — projeção estratégica do próximo ciclo institucional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Mussi 2030 — apresentação
+   Mesmo sistema visual do site: navy #1f2a44 / #1a2338 · dourado #cb9863
+   Plus Jakarta Sans (títulos) + Inter (texto)
+   ============================================================ */
+:root{
+  --navy:#1f2a44; --navy-deep:#1a2338; --navy-alt:#203d62;
+  --gold:#cb9863; --gold-soft:#e2b888; --gold-deep:#6d4c2a;
+  --blue-50:#f1f4fb; --blue-100:#e6ebf5; --blue-150:#dde4f2; --blue-200:#cdd7eb;
+  --ink:#1a2338; --muted:#56617a; --line:#e7ecf5; --white:#fff; --page:#eef2f9;
+  --gold-grad:linear-gradient(106deg,var(--gold) 60%,var(--gold-deep) 105%);
+  --shadow-card:0 18px 50px -24px rgba(26,35,56,.22);
+  --shadow-float:0 24px 60px -28px rgba(26,35,56,.4);
+  --font-display:"Plus Jakarta Sans",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --radius:20px; --radius-lg:22px; --radius-xl:28px;
+  --container:1180px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --entra:cubic-bezier(.5,0,.5,.9);      /* entra devagar, acelera, pousa suave */
+  --t-entra:.72s;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{scroll-behavior:auto}
+body{
+  font-family:var(--font-body); color:var(--ink); background:var(--white);
+  font-size:17px; line-height:1.65; overflow-x:hidden; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+img{max-width:100%;display:block}
+
+/* ---------- barra superior ---------- */
+.topo{
+  position:fixed; inset:0 0 auto 0; z-index:60; height:64px; padding:0 clamp(18px,4vw,44px);
+  display:flex; align-items:center; gap:20px;
+  background:rgba(255,255,255,.82); backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line);
+}
+.topo-marca{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--navy)}
+.topo-marca img{height:28px;width:auto}
+.topo-tag{margin-left:auto;display:flex;align-items:center;gap:14px;font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.contador{color:var(--gold-deep);font-variant-numeric:tabular-nums}
+.progresso{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.progresso i{display:block;height:100%;width:0;background:var(--gold-grad);transition:width .12s linear}
+
+/* ---------- índice lateral ---------- */
+.indice{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:55;display:flex;flex-direction:column;gap:12px}
+.indice a{position:relative;width:12px;height:12px;border-radius:50%;background:var(--blue-200);transition:background .3s var(--ease),transform .3s var(--ease)}
+.indice a:hover,.indice a.ativo{background:var(--gold);transform:scale(1.35)}
+.indice a span{
+  position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(6px);
+  white-space:nowrap;font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--white);background:var(--navy-deep);padding:6px 10px;border-radius:999px;
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+.indice a:hover span{opacity:1;transform:translateY(-50%) translateX(0)}
+body.sobre-escuro .indice a{background:rgba(255,255,255,.32)}
+body.sobre-escuro .indice a:hover,body.sobre-escuro .indice a.ativo{background:var(--gold-soft)}
+
+/* ---------- seções ---------- */
+main{position:relative;height:100vh;height:100dvh}
+/* cada section e um slide: so o ativo aparece, o resto espera fora de cena */
+section{position:absolute;inset:0;overflow:hidden;overscroll-behavior:contain;
+  padding:clamp(76px,8vh,104px) clamp(22px,5vw,64px) clamp(46px,5.5vh,74px);
+  display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateY(26px);
+  transition:opacity .5s var(--entra),transform .6s var(--entra),visibility .5s}
+section.ativo{opacity:1;visibility:visible;transform:none;z-index:2}
+/* setas de navegacao */
+.passar{position:fixed;right:22px;bottom:22px;z-index:58;display:flex;gap:10px}
+.passar button{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.9);
+  color:var(--navy);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-card);
+  transition:transform .3s var(--ease),background .3s var(--ease),opacity .3s var(--ease)}
+.passar button:hover{transform:translateY(-3px);background:#fff}
+.passar button[disabled]{opacity:.35;cursor:default;transform:none}
+.passar svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.sobre-escuro .passar button{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff}
+body.sobre-escuro .passar button:hover{background:rgba(255,255,255,.2)}
+
+.wrap{width:100%;max-width:var(--container);margin:0 auto;position:relative;z-index:2}
+.claro{background:var(--white)}
+.papel{background:linear-gradient(180deg,var(--page) 0%,#f7f9fd 100%)}
+.escuro{background:var(--navy-deep);color:#fff}
+.azul{background:radial-gradient(120% 120% at 15% 0%,var(--navy-alt) 0%,var(--navy) 55%,var(--navy-deep) 100%);color:#fff}
+
+/* ---------- tipografia ---------- */
+.eyebrow{display:flex;width:fit-content;align-items:center;gap:12px;font-family:var(--font-display);color:var(--gold-deep);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px}
+.eyebrow .bar{width:34px;height:3px;border-radius:3px;background:var(--gold)}
+.escuro .eyebrow,.azul .eyebrow{color:var(--gold-soft)}
+h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.6rem,5.6vw,4.5rem);line-height:1.04;letter-spacing:-.03em;max-width:16ch}
+h2{font-family:var(--font-display);font-weight:800;font-size:clamp(1.9rem,3.6vw,3rem);line-height:1.1;letter-spacing:-.025em;max-width:20ch}
+h2 .gold,h1 .gold{background-image:var(--grad-texto,var(--gold-grad));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* no escuro o dourado precisa clarear, nao escurecer */
+.escuro,.azul{--grad-texto:linear-gradient(100deg,var(--gold-soft),var(--gold))}
+.lead{font-size:clamp(1.15rem,1.5vw,1.45rem);line-height:1.6;color:#3d4a66;max-width:64ch;margin-top:18px}
+.corpo{font-size:1.05rem;line-height:1.75;color:var(--muted);max-width:70ch;margin-top:22px}
+.escuro .lead,.azul .lead{color:#cfd9e9}
+.escuro .corpo,.azul .corpo{color:#b4c1d6}
+.nota{font-size:.92rem;line-height:1.6;color:var(--muted);max-width:62ch;margin-top:26px;padding-left:14px;border-left:2px solid var(--blue-150)}
+.escuro .nota,.azul .nota{color:#a7b4ca;border-left-color:rgba(255,255,255,.18)}
+
+/* ---------- formas decorativas ---------- */
+.forma{position:absolute;pointer-events:none;z-index:0}
+.forma-circulo{border-radius:50%;background:var(--navy-alt);opacity:.05}
+.forma-pontos{color:var(--blue-200)}
+.escuro .forma-pontos,.azul .forma-pontos{color:rgba(255,255,255,.14)}
+.escuro .forma-circulo,.azul .forma-circulo{background:var(--gold);opacity:.07}
+.forma-anel{border-radius:50%;border:1px solid rgba(203,152,99,.35);box-shadow:0 0 0 clamp(40px,7vw,90px) rgba(203,152,99,.035),0 0 0 clamp(80px,14vw,180px) rgba(203,152,99,.022)}
+
+/* ---------- capa ---------- */
+.capa{background:radial-gradient(120% 120% at 80% 0%,#eaf0fb 0%,#f4f7fc 45%,#fff 100%)}
+.capa-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:clamp(30px,5vw,70px);align-items:center}
+.capa-selo{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;max-width:100%;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-card);font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:26px}
+.capa-selo img{height:20px;width:auto}
+.capa-selo b{color:var(--gold-deep);font-weight:800}
+.marcas{display:flex;gap:clamp(24px,4vw,56px);margin-top:clamp(36px,5vh,56px);flex-wrap:wrap}
+.marca{position:relative;padding-top:18px;border-top:2px solid var(--blue-150)}
+.marca:before{content:"";position:absolute;top:-2px;left:0;width:38px;height:2px;background:var(--gold-grad)}
+.marca b{display:block;font-family:var(--font-display);font-weight:800;font-size:clamp(2.1rem,3.4vw,3rem);line-height:1;letter-spacing:-.04em;color:var(--navy)}
+.marca span{display:block;margin-top:8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:18ch}
+.escuro .marca{border-top-color:rgba(255,255,255,.16)}
+.escuro .marca b{color:#fff}
+.escuro .marca span{color:#9dabc4}
+.capa-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-xl);padding:28px;box-shadow:var(--shadow-float)}
+.capa-card img{border-radius:12px;margin:8px 0 6px}
+.capa-card figcaption{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--font-display);font-weight:700}
+
+
+/* ---------- icones ---------- */
+.ic{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic-bolha{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(140deg,rgba(203,152,99,.18),rgba(203,152,99,.06));border:1px solid rgba(203,152,99,.35);color:var(--gold-deep)}
+.escuro .ic-bolha,.azul .ic-bolha{color:var(--gold-soft);border-color:rgba(226,184,136,.35)}
+.card .ic-bolha{margin-bottom:14px}
+.fase .ic-bolha{width:46px;height:46px;border-radius:14px;margin-bottom:14px}
+.fase .ic-bolha .ic{width:22px;height:22px}
+
+/* ---------- cards ---------- */
+.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:clamp(24px,3.5vh,44px)}
+.card{position:relative;padding:24px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:0 1px 0 rgba(26,35,56,.02);transition:transform .4s var(--entra),box-shadow .4s var(--ease),border-color .4s var(--ease)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card);border-color:var(--gold)}
+.card .num{font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--gold-deep)}
+.card h3{font-family:var(--font-display);font-size:1.15rem;font-weight:800;margin:10px 0 8px;letter-spacing:-.01em}
+.card p{font-size:1rem;line-height:1.65;color:var(--muted)}
+.escuro .card,.azul .card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
+.escuro .card h3,.azul .card h3{color:#fff}
+.escuro .card p,.azul .card p{color:#b4c1d6}
+.escuro .card .num,.azul .card .num{color:var(--gold-soft)}
+.escuro .card:hover,.azul .card:hover{border-color:var(--gold);background:rgba(255,255,255,.07)}
+
+/* ---------- evidência (bloco a preencher) ---------- */
+.evidencia{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(26px,4vw,54px);align-items:center;margin-top:clamp(30px,4vh,46px)}
+.slot{position:relative;min-height:400px;border-radius:var(--radius-xl);border:1.5px dashed rgba(226,184,136,.5);background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));padding:28px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.slot-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(226,184,136,.14);color:var(--gold-soft);font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.slot-titulo{font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,3.4vw,2.9rem);line-height:1;letter-spacing:-.04em;color:#fff}
+.slot small{font-size:.8rem;line-height:1.6;color:#8b9ab5;display:block}
+.slot-preenchido{border-style:solid;border-color:rgba(226,184,136,.35);background:linear-gradient(150deg,rgba(203,152,99,.12),rgba(255,255,255,.02));justify-content:flex-start}
+.slot-tag i{font-style:normal;font-weight:600;letter-spacing:0;text-transform:none;color:#b4c1d6;opacity:.85}
+.slot-stat{display:flex;flex-direction:column;gap:6px}
+.slot-num{font-family:var(--font-display);font-weight:800;font-size:clamp(2.6rem,5vw,3.6rem);line-height:1;letter-spacing:-.04em;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slot-num-legenda{font-size:1.02rem;line-height:1.5;color:#dce4f0;max-width:34ch}
+.slot-num-legenda b{color:#fff}
+.slot-fatos{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:4px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14)}
+.slot-fatos li{position:relative;padding-left:16px;font-size:.92rem;line-height:1.5;color:#b4c1d6}
+.slot-fatos li:before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--gold-soft)}
+.slot-fonte{font-size:.74rem;color:#8b9ab5;margin-top:2px}
+
+/* ---------- canais ---------- */
+.canais{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:clamp(22px,3.2vh,40px)}
+.canal{padding:18px 20px;border-radius:var(--radius);background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);transition:transform .4s var(--entra),box-shadow .4s var(--ease)}
+.canal:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.canal b{display:block;font-family:var(--font-display);font-size:1.1rem;font-weight:800;letter-spacing:-.01em}
+.canal p{margin-top:8px;font-size:.98rem;line-height:1.55;color:var(--muted)}
+.canal em{display:block;margin-top:12px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
+
+/* ---------- jornada ---------- */
+.jornada{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(160px,1fr);gap:0;margin-top:clamp(34px,5vh,52px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+.etapa{scroll-snap-align:start;position:relative;padding:26px 20px 0 0;border-top:1px solid rgba(203,152,99,.4)}
+.etapa:before{content:"";position:absolute;top:-5px;left:0;width:10px;height:10px;border-radius:50%;background:var(--gold-grad);box-shadow:0 0 0 4px rgba(203,152,99,.16)}
+.etapa b{display:block;font-family:var(--font-display);font-size:.98rem;font-weight:800}
+.etapa p{margin-top:8px;font-size:.95rem;line-height:1.5;color:var(--muted);max-width:20ch}
+.azul .etapa{border-top-color:rgba(226,184,136,.45)}
+.azul .etapa b{color:#fff}
+.azul .etapa p{color:#b7c3d8}
+
+/* ---------- retrato / matriz ---------- */
+/* cena do podcast: ilustracao do Dr. Mussi, microfone e ondas de som */
+.palco-pod{position:relative;margin-top:clamp(20px,3vh,36px);min-height:min(44vh,400px);overflow:hidden;
+  border-radius:var(--radius-xl);border:1px solid rgba(226,184,136,.28);
+  background:radial-gradient(120% 130% at 78% 30%,#25406a 0%,#16233d 55%,#101a2e 100%);
+  display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:end;gap:clamp(16px,3vw,44px);padding:26px 30px 0}
+.pod-copy{padding-bottom:36px;max-width:34ch;position:relative;z-index:2}
+.pod-copy .eyebrow{margin-bottom:14px}
+.pod-copy h3{font-family:var(--font-display);font-size:clamp(1.4rem,2.2vw,1.9rem);font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.15}
+.pod-copy p{margin-top:10px;color:#b4c1d6;font-size:1rem;line-height:1.55}
+.pod-mic{position:relative;z-index:2;align-self:end;width:clamp(96px,11vw,150px);color:var(--gold-soft);opacity:.9}
+.pod-mic svg{width:100%;height:auto;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.pod-ondas{position:absolute;right:14%;bottom:0;width:min(520px,46%);aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(226,184,136,.3);box-shadow:0 0 0 46px rgba(226,184,136,.05),0 0 0 96px rgba(226,184,136,.035);transform:translateY(38%)}
+.pod-foto{position:relative;z-index:2;align-self:end;width:clamp(230px,30vw,380px);filter:drop-shadow(0 26px 40px rgba(0,0,0,.45))}
+.pod-foto img{display:block;width:100%;height:auto}
+@media (max-width:900px){
+  .palco-pod{grid-template-columns:1fr;padding:26px 22px 0}
+  .pod-mic{display:none}
+  .pod-foto{width:min(280px,72%);margin:0 auto}
+  .pod-copy{padding-bottom:10px;max-width:none}
+}
+.matriz{margin-top:clamp(30px,4vh,46px);max-width:60ch}
+.matriz div{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.12);font-family:var(--font-display);font-weight:700;font-size:clamp(1.05rem,2vw,1.6rem);letter-spacing:-.02em;color:#a9b6cb}
+.matriz div:first-child{color:#fff;font-weight:800}
+.matriz div:first-child .seta{background:var(--gold-grad);color:#fff}
+.matriz .seta{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:var(--gold-soft);font-size:.8rem;font-weight:700}
+
+/* ---------- ecossistema ---------- */
+.eco{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:18px;margin-top:clamp(34px,5vh,52px)}
+.eco-box{padding:32px;border:1px solid var(--line);border-radius:var(--radius-lg);background:#fff;box-shadow:0 1px 0 rgba(26,35,56,.02)}
+.eco-box h3{font-family:var(--font-display);font-size:1.7rem;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.eco-box p{color:var(--muted);line-height:1.65;font-size:1.05rem}
+.eco-mid{align-self:center;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:132px;height:132px;border-radius:50%;background:var(--navy-deep);color:#fff;text-align:center;font-family:var(--font-display);font-size:11px;font-weight:800;letter-spacing:.14em;line-height:1.25;box-shadow:var(--shadow-float)}
+.eco-mid span{display:block;font-size:15px;letter-spacing:.06em;color:var(--gold-soft)}
+
+/* ---------- termômetro ---------- */
+.termo{margin-top:clamp(20px,3vh,36px);display:flex;flex-direction:column;gap:12px}
+.nivel{padding:20px 24px;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);position:relative;overflow:hidden}
+.nivel:before{content:"";position:absolute;inset:0 auto 0 0;width:var(--escala,25%);background:linear-gradient(90deg,rgba(203,152,99,.14),rgba(203,152,99,0));pointer-events:none}
+.nivel>*{position:relative}
+/* linha de cima: icone+nome de um lado, medidor do outro (sem valor em R$ aqui — isso fica só no slide final) */
+.nv-topo{display:grid;grid-template-columns:auto minmax(0,1fr) 300px;gap:24px;align-items:center}
+.nv-nome{display:flex;flex-direction:column;gap:2px;min-width:0}
+.nivel .valor{display:block;font-family:var(--font-display);font-size:clamp(1.6rem,2.4vw,2.15rem);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1}
+.nivel b{display:block;margin-top:6px;font-family:var(--font-display);font-size:1.2rem;font-weight:800;letter-spacing:-.01em;color:var(--gold-soft)}
+.nv-nome b{margin-top:0;font-size:1.35rem}
+.nivel>p{margin-top:10px;color:#b4c1d6;font-size:1.02rem;line-height:1.6;max-width:78ch}
+/* barra de progresso */
+.medidor{display:flex;flex-direction:column;gap:9px}
+.barra{height:12px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.barra i{display:block;height:100%;width:var(--escala,25%);border-radius:999px;background:var(--gold-grad)}
+.passos{display:flex;gap:6px}
+.passos span{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.12)}
+.passos span.on{background:var(--gold-soft)}
+.medidor b{margin:0;font-size:1rem;color:#fff}
+.medidor small{display:block;margin-top:1px;font-size:.88rem;color:#b4c1d6}
+/* o que entra: entregaveis com icone, em colunas */
+.entrega{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.entrega h4{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--font-display);font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:10px}
+.entrega h4 i{font-style:normal;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:#b4c1d6;font-size:.72rem;letter-spacing:.1em}
+.entrega ul{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 24px}
+.entrega li{display:flex;align-items:center;gap:12px;font-size:1.02rem;line-height:1.35;color:#dce4f0}
+.et-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:var(--gold-soft)}
+.et-ic .ic{width:21px;height:21px}
+.entrega li.novo{color:#fff;font-weight:600}
+.entrega li.novo .et-ic{background:var(--gold-grad);border-color:transparent;color:#fff}
+.entrega li em{display:block;margin-top:2px;font-style:normal;font-size:.86rem;font-weight:500;letter-spacing:0;text-transform:none;color:#9aa8c0}
+.entrega li.novo em{color:var(--gold-soft);font-weight:600}
+.entrega li{align-items:flex-start}
+.entrega li .et-ic{margin-top:2px}
+.nivel.topo-nivel{border-color:rgba(226,184,136,.55);background:rgba(203,152,99,.1)}
+.nivel.topo-nivel>.nv-topo>.ic-bolha{background:var(--gold-grad);border-color:transparent;color:#fff}
+
+/* ---------- linha do tempo ---------- */
+.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:clamp(34px,5vh,52px)}
+.fase{padding:26px 22px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);border-top:3px solid var(--gold);position:relative}
+.fase small{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fase h3{font-family:var(--font-display);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:12px 0 10px}
+.fase p{font-size:1rem;line-height:1.6;color:var(--muted)}
+.fase:not(:first-child):before{content:"";position:absolute;top:-3px;left:-12px;width:12px;height:3px;background:var(--blue-200)}
+
+
+/* slides com muita informacao: titulo e respiros menores */
+.compacto h2{font-size:clamp(1.7rem,2.7vw,2.25rem);max-width:28ch}
+.compacto .lead{font-size:1.05rem;margin-top:12px}
+.compacto .nota{margin-top:12px}
+.compacto .termo{margin-top:clamp(16px,2.4vh,28px)}
+
+/* ---------- comparativo: os quatro niveis lado a lado ---------- */
+.planos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:clamp(24px,3.5vh,40px);align-items:stretch}
+.plano{display:flex;flex-direction:column;gap:10px;padding:22px 20px;border-radius:var(--radius-lg);
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+.plano .ic-bolha{width:46px;height:46px;border-radius:14px}
+.plano .ic-bolha .ic{width:22px;height:22px}
+.plano .valor{font-family:var(--font-display);font-size:clamp(1.25rem,1.8vw,1.6rem);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1}
+.plano b{font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--gold-soft);letter-spacing:-.01em}
+.plano .barra{height:9px}
+.plano small{font-family:var(--font-display);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#b4c1d6}
+.plano ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.plano li{display:flex;align-items:center;gap:9px;font-size:.95rem;line-height:1.3;color:#dce4f0}
+.plano li .et-ic{width:30px;height:30px;border-radius:9px}
+.plano li .et-ic .ic{width:17px;height:17px}
+.plano li.novo{color:#fff;font-weight:600}
+.plano li.novo .et-ic{background:var(--gold-grad);border-color:transparent;color:#fff}
+.plano.destaque{border-color:rgba(226,184,136,.55);background:rgba(203,152,99,.1)}
+.plano.destaque .ic-bolha{background:var(--gold-grad);border-color:transparent;color:#fff}
+.planos-nota{margin-top:18px}
+@media (max-width:1100px){.planos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.planos{grid-template-columns:1fr}}
+
+/* ---------- resumo do investimento: so os precos ---------- */
+.precos-grade{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:clamp(30px,4.5vh,54px);align-items:stretch}
+.preco-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:32px 22px;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+.preco-card .ic-bolha{width:50px;height:50px;border-radius:15px}
+.preco-card .ic-bolha .ic{width:24px;height:24px}
+.preco-card small{font-family:var(--font-display);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#b4c1d6}
+.preco-card b{font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--gold-soft);letter-spacing:-.01em}
+.preco-card .barra{width:100%;height:9px;margin-top:-2px}
+.preco-card .valor{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);width:100%;font-family:var(--font-display);font-size:clamp(1.3rem,1.85vw,1.65rem);font-weight:800;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+.preco-card.destaque{border-color:rgba(226,184,136,.55);background:rgba(203,152,99,.1)}
+.preco-card.destaque .ic-bolha{background:var(--gold-grad);border-color:transparent;color:#fff}
+@media (max-width:1100px){.precos-grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.precos-grade{grid-template-columns:1fr}}
+
+/* ---------- fechamento ---------- */
+.fim h2{max-width:22ch}
+.fim-linha{width:120px;height:3px;border-radius:3px;background:var(--gold-grad);margin-bottom:28px}
+.fim-marca{margin-top:clamp(40px,6vh,64px);display:flex;align-items:center;gap:16px}
+.fim-marca img{height:46px;width:auto}
+.fim-marca span{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8b9ab5}
+
+/* ---------- entrada das seções ---------- */
+.reveal{opacity:0;transition:opacity var(--t-entra) var(--entra),transform var(--t-entra) var(--entra);transition-delay:var(--atraso,0ms);will-change:transform,opacity}
+.rv-alto{transform:translateY(34px)}
+.rv-esq{transform:translateX(-38px)}
+.rv-dir{transform:translateX(38px)}
+.rv-zoom{transform:scale(.94)}
+.reveal.dentro{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- responsivo ---------- */
+@media (max-width:1100px){
+  .canais,.grade{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  section{overflow:hidden auto}
+}
+@media (max-width:1000px){
+  .capa-grid,.evidencia{grid-template-columns:1fr}
+  .eco{grid-template-columns:1fr}
+  .eco-mid{width:100%;height:auto;border-radius:var(--radius-lg);padding:18px}
+  .nv-topo{grid-template-columns:auto 1fr;gap:16px}
+  .medidor{grid-column:1 / -1}
+  .entrega ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .indice{display:none}
+}
+@media (max-width:640px){
+  section{min-height:auto;padding:88px 22px 64px}
+  .jornada{grid-auto-columns:minmax(150px,1fr)}
+  .capa-card{padding:18px}
+  .capa-selo{font-size:11px;letter-spacing:.06em}
+  .canais,.grade{grid-template-columns:1fr}
+  .entrega ul{grid-template-columns:1fr}
+  .nivel{padding:22px}
+}
+@media print{
+  .topo,.indice,.passar{display:none}
+  main{height:auto}
+  section{position:static;opacity:1;visibility:visible;transform:none;min-height:auto;page-break-after:always;padding:34px}
+  .reveal{opacity:1;transform:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<a class="topo-marca" href="#capa" style="position:absolute;left:-9999px">Ir para o início</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="ic-camadas"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 13l9 5 9-5"/><path d="M3 17.5 12 22l9-4.5"/></g>
+    <g id="ic-subir"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g>
+    <g id="ic-ondas"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7"/><path d="M15.5 15.5a5 5 0 0 0 0-7"/><path d="M5.5 5.5a9 9 0 0 0 0 13"/><path d="M18.5 18.5a9 9 0 0 0 0-13"/></g>
+    <g id="ic-rede"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.5 7.2 6.5 15.8M13.5 7.2l4 8.6M7.5 18h9"/></g>
+    <g id="ic-estrela"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9L12 3.5Z"/></g>
+    <g id="ic-agenda"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="m9 15 2 2 4-4"/></g>
+    <g id="ic-compartilhar"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="m8.3 10.8 7.4-4M8.3 13.2l7.4 4"/></g>
+    <g id="ic-dados"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></g>
+    <g id="ic-bandeira"><path d="M5 21V4"/><path d="M5 4.5h11l-2 3.5 2 3.5H5"/></g>
+    <g id="ic-chave"><circle cx="8" cy="15" r="3.5"/><path d="m10.6 12.6 8-8M16.5 7l2 2M19 4.5l2 2"/></g>
+    <g id="ic-robo"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4.5M10.5 3.2h3"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><path d="M9.5 16.2h5"/></g>
+    <g id="ic-equipe"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6.2a3 3 0 0 1 0 5.6M17 14.4a5.5 5.5 0 0 1 3.5 4.6"/></g>
+    <g id="ic-megafone"><path d="M4 10.5v3a2 2 0 0 0 2 2h1.5L14 20V4L7.5 8.5H6a2 2 0 0 0-2 2Z"/><path d="M17.5 8.8a4.5 4.5 0 0 1 0 6.4"/></g>
+    <g id="ic-predio"><path d="M4 21V6.5L12 3l8 3.5V21"/><path d="M3 21h18"/><path d="M9 21v-5h6v5"/><path d="M8.5 10h2M13.5 10h2"/></g>
+    <g id="ic-video"><rect x="3" y="6.5" width="12" height="11" rx="2.5"/><path d="m15 11 6-3.5v9L15 13"/></g>
+    <g id="ic-instagram"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4.1"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></g>
+    <g id="ic-youtube"><rect x="2.5" y="5.5" width="19" height="13" rx="4.5"/><path d="m10.3 9.2 5.2 2.8-5.2 2.8V9.2Z"/></g>
+    <g id="ic-tiktok"><path d="M14.2 3.5v10.1a3.8 3.8 0 1 1-3.3-3.77"/><path d="M14.2 3.5c.5 2.4 2.1 3.9 4.6 4.2"/></g>
+    <g id="ic-spotify"><circle cx="12" cy="12" r="9"/><path d="M7.3 9.4c3.2-.9 6.8-.4 9.5 1.2"/><path d="M8 12.7c2.5-.7 5.3-.3 7.6.9"/><path d="M8.7 15.8c1.9-.5 3.9-.2 5.6.7"/></g>
+    <g id="ic-whatsapp"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.7 7.4l-4.3 1.3 1.3-4.2A8.5 8.5 0 1 1 20.5 11.8Z"/><path d="M9 9.2c0 3 2.8 5.8 5.8 5.8l1-1.4 1.9 1.1-.5 1.4c-3.5.7-7.8-3.6-7.1-7.1l1.4-.5L12.6 10 9 9.2Z"/></g>
+    <g id="ic-busca"><circle cx="11" cy="11" r="6.3"/><path d="m15.6 15.6 4.4 4.4"/></g>
+    <g id="ic-linkedin"><rect x="3.3" y="3.3" width="17.4" height="17.4" rx="4.5"/><path d="M7.7 10.6v6M7.7 7.7v.2M11.6 16.6v-6M11.6 13.3a2.4 2.4 0 0 1 4.8 0v3.3"/></g>
+    <g id="ic-site"><circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8"/><path d="M12 3.4c4.4 4.8 4.4 12.4 0 17.2-4.4-4.8-4.4-12.4 0-17.2Z"/></g>
+    <g id="ic-painel"><rect x="3.2" y="4.2" width="17.6" height="15.6" rx="3"/><path d="M7.4 15.6v-3M12 15.6V9.4M16.6 15.6v-4.6"/></g>
+    <g id="ic-microfone"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></g>
+  </defs>
+</svg>
+
+<header class="topo">
+  <div class="topo-marca"><img src="emblema-outline.png" alt="" aria-hidden="true"> Instituto Mussi</div>
+  <div class="topo-tag"><span class="contador" id="contador">01 / 13</span><span>Mussi 2030</span></div>
+  <div class="progresso"><i id="progresso"></i></div>
+</header>
+
+<nav class="indice" id="indice" aria-label="Seções da apresentação"></nav>
+
+<div class="passar">
+  <button id="anterior" type="button" aria-label="Slide anterior"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
+  <button id="proximo" type="button" aria-label="Próximo slide"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button>
+</div>
+
+<main>
+<!-- 01 capa -->
+<section id="capa" class="capa" data-nome="Capa">
+  <div class="forma forma-anel" style="right:-12vw;top:12vh;width:42vw;height:42vw" aria-hidden="true"></div>
+  <svg class="forma forma-pontos" style="left:-26px;top:120px;width:150px;height:150px;opacity:.7" viewBox="0 0 120 120" aria-hidden="true"><defs><pattern id="pontos" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2.2" fill="currentColor"/></pattern></defs><rect width="120" height="120" fill="url(#pontos)"/></svg>
+  <div class="wrap capa-grid">
+    <div>
+      <div class="capa-selo reveal rv-alto"><img src="emblema-outline.png" alt="" aria-hidden="true"><b>Instituto Mussi</b> × Hospital Tereza Mussi</div>
+      <h1 class="reveal rv-alto" style="--atraso:80ms">Uma história construída para <span class="gold">continuar em movimento</span>.</h1>
+      <p class="lead reveal rv-alto" style="--atraso:160ms">A próxima etapa não é produzir mais comunicação. É transformar reputação, conhecimento, tecnologia e presença em uma estrutura institucional de longo prazo.</p>
+      <div class="marcas" data-fila="90">
+        <div class="marca reveal rv-alto"><b>50</b><span>anos de trajetória médica</span></div>
+        <div class="marca reveal rv-alto"><b>20</b><span>anos de Hospital Tereza Mussi</span></div>
+        <div class="marca reveal rv-alto"><b>2030</b><span>horizonte estratégico</span></div>
+      </div>
+    </div>
+    <figure class="capa-card reveal rv-zoom" style="--atraso:220ms">
+      <img src="logo-capa.jpg" alt="Marca do Instituto Mussi">
+      <figcaption>Próximo ciclo · 2026 → 2030</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 02 base -->
+<section id="base" class="claro" data-nome="Construir a base">
+  <div class="forma forma-circulo" style="left:-180px;top:40px;width:420px;height:420px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>01 / Construir a base</div>
+    <h2 class="reveal rv-alto">Antes de ampliar, era preciso <span class="gold">organizar</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">Identidade, narrativa, processos, produção, mídia, tecnologia e equipe começaram a operar como partes de uma mesma estrutura.</p>
+    <div class="grade" data-fila="80">
+      <article class="card reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-estrela"/></svg></span><span class="num">01</span><h3>Marca</h3><p>Identidade, posicionamento, narrativa e linguagem capazes de sustentar consistência.</p></article>
+      <article class="card reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-agenda"/></svg></span><span class="num">02</span><h3>Operação</h3><p>Calendário, produção, responsabilidades e processos para reduzir improviso.</p></article>
+      <article class="card reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-compartilhar"/></svg></span><span class="num">03</span><h3>Distribuição</h3><p>Conteúdo e mídia trabalhando sob uma lógica comum de presença e demanda.</p></article>
+      <article class="card reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-dados"/></svg></span><span class="num">04</span><h3>Inteligência</h3><p>CRM, automações, dados e tecnologia formando uma camada proprietária.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 03 evidência -->
+<section id="evidencia" class="escuro" data-nome="Evidência de mercado">
+  <svg class="forma forma-pontos" style="right:40px;top:90px;width:200px;height:200px" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="url(#pontos)"/></svg>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Evidência / mercado</div>
+    <h2 class="reveal rv-alto">Autoridade precisa de <span class="gold">lastro</span> — não apenas alcance.</h2>
+    <div class="evidencia">
+      <div class="slot slot-preenchido reveal rv-zoom">
+        <span class="slot-tag">Pulso 2026/27 <i>DECK + Nexus · FSB Holding</i></span>
+        <div class="slot-stat">
+          <span class="slot-num">42%</span>
+          <span class="slot-num-legenda">das vozes que mais influenciam o mercado hoje são <b>lideranças corporativas</b> (executive advocacy).</span>
+        </div>
+        <ul class="slot-fatos">
+          <li>21 setores estratégicos do PIB brasileiro mapeados, incluindo saúde — 30 vozes mais influentes por setor.</li>
+          <li>2 mil nomes avaliados, 630 selecionados na lista final.</li>
+          <li>Metodologia: validação analítica + IA (múltiplos LLMs) + curadoria humana.</li>
+          <li>Dados coletados entre março e junho de 2026.</li>
+        </ul>
+        <small class="slot-fonte">Nexus é a unidade de inteligência de dados e análises preditivas da FSB Holding.</small>
+      </div>
+      <div class="reveal rv-dir" style="--atraso:120ms">
+        <p class="lead" style="margin-top:0">O influenciador de milhões de seguidores perde espaço para o executivo e o acadêmico com vivência real de mercado. Conteúdo de educação utilitária — bastidores, análise técnica — converte mais do que entretenimento puro.</p>
+        <p class="corpo">São esses executivos que reúnem as pessoas capacitadas para sustentar o projeto e trazer leitura de mercado — para que a liderança decida com base em dado atual, não em achismo. É exatamente esse lugar que o Instituto Mussi já vem construindo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 presença -->
+<section id="presenca" class="papel" data-nome="Expandir presença">
+  <div class="forma forma-circulo" style="right:-140px;bottom:0;width:460px;height:460px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>02 / Expandir presença</div>
+    <h2 class="reveal rv-alto" style="max-width:24ch">Uma instituição de longo prazo não deve depender de um <span class="gold">único ambiente</span> de distribuição.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">A expansão não substitui o Instagram. Ela atribui funções diferentes a diferentes pontos de contato.</p>
+    <div class="canais" data-fila="60">
+      <div class="canal reveal rv-alto"><b>Instagram</b><p>Descoberta, relacionamento e recorrência.</p><em>Descoberta</em></div>
+      <div class="canal reveal rv-alto"><b>YouTube</b><p>Profundidade, histórias, busca e autoridade.</p><em>Profundidade</em></div>
+      <div class="canal reveal rv-alto"><b>Spotify</b><p>Conversas longas e continuidade.</p><em>Profundidade</em></div>
+      <div class="canal reveal rv-alto"><b>Google</b><p>Captura de intenção.</p><em>Intenção</em></div>
+      <div class="canal reveal rv-alto"><b>TikTok</b><p>Descoberta em novos públicos.</p><em>Descoberta</em></div>
+      <div class="canal reveal rv-alto"><b>Site</b><p>Ambiente institucional e conversão.</p><em>Próprio</em></div>
+      <div class="canal reveal rv-alto"><b>Chatbot / Atendimento</b><p>Primeira resposta, dúvidas e agendamento sem fila de espera.</p><em>Próprio</em></div>
+      <div class="canal reveal rv-alto"><b>CRM</b><p>Relacionamento e inteligência própria.</p><em>Próprio</em></div>
+      <div class="canal reveal rv-alto"><b>Mídia</b><p>Amplificação controlada.</p><em>Amplificação</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 confiança -->
+<section id="confianca" class="azul" data-nome="Atenção ≠ confiança">
+  <div class="forma forma-circulo" style="left:-120px;top:-80px;width:420px;height:420px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Atenção ≠ confiança</div>
+    <h2 class="reveal rv-alto">Uma decisão médica complexa exige espaço para <span class="gold">aprofundamento</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">Um conteúdo curto pode iniciar a relação. Histórias, entrevistas, explicações e conteúdos longos criam caminhos para que a pessoa conheça melhor a instituição antes de uma decisão de maior complexidade.</p>
+    <div class="jornada" data-fila="70">
+      <div class="etapa reveal rv-alto"><b>Descoberta</b><p>Primeiro contato.</p></div>
+      <div class="etapa reveal rv-alto"><b>Reconhecimento</b><p>A marca passa a ser familiar.</p></div>
+      <div class="etapa reveal rv-alto"><b>Informação</b><p>Conteúdo aprofunda contexto.</p></div>
+      <div class="etapa reveal rv-alto"><b>Confiança</b><p>Reputação ganha substância.</p></div>
+      <div class="etapa reveal rv-alto"><b>Intenção</b><p>Busca ativa por solução.</p></div>
+      <div class="etapa reveal rv-alto"><b>Relacionamento</b><p>Continuidade além da campanha.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 podcast -->
+<section id="podcast" class="escuro" data-nome="Instituto Mussi Conversa">
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Instituto Mussi Conversa</div>
+    <h2 class="reveal rv-alto">O podcast preserva uma <span class="gold">voz</span> que deve continuar ativa na instituição.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">O Dr. Mussi concentra décadas de experiência, histórias, relações e memória institucional. O podcast cria um formato recorrente para registrar esse patrimônio e permitir que sua participação continue relevante mesmo quando sua presença operacional diminuir.</p>
+    <div class="palco-pod reveal rv-zoom" style="--atraso:150ms">
+      <div class="pod-ondas" aria-hidden="true"></div>
+      <div class="pod-mic" aria-hidden="true">
+        <svg viewBox="0 0 120 210">
+          <rect x="36" y="14" width="48" height="86" rx="24"/>
+          <path d="M44 30h32M44 42h32M44 54h32M44 66h32M44 78h32"/>
+          <path d="M26 74a34 34 0 0 0 68 0"/>
+          <path d="M60 108v26"/>
+          <rect x="44" y="134" width="32" height="14" rx="6"/>
+          <path d="M60 148v54"/><path d="M28 202h64"/>
+          <path d="M22 60v28M98 60v28"/>
+        </svg>
+      </div>
+      <div class="pod-copy">
+        <div class="eyebrow"><span class="bar"></span>O formato</div>
+        <h3>A voz que construiu o Instituto, registrada episódio a episódio.</h3>
+        <p>Conversas longas, histórias e explicações que continuam disponíveis depois da gravação.</p>
+      </div>
+      <figure class="pod-foto"><img src="dr-mussi-podcast.jpg" alt="Ilustração do Dr. Mussi"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- 07 multiplicação -->
+<section id="ativos" class="escuro" data-nome="Uma conversa, muitos ativos">
+  <svg class="forma forma-pontos" style="right:40px;bottom:60px;width:210px;height:210px" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="url(#pontos)"/></svg>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Uma conversa / muitos ativos</div>
+    <h2 class="reveal rv-alto">O episódio é a origem. A <span class="gold">distribuição</span> multiplica o valor.</h2>
+    <div class="matriz" data-fila="80">
+      <div class="reveal rv-esq"><span class="seta">01</span>Uma conversa de profundidade</div>
+      <div class="reveal rv-esq"><span class="seta">→</span>YouTube + Spotify</div>
+      <div class="reveal rv-esq"><span class="seta">→</span>Reels + Shorts + TikTok</div>
+      <div class="reveal rv-esq"><span class="seta">→</span>Stories + carrosséis + recortes</div>
+      <div class="reveal rv-esq"><span class="seta">→</span>Artigos + pesquisa + arquivo</div>
+      <div class="reveal rv-esq"><span class="seta">→</span>Memória e conhecimento institucional</div>
+    </div>
+    <p class="nota reveal rv-alto">Patrocínios, parceiros e projetos especiais podem constituir uma camada econômica futura, condicionada a audiência, consistência, mercado e conformidade — nunca como promessa.</p>
+  </div>
+</section>
+
+<!-- 08 amplificação -->
+<section id="amplificacao" class="claro" data-nome="Amplificação multicanal">
+  <div class="forma forma-circulo" style="right:-160px;top:60px;width:420px;height:420px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>03 / Amplificação multicanal</div>
+    <h2 class="reveal rv-alto">De produzir conteúdo para <span class="gold">distribuir inteligência</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">A operação passa a funcionar como um ciclo: pesquisa, pauta, captação, conteúdo central, desdobramentos, distribuição, mídia, dados, CRM e aprendizado.</p>
+    <div class="jornada" data-fila="70">
+      <div class="etapa reveal rv-alto"><b>Pesquisa</b></div>
+      <div class="etapa reveal rv-alto"><b>Pauta</b></div>
+      <div class="etapa reveal rv-alto"><b>Captação</b></div>
+      <div class="etapa reveal rv-alto"><b>Conteúdo central</b></div>
+      <div class="etapa reveal rv-alto"><b>Distribuição</b></div>
+      <div class="etapa reveal rv-alto"><b>Dados + CRM</b></div>
+    </div>
+    <p class="corpo reveal rv-alto">É nessa capacidade que entram estrutura ampliada de social media, fotografia, audiovisual, edição, estratégia, mídia e tecnologia.</p>
+  </div>
+</section>
+
+<!-- 09 ecossistema -->
+<section id="ecossistema" class="papel" data-nome="Integração do ecossistema">
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>04 / Integração do ecossistema</div>
+    <h2 class="reveal rv-alto" style="max-width:24ch">Instituto e Hospital passam a ser pensados dentro da <span class="gold">mesma construção de valor</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">A comunicação deixa de trabalhar apenas a demanda do paciente e começa a explorar também reputação institucional, utilização da estrutura e uma futura frente B2B de relacionamento com médicos.</p>
+    <div class="eco">
+      <div class="eco-box reveal rv-esq"><h3>B2C</h3><p>Paciente → conteúdo → confiança → Instituto → relacionamento.</p></div>
+      <div class="eco-mid reveal rv-zoom" style="--atraso:120ms">Marca<span>Mussi</span></div>
+      <div class="eco-box reveal rv-dir" style="--atraso:180ms"><h3>B2B</h3><p>Médico → reputação → proposta institucional → Hospital. Frente sujeita a validação comercial.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 patrimônio -->
+<section id="patrimonio" class="escuro" data-nome="Patrimônio estratégico">
+  <div class="forma forma-circulo" style="left:-140px;bottom:0;width:440px;height:440px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Do custo ao patrimônio estratégico</div>
+    <h2 class="reveal rv-alto">Fazer a comunicação <span class="gold">acumular valor</span>.</h2>
+    <div class="grade" data-fila="60">
+      <article class="card reveal rv-zoom"><h3>Marca</h3></article>
+      <article class="card reveal rv-zoom"><h3>Audiência</h3></article>
+      <article class="card reveal rv-zoom"><h3>Biblioteca de conteúdo</h3></article>
+      <article class="card reveal rv-zoom"><h3>CRM e dados</h3></article>
+      <article class="card reveal rv-zoom"><h3>Processos</h3></article>
+      <article class="card reveal rv-zoom"><h3>Canais</h3></article>
+      <article class="card reveal rv-zoom"><h3>Reputação e relações</h3></article>
+      <article class="card reveal rv-zoom"><h3>História documentada</h3></article>
+    </div>
+    <p class="nota reveal rv-alto">O termo “ativo” é utilizado aqui em sentido estratégico e econômico, não como classificação contábil.</p>
+  </div>
+</section>
+
+<!-- 11 horizonte -->
+<section id="horizonte" class="claro" data-nome="Mussi 2030">
+  <div class="forma forma-anel" style="left:-14vw;top:18vh;width:38vw;height:38vw" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Mussi 2030</div>
+    <h2 class="reveal rv-alto">Menos dependências. Mais <span class="gold">força institucional</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">O horizonte é reduzir dependência de uma única pessoa, liderança, plataforma, algoritmo ou fonte de aquisição — enquanto Instituto e Hospital acumulam força própria de marca.</p>
+    <div class="marcas" data-fila="90">
+      <div class="marca reveal rv-alto"><b>Legado</b><span>preservar conhecimento</span></div>
+      <div class="marca reveal rv-alto"><b>Marca</b><span>transferir reputação</span></div>
+      <div class="marca reveal rv-alto"><b>Escala</b><span>ampliar capacidade</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 investimento -->
+<section id="investimento" class="escuro compacto" data-nome="Termômetro de investimento">
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Termômetro de investimento</div>
+    <h2 class="reveal rv-alto">O investimento acompanha a <span class="gold">capacidade ativada</span>.</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">Não são pacotes de posts. São níveis diferentes de estrutura, distribuição e responsabilidade.</p>
+    <div class="termo" data-fila="90">
+      <article class="nivel reveal rv-esq" style="--escala:26%">
+        <div class="nv-topo">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-camadas"/></svg></span>
+          <div class="nv-nome"><b>Base estruturada</b></div>
+          <div class="medidor">
+            <div class="barra"><i></i></div>
+            <div class="passos"><span class="on"></span><span class=""></span><span class=""></span><span class=""></span></div>
+            <div><b>Nível 1 de 4</b><small>capacidade ativada</small></div>
+          </div>
+        </div>
+        <p>Consolidação da operação, marca, conteúdo, processos e presença.</p>
+        <div class="entrega">
+          <h4>O que entra nesta faixa </h4>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-instagram"/></svg></span><span>Instagram<em>feed, stories e reels</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-site"/></svg></span><span>Site institucional<em>conteúdo e agendamento</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-busca"/></svg></span><span>Google Meu Negócio<em>ficha e avaliações</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-whatsapp"/></svg></span><span>WhatsApp organizado<em>fluxo de atendimento</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-estrela"/></svg></span><span>Marca e narrativa<em>identidade aplicada</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-agenda"/></svg></span><span>Calendário e processos<em>rotina de produção</em></span></li>
+          </ul>
+        </div>
+      </article>
+      <article class="nivel reveal rv-esq" style="--escala:48%">
+        <div class="nv-topo">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-subir"/></svg></span>
+          <div class="nv-nome"><b>Expansão</b></div>
+          <div class="medidor">
+            <div class="barra"><i></i></div>
+            <div class="passos"><span class="on"></span><span class="on"></span><span class=""></span><span class=""></span></div>
+            <div><b>Nível 2 de 4</b><small>capacidade ativada</small></div>
+          </div>
+        </div>
+        <p>Novos canais, formatos e aumento progressivo da capacidade de produção.</p>
+        <div class="entrega">
+          <h4>O que entra nesta faixa <i>Soma-se ao nível anterior</i></h4>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-youtube"/></svg></span><span>YouTube<em>vídeos longos e busca</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-tiktok"/></svg></span><span>TikTok<em>novos públicos</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-busca"/></svg></span><span>Google Ads<em>quem já procura</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-megafone"/></svg></span><span>Mídia no Instagram<em>alcance pago</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-video"/></svg></span><span>Fotografia e vídeo<em>captação no Instituto</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-subir"/></svg></span><span>Mais produção<em>volume por mês</em></span></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 12b investimento (2/2) -->
+<section id="investimento-2" class="escuro compacto" data-nome="Investimento · níveis 3 e 4">
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Termômetro de investimento</div>
+    <h2 class="reveal rv-alto" style="max-width:26ch">Quando a operação passa a funcionar como <span class="gold">ecossistema</span>.</h2>
+    <div class="termo" data-fila="90">
+      <article class="nivel reveal rv-esq" style="--escala:72%">
+        <div class="nv-topo">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-ondas"/></svg></span>
+          <div class="nv-nome"><b>Multicanal</b></div>
+          <div class="medidor">
+            <div class="barra"><i></i></div>
+            <div class="passos"><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span></div>
+            <div><b>Nível 3 de 4</b><small>capacidade ativada</small></div>
+          </div>
+        </div>
+        <p>Podcast, distribuição ampliada, equipe adicional, mídia em escala e a tecnologia própria do Instituto.</p>
+        <div class="entrega">
+          <h4>O que entra nesta faixa <i>Soma-se aos níveis anteriores</i></h4>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-microfone"/></svg></span><span>Podcast Instituto Mussi Conversa<em>gravação e edição</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-spotify"/></svg></span><span>Spotify e YouTube<em>episódios completos</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-tiktok"/></svg></span><span>Cortes em Reels, Shorts e TikTok<em>do episódio</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-equipe"/></svg></span><span>Equipe adicional<em>social, audiovisual e edição</em></span></li>
+            <li class="novo"><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-robo"/></svg></span><span>Chatbot no WhatsApp<em>tecnologia própria</em></span></li>
+            <li class="novo"><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-dados"/></svg></span><span>CRM próprio no lugar do Feegow<em>em desenvolvimento</em></span></li>
+          </ul>
+        </div>
+      </article>
+      <article class="nivel topo-nivel reveal rv-esq" style="--escala:100%">
+        <div class="nv-topo">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span>
+          <div class="nv-nome"><b>Ecossistema Mussi 2030</b></div>
+          <div class="medidor">
+            <div class="barra"><i></i></div>
+            <div class="passos"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+            <div><b>Nível 4 de 4</b><small>capacidade ativada</small></div>
+          </div>
+        </div>
+        <p>Instituto + Hospital + canais + arquitetura de marca + frente B2B + estrutura institucional ampliada.</p>
+        <div class="entrega">
+          <h4>O que entra nesta faixa <i>Soma-se aos níveis anteriores</i></h4>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-predio"/></svg></span><span>Hospital Tereza Mussi<em>na mesma marca</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-estrela"/></svg></span><span>Arquitetura de marca<em>Instituto + Hospital</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-linkedin"/></svg></span><span>Frente B2B com médicos<em>LinkedIn e relacionamento</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-painel"/></svg></span><span>Dados e inteligência<em>painel próprio</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-megafone"/></svg></span><span>Mídia institucional<em>reputação e estrutura</em></span></li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span><span>Estrutura ampliada<em>time e operação</em></span></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+    <p class="nota reveal rv-alto">Valores de referência para a discussão estratégica. A composição final deve validar operação, mídia, tributação e estrutura adicional antes da contratação.</p>
+  </div>
+</section>
+
+
+<!-- 13 12 meses -->
+<section id="fases" class="papel" data-nome="12 meses">
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>12 meses / evolução por maturidade</div>
+    <h2 class="reveal rv-alto">Primeiro a capacidade é construída. Depois, o próximo nível é <span class="gold">ativado</span>.</h2>
+    <div class="fases" data-fila="90">
+      <div class="fase reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-bandeira"/></svg></span><small>Fase 01</small><h3>Base</h3><p>Estrutura consolidada e operação estabilizada.</p></div>
+      <div class="fase reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-chave"/></svg></span><small>Etapa liberada</small><h3>Expansão</h3><p>Novos canais entram quando a base consegue sustentá-los.</p></div>
+      <div class="fase reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-microfone"/></svg></span><small>Etapa liberada</small><h3>Amplificação</h3><p>Produção e distribuição passam a operar em escala.</p></div>
+      <div class="fase reveal rv-alto"><span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span><small>Etapa liberada</small><h3>Ecossistema</h3><p>Hospital, Instituto e B2B entram no mesmo horizonte estratégico.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 fechamento -->
+<section id="proximo" class="azul fim" data-nome="Próximo ciclo">
+  <div class="forma forma-circulo" style="right:-120px;top:-60px;width:420px;height:420px" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="fim-linha reveal rv-esq"></div>
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Próximo ciclo</div>
+    <h2 class="reveal rv-alto">Qual nível de capacidade o ecossistema Mussi quer construir — e em qual <span class="gold">velocidade</span>?</h2>
+    <p class="lead reveal rv-alto" style="--atraso:90ms">O investimento deixa de ser o ponto de partida. Ele passa a ser consequência da estrutura que a instituição decide ativar.</p>
+    <div class="fim-marca reveal rv-alto" style="--atraso:180ms">
+      <img src="logo-rodape.png" alt="Instituto Mussi">
+      <span>Mussi 2030 · Instituto Mussi × Hospital Tereza Mussi</span>
+    </div>
+  </div>
+</section>
+
+<!-- 15 comparativo -->
+<section id="comparativo" class="escuro" data-nome="Os quatro níveis">
+  <svg class="forma forma-pontos" style="right:40px;top:80px;width:180px;height:180px" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="url(#pontos)"/></svg>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Comparativo</div>
+    <h2 class="reveal rv-alto" style="max-width:26ch">Os quatro níveis <span class="gold">lado a lado</span>.</h2>
+    <div class="planos" data-fila="90">
+        <article class="plano reveal rv-alto">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-camadas"/></svg></span>
+          <b>Base estruturada</b>
+          <div class="barra" style="--escala:26%"><i></i></div>
+          <small>Nível 1 de 4</small>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-instagram"/></svg></span>Instagram</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-site"/></svg></span>Site institucional</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-busca"/></svg></span>Google Meu Negócio</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-whatsapp"/></svg></span>WhatsApp organizado</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-agenda"/></svg></span>Processos e calendário</li>
+          </ul>
+        </article>
+        <article class="plano reveal rv-alto">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-subir"/></svg></span>
+          <b>Expansão</b>
+          <div class="barra" style="--escala:48%"><i></i></div>
+          <small>Nível 2 de 4</small>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-youtube"/></svg></span>YouTube</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-tiktok"/></svg></span>TikTok</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-busca"/></svg></span>Google Ads</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-megafone"/></svg></span>Mídia no Instagram</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-video"/></svg></span>Fotografia e vídeo</li>
+          </ul>
+        </article>
+        <article class="plano reveal rv-alto">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-ondas"/></svg></span>
+          <b>Multicanal</b>
+          <div class="barra" style="--escala:72%"><i></i></div>
+          <small>Nível 3 de 4</small>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-microfone"/></svg></span>Podcast</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-spotify"/></svg></span>Spotify e YouTube</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-equipe"/></svg></span>Equipe adicional</li>
+            <li class="novo"><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-robo"/></svg></span>Chatbot no WhatsApp</li>
+            <li class="novo"><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-dados"/></svg></span>CRM próprio</li>
+          </ul>
+        </article>
+        <article class="plano destaque reveal rv-alto">
+          <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span>
+          <b>Ecossistema 2030</b>
+          <div class="barra" style="--escala:100%"><i></i></div>
+          <small>Nível 4 de 4</small>
+          <ul>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-predio"/></svg></span>Hospital Tereza Mussi</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-estrela"/></svg></span>Arquitetura de marca</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-linkedin"/></svg></span>Frente B2B</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-painel"/></svg></span>Dados e inteligência</li>
+            <li class=""><span class="et-ic"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span>Estrutura ampliada</li>
+          </ul>
+        </article>
+    </div>
+    <p class="nota planos-nota reveal rv-alto">Cada nível soma-se ao anterior. Valores de referência para a discussão estratégica; a composição final valida operação, mídia, tributação e estrutura antes da contratação.</p>
+  </div>
+</section>
+
+<!-- 16 resumo de investimento -->
+<section id="precos" class="escuro" data-nome="Resumo do investimento">
+  <svg class="forma forma-pontos" style="left:40px;bottom:60px;width:180px;height:180px" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="url(#pontos)"/></svg>
+  <div class="wrap">
+    <div class="eyebrow reveal rv-esq"><span class="bar"></span>Resumo do investimento</div>
+    <h2 class="reveal rv-alto">Quanto cada nível <span class="gold">representa</span>.</h2>
+    <div class="precos-grade" data-fila="90">
+      <article class="preco-card reveal rv-alto">
+        <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-camadas"/></svg></span>
+        <small>Nível 1 de 4</small>
+        <b>Base estruturada</b>
+        <div class="barra" style="--escala:26%"><i></i></div>
+        <span class="valor">≈ R$ 18 mil</span>
+      </article>
+      <article class="preco-card reveal rv-alto">
+        <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-subir"/></svg></span>
+        <small>Nível 2 de 4</small>
+        <b>Expansão</b>
+        <div class="barra" style="--escala:48%"><i></i></div>
+        <span class="valor">≈ R$ 30 mil</span>
+      </article>
+      <article class="preco-card reveal rv-alto">
+        <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-ondas"/></svg></span>
+        <small>Nível 3 de 4</small>
+        <b>Multicanal</b>
+        <div class="barra" style="--escala:72%"><i></i></div>
+        <span class="valor">R$ 40–50 mil</span>
+      </article>
+      <article class="preco-card destaque reveal rv-alto">
+        <span class="ic-bolha"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-rede"/></svg></span>
+        <small>Nível 4 de 4</small>
+        <b>Ecossistema 2030</b>
+        <div class="barra" style="--escala:100%"><i></i></div>
+        <span class="valor">até R$ 70 mil</span>
+      </article>
+    </div>
+    <p class="nota reveal rv-alto">Valores de referência para a discussão estratégica. A composição final deve validar operação, mídia, tributação e estrutura adicional antes da contratação.</p>
+  </div>
+</section>
+</main>
+
+<script>
+/* ---------- apresentacao em slides ----------
+   cada <section> e um slide; so o ativo fica visivel. Passa com as setas do
+   teclado, os botoes do canto, a roda do mouse, o dedo (arrastar) ou os pontos
+   do indice. Se o conteudo do slide for mais alto que a tela, ele rola por
+   dentro antes de virar o slide. */
+const slides = Array.from(document.querySelectorAll("section"));
+const indice = document.getElementById("indice");
+const contador = document.getElementById("contador");
+const barra = document.getElementById("progresso");
+const btPrev = document.getElementById("anterior");
+const btProx = document.getElementById("proximo");
+const dois = (n) => String(n).padStart(2, "0");
+
+// escalona a entrada dos filhos de [data-fila]
+document.querySelectorAll("[data-fila]").forEach((box) => {
+  const passo = parseInt(box.dataset.fila, 10) || 70;
+  box.querySelectorAll(".reveal").forEach((el, i) => el.style.setProperty("--atraso", i * passo + "ms"));
+});
+
+indice.innerHTML = slides.map((s, i) => `<a href="#${s.id}" data-i="${i}" aria-label="${s.dataset.nome}"><span>${s.dataset.nome}</span></a>`).join("");
+const pontos = Array.from(indice.children);
+
+/* se o conteudo do slide passa da altura da tela, ele encolhe um pouco ate caber:
+   numa apresentacao ninguem deve precisar rolar */
+function ajusta(s) {
+  const w = s.querySelector(".wrap");
+  if (!w || innerWidth < 900) return;
+  w.style.zoom = "";
+  const e = getComputedStyle(s);
+  const util = s.clientHeight - parseFloat(e.paddingTop) - parseFloat(e.paddingBottom);
+  let z = 1;
+  for (let i = 0; i < 3; i++) {
+    if (w.scrollHeight * z <= util + 1 || z <= 0.7) break;
+    z = Math.max(0.7, util / w.scrollHeight - 0.005);
+    w.style.zoom = z.toFixed(3);
+  }
+}
+
+let atual = -1;
+function mostra(k, foco) {
+  k = Math.max(0, Math.min(slides.length - 1, k));
+  if (k === atual) return;
+  const antigo = slides[atual];
+  if (antigo) {
+    antigo.classList.remove("ativo");
+    antigo.querySelectorAll(".reveal").forEach((el) => el.classList.remove("dentro"));
+  }
+  atual = k;
+  const s = slides[k];
+  s.classList.add("ativo");
+  s.scrollTop = 0;
+  requestAnimationFrame(() => { ajusta(s); s.scrollTop = 0; s.querySelectorAll(".reveal").forEach((el) => el.classList.add("dentro")); });
+  [0, 120, 400, 900].forEach((ms) => setTimeout(() => { if (slides[atual] === s) { ajusta(s); s.scrollTop = 0; } }, ms));
+  pontos.forEach((p, i) => p.classList.toggle("ativo", i === k));
+  contador.textContent = dois(k + 1) + " / " + dois(slides.length);
+  barra.style.width = ((k) / (slides.length - 1) * 100) + "%";
+  document.body.classList.toggle("sobre-escuro", s.classList.contains("escuro") || s.classList.contains("azul"));
+  btPrev.disabled = k === 0;
+  btProx.disabled = k === slides.length - 1;
+  if (location.hash.slice(1) !== s.id) history.replaceState(null, "", "#" + s.id);
+  if (foco) s.focus({ preventScroll: true });
+}
+const vai = (n) => mostra(atual + n);
+
+// abre no slide do endereco, se houver
+const inicial = slides.findIndex((s) => s.id === location.hash.slice(1));
+mostra(inicial > 0 ? inicial : 0);
+
+addEventListener("resize", () => ajusta(slides[atual]), { passive: true });
+btPrev.addEventListener("click", () => vai(-1));
+btProx.addEventListener("click", () => vai(1));
+pontos.forEach((p, i) => p.addEventListener("click", (e) => { e.preventDefault(); mostra(i); }));
+
+addEventListener("keydown", (e) => {
+  const alvo = e.target;
+  if (alvo && (alvo.isContentEditable || /input|textarea|select/i.test(alvo.tagName))) return;
+  if (["ArrowDown", "ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); vai(1); }
+  else if (["ArrowUp", "ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); vai(-1); }
+  else if (e.key === "Home") { e.preventDefault(); mostra(0); }
+  else if (e.key === "End") { e.preventDefault(); mostra(slides.length - 1); }
+});
+
+// roda do mouse: rola o slide alto ate o fim e so entao troca
+let travado = 0;
+addEventListener("wheel", (e) => {
+  const s = slides[atual];
+  const sobra = s.scrollHeight - s.clientHeight - s.scrollTop;
+  if (e.deltaY > 0 && sobra > 2) return;
+  if (e.deltaY < 0 && s.scrollTop > 2) return;
+  if (Math.abs(e.deltaY) < 12) return;
+  const agora = Date.now();
+  if (agora - travado < 700) return;
+  travado = agora;
+  vai(e.deltaY > 0 ? 1 : -1);
+}, { passive: true });
+
+// dedo: arrastar para cima passa, para baixo volta
+let y0 = null;
+addEventListener("touchstart", (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+addEventListener("touchend", (e) => {
+  if (y0 === null) return;
+  const dy = e.changedTouches[0].clientY - y0;
+  const s = slides[atual];
+  const sobra = s.scrollHeight - s.clientHeight - s.scrollTop;
+  if (Math.abs(dy) > 60) {
+    if (dy < 0 && sobra <= 2) vai(1);
+    if (dy > 0 && s.scrollTop <= 2) vai(-1);
+  }
+  y0 = null;
+}, { passive: true });
+</script>
+</body>
+</html>

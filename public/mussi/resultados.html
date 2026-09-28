@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Resultados do primeiro ciclo do Instituto Mussi com a YPHE.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Instituto Mussi — Primeiro ciclo">
+<meta property="og:description" content="O que existe hoje que não existia em junho.">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
+<title>Mussi Ciclo 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    /* identidade do Instituto Mussi — navy + dourado */
+    --bg:#1a2338; --line:rgba(180,193,214,.20); --line-2:rgba(180,193,214,.10);
+    --txt:#F1F4FB; --txt-2:#B4C1D6; --txt-3:#8B9AB5;
+    --cy:#cb9863; --cy-2:#e2b888; --blue:#203d62; --deep:#1f2a44;
+    --ok:#e2b888; --ok-t:rgba(226,184,136,.14);
+    --gold:#cb9863; --gold-t:rgba(203,152,99,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--txt);
+    font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Plus Jakarta Sans",system-ui,sans-serif;margin:0;
+    letter-spacing:-.03em;line-height:1.05;text-wrap:balance}
+  p{margin:0}
+
+  #deck{display:flex;height:100vh;width:100%;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+  #deck::-webkit-scrollbar{display:none}
+  .slide{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:center;scroll-snap-stop:always;
+    position:relative;display:flex;align-items:center;justify-content:center;padding:96px 7vw 94px;
+    background:
+      radial-gradient(118% 88% at 50% -18%, rgba(32,61,98,.55), transparent 64%),
+      radial-gradient(78% 68% at 106% 108%, rgba(203,152,99,.10), transparent 60%),
+      var(--bg)}
+  .inner{width:100%;max-width:1180px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--cy);font-weight:500}
+  .s-head{display:flex;flex-direction:column;gap:14px;margin-bottom:42px}
+  .s-head h2{font-size:clamp(28px,3.8vw,48px);font-weight:800;max-width:21ch}
+  .s-head .sub{font-size:clamp(15px,1.4vw,19px);color:var(--txt-2);max-width:64ch;line-height:1.6}
+  .hl{color:var(--cy)}
+
+  /* capa */
+  .cover .inner{display:flex;flex-direction:column;gap:26px}
+  .cover .duo{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .cover .nm{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:900;font-size:clamp(26px,3.6vw,44px);
+    letter-spacing:.06em;color:#fff}
+  .cover .x{font-size:clamp(20px,2.4vw,30px);color:var(--txt-3)}
+  .cover h1{font-size:clamp(30px,4.5vw,58px);font-weight:800;max-width:19ch}
+  .cover h1 em{font-style:normal;color:var(--cy)}
+  .cover .sub{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:56ch;line-height:1.6}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.07em;color:var(--txt-2);
+    border:1px solid var(--line);border-radius:999px;padding:7px 15px;background:rgba(255,255,255,.03)}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+  .st{border:1px solid var(--line);border-radius:14px;padding:26px 24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    display:flex;flex-direction:column;gap:7px}
+  .sv{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(30px,3.6vw,46px);font-weight:800;
+    color:#fff;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .sr{font-size:14px;color:var(--txt-2);line-height:1.4}
+  .sd{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.05em;
+    color:var(--ok);background:var(--ok-t);border-radius:4px;padding:3px 8px;align-self:flex-start;margin-top:3px}
+  .sd.gold{color:var(--gold);background:var(--gold-t)}
+
+  /* destaque unico */
+  .mono-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:6vw;align-items:center}
+  .art{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;max-height:50vh}
+  .halo{position:absolute;inset:8%;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%, rgba(203,152,99,.30), rgba(32,61,98,.30) 46%, transparent 70%);
+    filter:blur(28px)}
+  .art img{position:relative;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 30px 56px rgba(10,15,28,.8));animation:fl 7s ease-in-out infinite}
+  @keyframes fl{0%,100%{transform:translateY(-9px)}50%{transform:translateY(9px)}}
+  .big{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(56px,10vw,132px);font-weight:900;
+    line-height:.92;letter-spacing:-.05em;color:#fff;font-variant-numeric:tabular-nums}
+  .big em{font-style:normal;color:var(--cy)}
+
+  /* comparativo */
+  .cmp{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .cmp th{background:rgba(255,255,255,.04);text-align:left;padding:12px 18px;
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--txt-3);font-weight:500}
+  .cmp th.n,.cmp td.n{text-align:right;font-variant-numeric:tabular-nums}
+  .cmp td{padding:12px 18px;border-top:1px solid var(--line-2);font-size:15px;color:var(--txt-2)}
+  .cmp td.r{color:#fff;font-weight:500}
+  .up{color:var(--ok);font-weight:600}
+
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px}
+  .card{border:1px solid var(--line);border-radius:14px;padding:24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));
+    display:flex;flex-direction:column;gap:9px}
+  .card .k{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:16px;font-weight:700;color:var(--cy)}
+  .card .v{font-size:14.5px;color:var(--txt-2);line-height:1.55}
+
+  /* ponte */
+  .ponte{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:18px;align-items:center}
+  .pb{border:1px solid var(--line);border-radius:14px;padding:24px 22px;text-align:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+  .pb.mid{border-color:var(--cy);background:linear-gradient(180deg,rgba(203,152,99,.16),rgba(203,152,99,.04))}
+  .pb .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:7px}
+  .pb .d{font-size:13.5px;color:var(--txt-2);line-height:1.5}
+  .seta{color:var(--cy);font-size:20px}
+
+  /* lista */
+  .lst{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+  .lst li{display:flex;gap:13px;font-size:16px;color:var(--txt-2);line-height:1.5}
+  .lst svg{width:19px;height:19px;flex:0 0 auto;margin-top:3px;stroke:var(--cy);fill:none;
+    stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+
+  /* caixa */
+  .box{border:1px solid var(--line);border-left:3px solid var(--cy);border-radius:12px;
+    padding:26px 30px;background:linear-gradient(120deg,rgba(32,61,98,.55),rgba(203,152,99,.06));
+    display:flex;flex-direction:column;gap:13px}
+  .box.gold{border-left-color:var(--gold);background:linear-gradient(120deg,rgba(203,152,99,.13),transparent)}
+  .box h3{font-size:clamp(19px,2.2vw,26px);font-weight:700;color:#fff}
+  .box p{font-size:clamp(15px,1.4vw,17.5px);color:var(--txt-2);max-width:68ch;line-height:1.6}
+  .box .hi{color:var(--cy-2);font-weight:600}
+  .box.gold .hi{color:var(--gold)}
+
+  /* eixos 2030 */
+  .eixos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .eixo{border:1px solid var(--line);border-radius:14px;padding:22px;
+    display:flex;flex-direction:column;gap:11px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+  .eixo img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(10,15,28,.75))}
+  .eixo .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:16.5px;font-weight:700;color:#fff}
+  .eixo .d{font-size:13.5px;color:var(--txt-2);line-height:1.5}
+
+  /* linha do tempo */
+  .fases{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .fase{padding:26px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:9px;position:relative}
+  .fase:last-child{border-right:0}
+  .fase::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--cy)}
+  .fase:nth-child(1)::before{opacity:.4} .fase:nth-child(2)::before{opacity:.7}
+  .fase .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-3);letter-spacing:.14em}
+  .fase .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:18px;font-weight:700;color:#fff}
+  .fase .d{font-size:14px;color:var(--txt-2);line-height:1.5}
+  .fase.viva{background:linear-gradient(180deg,rgba(203,152,99,.12),transparent)}
+
+  /* fecho */
+  .close .inner{display:flex;flex-direction:column;gap:24px;align-items:flex-start}
+  .close h2{font-size:clamp(29px,4.6vw,60px);font-weight:800;max-width:18ch}
+  .close h2 em{font-style:normal;color:var(--cy)}
+  .close p{font-size:clamp(16px,1.5vw,20px);color:var(--txt-2);max-width:56ch;line-height:1.6}
+
+  /* chrome */
+  .chrome{position:fixed;inset:0;pointer-events:none;z-index:20}
+  .top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;
+    justify-content:space-between;padding:24px 7vw}
+  .mark{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;font-size:14px;letter-spacing:.34em;color:#fff;opacity:.9}
+  .count{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;color:var(--txt-3)}
+  .count b{color:var(--cy);font-weight:500}
+  .bottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;
+    justify-content:space-between;gap:24px;padding:20px 7vw 26px}
+  .dots{display:flex;gap:6px;pointer-events:auto;flex-wrap:wrap}
+  .dot{width:19px;height:4px;border-radius:2px;border:0;padding:0;cursor:pointer;
+    background:rgba(180,193,214,.24);transition:background .25s,width .25s}
+  .dot:hover{background:rgba(180,193,214,.5)}
+  .dot[aria-current="true"]{background:var(--cy);width:38px}
+  .dot:focus-visible{outline:2px solid var(--cy-2);outline-offset:3px}
+  .navs{display:flex;gap:10px;pointer-events:auto}
+  .nav{width:42px;height:42px;border-radius:50%;cursor:pointer;border:1px solid var(--line);
+    background:rgba(255,255,255,.045);color:var(--txt-2);display:flex;align-items:center;justify-content:center;
+    transition:background .2s,color .2s,border-color .2s}
+  .nav:hover:not(:disabled){background:rgba(203,152,99,.16);color:#fff;border-color:var(--cy)}
+  .nav:disabled{opacity:.3;cursor:default}
+  .nav:focus-visible{outline:2px solid var(--cy-2);outline-offset:2px}
+  .nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .art img{animation:none} }
+  @media (max-width:980px){
+    .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
+    .mono-grid{grid-template-columns:1fr;gap:24px} .art{max-height:26vh;order:-1}
+    .ponte{grid-template-columns:1fr} .seta{transform:rotate(90deg)}
+    .fases{grid-template-columns:1fr}
+    .fase{border-right:0;border-bottom:1px solid var(--line)}
+    .cmp td,.cmp th{padding:9px 12px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <section class="slide cover" data-t="Capa">
+    <div class="inner">
+      <div class="duo">
+        <span class="nm">INSTITUTO MUSSI</span>
+        <span class="x">&times;</span>
+        <span class="nm" style="color:var(--gold)">YPHE</span>
+      </div>
+      <p class="eyebrow">Primeiro ciclo &middot; junho a setembro de 2026</p>
+      <h1>O que existe hoje que <em>não existia</em> em junho.</h1>
+      <p class="sub">Uma prestação de contas do que foi construído, do que os números mostram,
+        do que ainda não conseguimos medir — e do que o Instituto pode fazer com essa base.</p>
+      <div class="chips">
+        <span class="chip">Redes e percepção</span>
+        <span class="chip">Tecnologia e atendimento</span>
+        <span class="chip">Performance</span>
+        <span class="chip">Mussi 2030</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="O combinado">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O que combinamos construir</p>
+        <h2>O primeiro ciclo não foi para vender. Foi para existir.</h2>
+        <p class="sub">Em junho, o Instituto tinha reputação médica consolidada e presença digital
+          quase nula. A decisão do ciclo 1 foi estruturar a base: posicionamento, narrativa,
+          produção contínua, páginas, mensuração e tecnologia de atendimento.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Posicionar</span><span class="v">Definir o que o Instituto representa e traduzir isso em como ele aparece.</span></div>
+        <div class="card"><span class="k">Produzir</span><span class="v">Sair do conteúdo esporádico para um calendário contínuo com processo.</span></div>
+        <div class="card"><span class="k">Instrumentar</span><span class="v">Páginas, rastreamento e tecnologia de atendimento para poder medir.</span></div>
+        <div class="card"><span class="k">Aprender</span><span class="v">Descobrir o que funciona com este público específico, não com a média do mercado.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Ponto de partida">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O ponto de partida</p>
+        <h2>Para entender o tamanho do salto, é preciso lembrar de onde ele saiu.</h2>
+      </div>
+      <div class="box gold">
+        <h3>No Facebook, a página praticamente não tinha movimento.</h3>
+        <p>Os percentuais deste relatório são altos justamente porque a base anterior era muito
+          baixa. Por isso apresentamos <span class="hi">números absolutos</span> junto de cada
+          percentual — é o único jeito honesto de mostrar o que aconteceu.</p>
+        <p>A publicação começou em <span class="hi">27 de julho</span>. A comparação é de dois
+          meses no ar (27/07 a 24/09) contra os dois meses anteriores (27/05 a 26/07).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Instagram">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Redes &middot; Instagram</p>
+        <h2>Dois meses no ar</h2>
+      </div>
+      <div class="stats">
+        <div class="st"><span class="sv">144,7 mil</span><span class="sr">visualizações no Instagram</span></div>
+        <div class="st"><span class="sv">25,4 mil</span><span class="sr">pessoas alcançadas</span><span class="sd ">+185%</span></div>
+        <div class="st"><span class="sv">4,3 mil</span><span class="sr">interações com o conteúdo</span><span class="sd ">+539,9%</span></div>
+        <div class="st"><span class="sv">2,6 mil</span><span class="sr">visitas ao perfil</span><span class="sd ">+145,3%</span></div>
+      </div>
+      <p style="margin-top:26px;font-size:15.5px;color:var(--txt-3);max-width:70ch">
+        Alcance é quantas pessoas diferentes viram. Interação é quantas reagiram, salvaram,
+        comentaram ou compartilharam. Visita ao perfil é quem quis saber mais depois de ver.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Facebook">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Redes &middot; Facebook</p>
+        <h2>O canal que estava parado</h2>
+      </div>
+      <div class="stats">
+        <div class="st"><span class="sv">206,5 mil</span><span class="sr">visualizações</span></div>
+        <div class="st"><span class="sv">60,5 mil</span><span class="sr">pessoas alcançadas</span></div>
+        <div class="st"><span class="sv">3,6 mil</span><span class="sr">interações</span><span class="sd ">+736,5%</span></div>
+        <div class="st"><span class="sv">1,3 mil</span><span class="sr">visitas à página</span><span class="sd ">+47,7%</span></div>
+      </div>
+      <p style="margin-top:26px;font-size:15.5px;color:var(--txt-3);max-width:70ch">
+        O Facebook alcança um público mais velho — e, em ortopedia, é exatamente onde está
+        boa parte de quem decide operar.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Cliques">
+    <div class="inner mono-grid">
+      <div class="art"><span class="halo"></span><img src="/brand/produtos/leads.png" alt=""></div>
+      <div>
+        <p class="eyebrow">O número que mais importa</p>
+        <p class="big" style="margin:14px 0 6px"><em>1.468</em></p>
+        <h2 style="font-size:clamp(22px,2.6vw,32px);font-weight:700;margin-bottom:16px">
+          pessoas clicaram para chegar até vocês</h2>
+        <p style="font-size:17px;color:var(--txt-2);max-width:48ch;line-height:1.6">
+          726 pelo Instagram e 742 pelo Facebook. Antes do ciclo, esse número era
+          praticamente zero — não havia caminho do conteúdo até o agendamento.
+        </p>
+        <p style="font-size:15px;color:var(--txt-3);max-width:48ch;margin-top:16px">
+          Cada clique é uma pessoa que parou, se interessou e deu um passo em direção
+          ao Instituto por conta própria.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="O que funcionou">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Aprendizado do ciclo</p>
+        <h2>O que funcionou — e por que isso vale mais que o número</h2>
+        <p class="sub">Depois de dois meses, sabemos com evidência o que este público responde.
+          Esse conhecimento não existia em junho e não se compra pronto.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Collabs com os médicos</span>
+          <span class="v">Somam a audiência dos dois perfis. O conteúdo com o Dr. Mussi e os médicos falando dele foi o de maior alcance.</span></div>
+        <div class="card"><span class="k">O post do legado</span>
+          <span class="v">Performou bem e virou porta de entrada fixada no perfil.</span></div>
+        <div class="card"><span class="k">Dr. Henrique sobre tecnologia</span>
+          <span class="v">Conteúdo técnico com rosto próprio gera autoridade e retenção.</span></div>
+        <div class="card"><span class="k">Estudays e Afya</span>
+          <span class="v">O evento e o jogo com os estudantes viraram alcance orgânico multiplicado.</span></div>
+        <div class="card"><span class="k">Bastidores e secretárias</span>
+          <span class="v">Nos stories, o que mais engaja é gente. O cuidado do atendimento comunica tanto quanto a medicina.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Tecnologia">
+    <div class="inner mono-grid">
+      <div class="art"><span class="halo"></span><img src="/brand/produtos/connect.png" alt=""></div>
+      <div>
+        <p class="eyebrow">O que não aparece no feed</p>
+        <h2 style="font-size:clamp(25px,3.2vw,40px);font-weight:800;margin:14px 0 18px">
+          Tecnologia não é o que se compra. É o que passa a funcionar.</h2>
+        <p style="font-size:16.5px;color:var(--txt-2);max-width:50ch;line-height:1.62">
+          Uma coisa é disponibilizar a plataforma. Outra é adaptá-la à rotina real do Instituto —
+          aos computadores, ao fluxo da recepção, ao jeito como a Cátia trabalha.
+        </p>
+        <ul class="lst" style="margin-top:22px">
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Levantamento da rotina e tradução para configuração técnica</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Acesso local, instalação, testes e validações no ambiente real</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Refinamentos além da configuração-base do fornecedor</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Interlocução técnica contínua com a plataforma</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="A ponte">
+    <div class="inner">
+      <div class="s-head c" style="margin-bottom:38px">
+        <p class="eyebrow">Como isso acontece</p>
+        <h2>Três lados que não falam a mesma língua</h2>
+      </div>
+      <div class="ponte">
+        <div class="pb"><div class="t">INSTITUTO</div>
+          <div class="d">Conhece a rotina, as necessidades e o contexto físico. Não precisa conhecer código.</div></div>
+        <span class="seta">&rarr;</span>
+        <div class="pb mid"><div class="t">YPHE</div>
+          <div class="d">Traduz necessidade em configuração. Acesso local, testes, validação e ajuste fino.</div></div>
+        <span class="seta">&rarr;</span>
+        <div class="pb"><div class="t">FORNECEDOR</div>
+          <div class="d">Domina a plataforma e o desenvolvimento-base. Não tem acesso ao dia a dia da clínica.</div></div>
+      </div>
+      <p style="margin-top:30px;font-size:16px;color:var(--txt-2);max-width:72ch">
+        Sem esse meio, a tecnologia fica instalada mas não entra na operação. É o trabalho
+        que menos aparece e o que mais determina se a ferramenta vai ser usada.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Performance">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Mídia paga e páginas</p>
+        <h2>Onde o investimento foi e o que ele devolveu</h2>
+      </div>
+      <div class="stats">
+        <div class="st"><span class="sv">—</span><span class="sr">investimento no período</span><span class="sd gold">a preencher</span></div>
+        <div class="st"><span class="sv">—</span><span class="sr">cliques e CTR</span><span class="sd gold">a preencher</span></div>
+        <div class="st"><span class="sv">—</span><span class="sr">conversões rastreadas</span><span class="sd gold">a preencher</span></div>
+        <div class="st"><span class="sv">—</span><span class="sr">custo por conversão</span><span class="sd gold">a preencher</span></div>
+      </div>
+      <div class="box gold" style="margin-top:24px">
+        <p><span class="hi">Bloco a completar antes da reunião.</span> Investimento total e por campanha,
+          impressões, cliques, CTR, CPC, conversões rastreadas, custo por conversão, termos e páginas
+          de melhor resposta, taxa de conversão das landing pages e gargalos observados.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Agenda cheia">
+    <div class="inner mono-grid">
+      <div class="art"><span class="halo"></span><img src="/brand/produtos/agenda.png" alt=""></div>
+      <div>
+        <p class="eyebrow">A leitura que muda a conversa</p>
+        <h2 style="font-size:clamp(25px,3.2vw,40px);font-weight:800;margin:14px 0 18px">
+          A agenda de vocês já está cheia.</h2>
+        <p style="font-size:16.5px;color:var(--txt-2);max-width:50ch;line-height:1.62">
+          Olhando os agendamentos de março a agosto, o Instituto roda travado em torno de
+          <span style="color:var(--cy-2);font-weight:600">1.650 marcações por mês</span>,
+          com variação de apenas 6%. Isso é operação em capacidade.
+        </p>
+        <p style="font-size:16.5px;color:var(--txt-2);max-width:50ch;line-height:1.62;margin-top:14px">
+          Numa agenda cheia, comunicação não aumenta volume. Ela muda
+          <span style="color:var(--cy-2);font-weight:600">quem ocupa a vaga</span> — e o
+          que mais cresceu no período foram as cirurgias.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Honestidade">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O que ainda não sabemos</p>
+        <h2>O que este relatório não consegue provar — e como resolvemos isso</h2>
+        <p class="sub">Preferimos dizer o que não sabemos a atribuir resultado sem rastreamento.
+          É o que permite decidir com segurança no próximo ciclo.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Quantas consultas vieram das redes</span>
+          <span class="v">Os 1.468 cliques chegaram ao site, mas não há rastreamento até o agendamento. Não dá para afirmar o número.</span></div>
+        <div class="card"><span class="k">O valor real das cirurgias</span>
+          <span class="v">373 das 375 cirurgias do sistema estão lançadas com valor R$ 0. O procedimento de maior ticket não é medido.</span></div>
+        <div class="card"><span class="k">A origem declarada</span>
+          <span class="v">79% dos agendamentos entram como &ldquo;indicação&rdquo;. O campo é preenchido na recepção e não reflete a descoberta real.</span></div>
+        <div class="card"><span class="k">Como resolvemos</span>
+          <span class="v">Link rastreável por origem e a pergunta &ldquo;como nos conheceu?&rdquo; na agenda. Em 60 dias, esta conversa passa a ter número.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Fases">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">Onde estamos</p>
+        <h2>A base está construída. A próxima decisão é outra.</h2>
+      </div>
+      <div class="fases">
+        <div class="fase"><span class="n">CICLO 1 &middot; CONCLUÍDO</span><span class="t">Estruturar</span>
+          <span class="d">Posicionamento, narrativa, produção contínua, páginas, tecnologia e mensuração.</span></div>
+        <div class="fase viva"><span class="n">AGORA</span><span class="t">Consolidar</span>
+          <span class="d">Transformar presença em autoridade reconhecida e fechar o rastreamento até o agendamento.</span></div>
+        <div class="fase"><span class="n">MUSSI 2030</span><span class="t">Escalar</span>
+          <span class="d">Novos canais, mais médicos, novas frentes e impacto comercial medido.</span></div>
+      </div>
+      <p style="margin-top:28px;font-size:16.5px;color:var(--txt-2);max-width:72ch">
+        A pergunta do próximo ciclo não é mais &ldquo;o que a agência fez?&rdquo;. É
+        <span style="color:var(--cy-2);font-weight:600">o que o Instituto quer fazer com a
+        estrutura que agora existe</span>.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Mussi 2030">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">A próxima fase</p>
+        <h2>Mussi 2030</h2>
+        <p class="sub">Os eixos abaixo são a moldura. O conteúdo definitivo vem do material que
+          o Instituto já vem construindo — e deve ser refinado junto com os sócios.</p>
+      </div>
+      <div class="eixos">
+        <div class="eixo"><img src="/brand/produtos/branding.png" alt="">
+          <span class="t">Marca de referência</span>
+          <span class="d">Deixar de ser conhecido na cidade para ser referência regional em ortopedia.</span></div>
+        <div class="eixo"><img src="/brand/produtos/content.png" alt="">
+          <span class="t">Jornada do paciente</span>
+          <span class="d">Série acompanhando antes, durante e depois — com autorização de imagem e dentro do CFM.</span></div>
+        <div class="eixo"><img src="/brand/produtos/predio.png" alt="">
+          <span class="t">Instituto como instituição</span>
+          <span class="d">Equipe, bastidores e cultura. O cuidado comunica tanto quanto a técnica.</span></div>
+        <div class="eixo"><img src="/brand/produtos/diag.png" alt="">
+          <span class="t">Medição fechada</span>
+          <span class="d">Da primeira visualização até a consulta realizada, com número em cada etapa.</span></div>
+        <div class="eixo"><img src="/brand/produtos/orb.png" alt="">
+          <span class="t">Atendimento inteligente</span>
+          <span class="d">Tecnologia que responde, tria e agenda — liberando a equipe para o que é humano.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide close" data-t="Fecho">
+    <div class="inner">
+      <p class="eyebrow">A pergunta desta reunião</p>
+      <h2>Diante da base que já existe, qual é o nível de <em>ambição</em> que o Instituto quer para a próxima fase?</h2>
+      <p>O primeiro ciclo respondeu se era possível. O próximo responde até onde vai.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="chrome">
+  <div class="top">
+    <span class="mark">INSTITUTO MUSSI</span>
+    <span class="count"><b id="cur">01</b> / <span id="tot">00</span></span>
+  </div>
+  <div class="bottom">
+    <div class="dots" id="dots"></div>
+    <div class="navs">
+      <button class="nav" id="prev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="nav" id="next" aria-label="Próximo"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck');
+  var slides=[].slice.call(deck.querySelectorAll('.slide'));
+  var dots=document.getElementById('dots'),cur=document.getElementById('cur'),tot=document.getElementById('tot');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  var idx=0; tot.textContent=String(slides.length).padStart(2,'0');
+  slides.forEach(function(s,i){
+    var b=document.createElement('button');b.className='dot';b.type='button';
+    b.setAttribute('aria-label','Ir para '+(s.dataset.t||('slide '+(i+1))));
+    b.addEventListener('click',function(){go(i);});dots.appendChild(b);
+  });
+  var de=[].slice.call(dots.children);
+  function paint(){
+    cur.textContent=String(idx+1).padStart(2,'0');
+    de.forEach(function(d,i){i===idx?d.setAttribute('aria-current','true'):d.removeAttribute('aria-current');});
+    prev.disabled=idx===0;next.disabled=idx===slides.length-1;
+  }
+  function go(n){idx=Math.max(0,Math.min(slides.length-1,n));
+    slides[idx].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});paint();}
+  prev.addEventListener('click',function(){go(idx-1);});
+  next.addEventListener('click',function(){go(idx+1);});
+  window.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}
+    else if(e.key==='Home'){e.preventDefault();go(0);}
+    else if(e.key==='End'){e.preventDefault();go(slides.length-1);}
+  });
+  var t;deck.addEventListener('scroll',function(){clearTimeout(t);
+    t=setTimeout(function(){var w=deck.clientWidth||1,n=Math.round(deck.scrollLeft/w);
+      if(n!==idx){idx=Math.max(0,Math.min(slides.length-1,n));paint();}},90);},{passive:true});
+  paint();
+  function fit(){
+    if(window.innerWidth<=980){slides.forEach(function(s){var c=s.firstElementChild;if(c)c.style.transform='';});return;}
+    slides.forEach(function(s){
+      var c=s.firstElementChild;if(!c)return;c.style.transform='';
+      var e=getComputedStyle(s),livre=s.clientHeight-parseFloat(e.paddingTop)-parseFloat(e.paddingBottom);
+      if(c.scrollHeight>livre&&c.scrollHeight>0){
+        var k=Math.max(.62,livre/c.scrollHeight);
+        c.style.transformOrigin='center center';c.style.transform='scale('+k.toFixed(4)+')';}
+    });
+  }
+  fit();window.addEventListener('resize',fit);window.addEventListener('load',fit);
+})();
+</script>
+</body>
+</html>

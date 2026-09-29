@@ -34,8 +34,7 @@
     position:relative;display:flex;align-items:center;justify-content:center;padding:96px 7vw 94px;
     background:
       radial-gradient(118% 88% at 50% -18%, rgba(32,61,98,.55), transparent 64%),
-      radial-gradient(78% 68% at 106% 108%, rgba(203,152,99,.10), transparent 60%),
-      var(--bg)}
+      radial-gradient(78% 68% at 106% 108%, rgba(203,152,99,.10), transparent 60%)}
   .inner{width:100%;max-width:1180px}
   .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--cy);font-weight:500}
@@ -384,9 +383,113 @@
   .met-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
     text-transform:uppercase;color:#56617a;text-align:center;padding-top:8px}
   @media (max-width:980px){ .met{grid-template-columns:1fr;gap:26px} }
+
+  /* ===== aprimoramento visual ===== */
+  #deck{position:relative;z-index:1}
+  .bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--bg)}
+  .bgfx .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;
+    will-change:transform}
+  .bgfx .b1{width:52vw;height:52vw;left:-12vw;top:-16vw;
+    background:radial-gradient(circle,rgba(32,61,98,.95),transparent 68%);
+    animation:drift1 26s ease-in-out infinite}
+  .bgfx .b2{width:44vw;height:44vw;right:-10vw;bottom:-14vw;
+    background:radial-gradient(circle,rgba(203,152,99,.38),transparent 68%);
+    animation:drift2 32s ease-in-out infinite}
+  .bgfx .b3{width:36vw;height:36vw;left:38vw;top:42vh;
+    background:radial-gradient(circle,rgba(97,140,196,.26),transparent 70%);
+    animation:drift3 38s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(7vw,5vh,0) scale(1.12)}}
+  @keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.06)}
+    50%{transform:translate3d(-8vw,-6vh,0) scale(.92)}}
+  @keyframes drift3{0%,100%{transform:translate3d(0,0,0)}
+    33%{transform:translate3d(-6vw,4vh,0)} 66%{transform:translate3d(5vw,-5vh,0)}}
+  .bgfx .grid{position:absolute;inset:0;opacity:.14;
+    background-image:linear-gradient(rgba(180,193,214,.16) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(180,193,214,.16) 1px,transparent 1px);
+    background-size:72px 72px;
+    mask-image:radial-gradient(72% 62% at 50% 44%,#000,transparent 78%);
+    -webkit-mask-image:radial-gradient(72% 62% at 50% 44%,#000,transparent 78%)}
+  .bgfx .grain{position:absolute;inset:-50%;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain 6s steps(5) infinite}
+  @keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}
+    40%{transform:translate(3%,-4%)}60%{transform:translate(-3%,-3%)}80%{transform:translate(4%,4%)}}
+  .bgfx .beam{position:absolute;top:-30%;left:50%;width:140vw;height:160vh;
+    transform:translateX(-50%) rotate(14deg);opacity:.16;
+    background:linear-gradient(100deg,transparent 42%,rgba(226,184,136,.5) 50%,transparent 58%);
+    animation:beam 18s linear infinite}
+  @keyframes beam{0%{transform:translateX(-110%) rotate(14deg)}
+    100%{transform:translateX(10%) rotate(14deg)}}
+
+  /* entrada de conteúdo */
+  .slide > .inner > *{opacity:0;transform:translateY(22px);
+    transition:opacity .62s cubic-bezier(.22,.7,.3,1),transform .62s cubic-bezier(.22,.7,.3,1)}
+  .slide.is-on > .inner > *{opacity:1;transform:none}
+  .slide.is-on > .inner > *:nth-child(1){transition-delay:.06s}
+  .slide.is-on > .inner > *:nth-child(2){transition-delay:.14s}
+  .slide.is-on > .inner > *:nth-child(3){transition-delay:.22s}
+  .slide.is-on > .inner > *:nth-child(4){transition-delay:.30s}
+  .slide.is-on > .inner > *:nth-child(5){transition-delay:.38s}
+  .slide.is-on > .inner > *:nth-child(n+6){transition-delay:.44s}
+
+  /* brilho nas bordas dos cartões */
+  .st,.card,.pcard,.ebox,.eixo,.bn,.fala-c,.cbox,.pb,.box{position:relative;overflow:hidden;
+    transition:border-color .3s,transform .3s,box-shadow .3s}
+  .st::after,.card::after,.pcard::after,.ebox::after,.eixo::after,.bn::after,.fala-c::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:radial-gradient(120% 80% at 0% 0%,rgba(226,184,136,.10),transparent 58%);
+    opacity:0;transition:opacity .35s}
+  .st:hover,.card:hover,.pcard:hover,.ebox:hover,.eixo:hover,.bn:hover,.fala-c:hover{
+    border-color:rgba(203,152,99,.45);transform:translateY(-3px);
+    box-shadow:0 22px 46px -28px rgba(0,0,0,.9)}
+  .st:hover::after,.card:hover::after,.pcard:hover::after,.ebox:hover::after,
+  .eixo:hover::after,.bn:hover::after,.fala-c:hover::after{opacity:1}
+
+  /* ícone dos cartões */
+  .ico{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,rgba(203,152,99,.24),rgba(32,61,98,.55));
+    border:1px solid rgba(203,152,99,.34);flex:0 0 auto;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 8px 18px -12px rgba(0,0,0,.9)}
+  .ico svg{width:19px;height:19px;fill:none;stroke:var(--cy-2);stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round}
+  .cbox .ico{background:linear-gradient(145deg,rgba(214,120,90,.26),rgba(32,61,98,.5));
+    border-color:rgba(214,120,90,.45)}
+  .cbox .ico svg{stroke:#e0917a}
+
+  /* provas e comentários maiores */
+  .coms{gap:20px}
+  .coms.c3{grid-template-columns:repeat(2,1fr)}
+  .coms.c3 .com:first-child{grid-column:span 2}
+  .com,.prova{transition:transform .35s cubic-bezier(.22,.7,.3,1),box-shadow .35s}
+  .com{padding:12px;border-radius:14px;box-shadow:0 26px 60px -26px rgba(0,0,0,.85)}
+  .com:hover,.prova:hover{transform:translateY(-5px) scale(1.015);
+    box-shadow:0 38px 80px -30px rgba(0,0,0,.95)}
+  .prova{border-radius:14px;padding:12px}
+  .met-img{transition:transform .35s,box-shadow .35s}
+  .met-img:hover{transform:translateY(-4px) scale(1.012)}
+  @media (max-width:980px){ .coms.c3{grid-template-columns:1fr}
+    .coms.c3 .com:first-child{grid-column:span 1} }
+
+  /* logo YPHE no chrome */
+  .mark{display:flex;align-items:center;gap:13px}
+  .mark .lg{height:14px;width:auto;opacity:.85;filter:brightness(0) invert(1)}
+  .mark .sep{color:var(--txt-3);letter-spacing:0;font-weight:400;opacity:.7}
+  .cover .lgw{height:clamp(26px,3.2vw,40px);width:auto;filter:brightness(0) invert(1);opacity:.95}
+  .close .lgw{height:26px;width:auto;filter:brightness(0) invert(1);opacity:.6;margin-top:6px}
+
+  /* contador e dots com vida */
+  .dot[aria-current="true"]{box-shadow:0 0 12px rgba(203,152,99,.7)}
+  .count b{text-shadow:0 0 14px rgba(203,152,99,.5)}
+
+  @media (prefers-reduced-motion: reduce){
+    .bgfx *{animation:none!important}
+    .slide > .inner > *{opacity:1;transform:none;transition:none}
+  }
 </style>
 </head>
 <body>
+<div class="bgfx" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="beam"></span><span class="grid"></span><span class="grain"></span></div>
 <div id="deck">
 
   <section class="slide cover" data-t="Capa">
@@ -394,7 +497,7 @@
       <div class="duo">
         <span class="nm">INSTITUTO MUSSI</span>
         <span class="x">&times;</span>
-        <span class="nm" style="color:var(--gold)">YPHE</span>
+        <img class="lgw" src="/brand/logo-yphe.svg" alt="YPHE">
       </div>
       <p class="eyebrow">Primeiro ciclo &middot; junho a setembro de 2026</p>
       <h1>O que existe hoje que <em>não existia</em> em junho.</h1>
@@ -1080,6 +1183,7 @@
       <p class="eyebrow">A pergunta desta reunião</p>
       <h2>Diante da base que já existe, qual é o nível de <em>ambição</em> que o Instituto quer para a próxima fase?</h2>
       <p>O primeiro ciclo respondeu se era possível. O próximo responde até onde vai.</p>
+      <img class="lgw" src="/brand/logo-yphe.svg" alt="YPHE">
     </div>
   </section>
 
@@ -1087,7 +1191,7 @@
 
 <div class="chrome">
   <div class="top">
-    <span class="mark">INSTITUTO MUSSI</span>
+    <span class="mark">INSTITUTO MUSSI<span class="sep">&times;</span><img class="lg" src="/brand/logo-yphe.svg" alt="YPHE"></span>
     <span class="count"><b id="cur">01</b> / <span id="tot">00</span></span>
   </div>
   <div class="bottom">
@@ -1130,6 +1234,35 @@
   var t;deck.addEventListener('scroll',function(){clearTimeout(t);
     t=setTimeout(function(){var w=deck.clientWidth||1,n=Math.round(deck.scrollLeft/w);
       if(n!==idx){idx=Math.max(0,Math.min(slides.length-1,n));paint();}},90);},{passive:true});
+
+  // --- entrada de conteúdo por slide ---
+  function marcar(){ slides.forEach(function(s,i){ s.classList.toggle('is-on', i===idx); }); }
+  var _paint = paint;
+  paint = function(){ _paint(); marcar(); };
+  marcar();
+
+  // --- ícones nos cartões ---
+  var ICONS = [
+    '<path d="M3 12h4l3 8 4-16 3 8h4"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    '<path d="M4 20v-5a8 8 0 0116 0v5"/><path d="M2 20h20"/><circle cx="12" cy="7" r="3"/>',
+    '<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>',
+    '<path d="M12 2l2.6 6.3 6.8.5-5.2 4.4 1.6 6.6L12 16.3 6.2 19.8l1.6-6.6L2.6 8.8l6.8-.5z"/>',
+    '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/>',
+    '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+    '<path d="M4 6h16M4 12h10M4 18h7"/>',
+    '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9l10 6 10-6"/>',
+    '<path d="M12 3l8 4v6c0 4.4-3.4 7.4-8 8-4.6-.6-8-3.6-8-8V7z"/><path d="M9 12l2 2 4-4"/>',
+    '<circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 003 3h6"/>'
+  ];
+  var alvos = deck.querySelectorAll('.card, .pcard, .ebox, .cbox, .fala-c');
+  [].forEach.call(alvos, function(el,i){
+    var d=document.createElement('span'); d.className='ico'; d.setAttribute('aria-hidden','true');
+    d.innerHTML='<svg viewBox="0 0 24 24">'+ICONS[i%ICONS.length]+'</svg>';
+    el.insertBefore(d, el.firstChild);
+  });
+
   paint();
   function fit(){
     if(window.innerWidth<=980){slides.forEach(function(s){var c=s.firstElementChild;if(c)c.style.transform='';});return;}

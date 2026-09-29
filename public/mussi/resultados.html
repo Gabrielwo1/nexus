@@ -362,6 +362,27 @@
   @media (max-width:980px){ .crise{grid-template-columns:1fr}
     .tl{grid-template-columns:1fr;gap:18px} .tl::before{display:none}
     .tn{border-left:2px solid var(--gold);padding-left:16px} .tn .dot{display:none} }
+
+  /* slide de métrica única */
+  .met{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:5vw;align-items:center}
+  .met-n{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin:14px 0 10px;
+    font-variant-numeric:tabular-nums}
+  .met-a{font-family:"IBM Plex Mono",monospace;font-size:clamp(20px,2.4vw,30px);color:var(--txt-3)}
+  .met-x{color:var(--gold);font-size:clamp(18px,2vw,24px)}
+  .met-d{font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-size:clamp(52px,8.4vw,112px);font-weight:800;color:#fff;line-height:.92;letter-spacing:-.05em}
+  .met-p{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:14px;color:#7ee0ad;
+    background:rgba(126,224,173,.14);border-radius:5px;padding:5px 12px}
+  .met-l{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--txt-2)}
+  .met-e{font-size:clamp(15px,1.4vw,17.5px);color:var(--txt-2);line-height:1.6;
+    max-width:44ch;margin-top:20px}
+  .met-img{background:#fff;border:1px solid rgba(180,193,214,.3);border-radius:12px;padding:12px;
+    box-shadow:0 22px 52px -24px rgba(0,0,0,.8)}
+  .met-img img{width:100%;height:auto;display:block;border-radius:6px}
+  .met-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:#56617a;text-align:center;padding-top:8px}
+  @media (max-width:980px){ .met{grid-template-columns:1fr;gap:26px} }
 </style>
 </head>
 <body>
@@ -596,37 +617,151 @@
     </div>
   </section>
 
-  <section class="slide" data-t="Instagram">
-    <div class="inner">
-      <div class="s-head">
+  <section class="slide" data-t="Instagram · Alcance">
+    <div class="inner met">
+      <div>
         <p class="eyebrow">Redes &middot; Instagram</p>
-        <h2>Dois meses no ar</h2>
+        <p class="met-l" style="margin-top:14px">Alcance</p>
+        <div class="met-n">
+          <span class="met-a">8.929</span><span class="met-x">→</span><span class="met-d">25.688</span>
+        </div>
+        <span class="met-p">+187,7%</span>
+        <p class="met-e">Alcance é quantas <strong style='color:#fff'>pessoas diferentes</strong> viram o Instituto. Quase três vezes mais gente do que nos dois meses anteriores.</p>
       </div>
-      <div class="bns">
-        <div class="bn"><span class="bn-r">Alcance</span><div class="bn-l"><span class="bn-a">8.929</span><span class="bn-x">→</span><span class="bn-d">25.688</span></div><span class="bn-p">+187,7%</span><span class="bn-mini"><img src="/mussi/provas/ig-alcance.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Interações</span><div class="bn-l"><span class="bn-a">666</span><span class="bn-x">→</span><span class="bn-d">4.317</span></div><span class="bn-p">+548,2%</span><span class="bn-mini"><img src="/mussi/provas/ig-interacoes.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Cliques no link</span><div class="bn-l"><span class="bn-a">364</span><span class="bn-x">→</span><span class="bn-d">727</span></div><span class="bn-p">+100%</span><span class="bn-mini"><img src="/mussi/provas/ig-cliques.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Novos seguidores</span><div class="bn-l"><span class="bn-a">197</span><span class="bn-x">→</span><span class="bn-d">384</span></div><span class="bn-p">+94,9%</span><span class="bn-mini"><img src="/mussi/provas/ig-seguidores.png" alt=""></span></div>
-      </div>
-      <p class="selo"><i></i> 174.193 visualizações no período · o número à esquerda é a base dos dois meses anteriores, calculada a partir do percentual do painel</p>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/ig-alcance.png" alt="Alcance no Instagram">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section class="slide" data-t="Facebook">
-    <div class="inner">
-      <div class="s-head">
-        <p class="eyebrow">Redes &middot; Facebook</p>
-        <h2>O canal que estava parado</h2>
+  <section class="slide" data-t="Instagram · Interações">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Instagram</p>
+        <p class="met-l" style="margin-top:14px">Interações</p>
+        <div class="met-n">
+          <span class="met-a">666</span><span class="met-x">→</span><span class="met-d">4.317</span>
+        </div>
+        <span class="met-p">+548,2%</span>
+        <p class="met-e">Interação é quem <strong style='color:#fff'>parou para reagir</strong> — curtir, salvar, comentar ou compartilhar. Seis vezes mais que antes.</p>
       </div>
-      <div class="bns">
-        <div class="bn"><span class="bn-r">Visualizações</span><div class="bn-l"><span class="bn-a">≈13.100</span><span class="bn-x">→</span><span class="bn-d">208.824</span></div><span class="bn-p">+1.500%</span><span class="bn-mini"><img src="/mussi/provas/fb-visualizacoes.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Pessoas alcançadas</span><div class="bn-l"><span class="bn-a">≈5.100</span><span class="bn-x">→</span><span class="bn-d">60.599</span></div><span class="bn-p">+1.100%</span><span class="bn-mini"><img src="/mussi/provas/fb-pessoas.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Interações</span><div class="bn-l"><span class="bn-a">436</span><span class="bn-x">→</span><span class="bn-d">3.712</span></div><span class="bn-p">+751,4%</span><span class="bn-mini"><img src="/mussi/provas/fb-interacoes.png" alt=""></span></div>
-        <div class="bn"><span class="bn-r">Cliques no link</span><div class="bn-l"><span class="bn-a">375</span><span class="bn-x">→</span><span class="bn-d">750</span></div><span class="bn-p">+100%</span><span class="bn-mini"><img src="/mussi/provas/fb-cliques.png" alt=""></span></div>
-      </div>
-      <p class="selo"><i></i> O canal que estava parado · 91 novos seguidores (+600%) e 1.372 visitas à página (+50,9%)</p>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/ig-interacoes.png" alt="Interações no Instagram">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
     </div>
   </section>
+
+  <section class="slide" data-t="Instagram · Cliques no link">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Instagram</p>
+        <p class="met-l" style="margin-top:14px">Cliques no link</p>
+        <div class="met-n">
+          <span class="met-a">364</span><span class="met-x">→</span><span class="met-d">727</span>
+        </div>
+        <span class="met-p">+100%</span>
+        <p class="met-e">Cliques no link são as pessoas que <strong style='color:#fff'>saíram do conteúdo para procurar o Instituto</strong>. O passo mais próximo do agendamento.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/ig-cliques.png" alt="Cliques no link no Instagram">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Instagram · Novos seguidores">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Instagram</p>
+        <p class="met-l" style="margin-top:14px">Novos seguidores</p>
+        <div class="met-n">
+          <span class="met-a">197</span><span class="met-x">→</span><span class="met-d">384</span>
+        </div>
+        <span class="met-p">+94,9%</span>
+        <p class="met-e">Seguidor é quem decidiu <strong style='color:#fff'>continuar acompanhando</strong>. Não é audiência de passagem — é audiência que volta.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/ig-seguidores.png" alt="Novos seguidores no Instagram">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+      <p class="selo" style="margin-top:22px"><i></i> 174.193 visualizações no Instagram no período</p>
+
+  <section class="slide" data-t="Facebook · Visualizações">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Facebook</p>
+        <p class="met-l" style="margin-top:14px">Visualizações</p>
+        <div class="met-n">
+          <span class="met-a">≈13.100</span><span class="met-x">→</span><span class="met-d">208.824</span>
+        </div>
+        <span class="met-p">+1.500%</span>
+        <p class="met-e">O canal que estava praticamente parado. O Facebook alcança o público mais velho — em ortopedia, boa parte de quem decide operar.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/fb-visualizacoes.png" alt="Visualizações no Facebook">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Facebook · Pessoas alcançadas">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Facebook</p>
+        <p class="met-l" style="margin-top:14px">Pessoas alcançadas</p>
+        <div class="met-n">
+          <span class="met-a">≈5.100</span><span class="met-x">→</span><span class="met-d">60.599</span>
+        </div>
+        <span class="met-p">+1.100%</span>
+        <p class="met-e">Sessenta mil pessoas diferentes viram o Instituto no canal onde, dois meses antes, quase ninguém via.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/fb-pessoas.png" alt="Pessoas alcançadas no Facebook">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Facebook · Interações">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Facebook</p>
+        <p class="met-l" style="margin-top:14px">Interações</p>
+        <div class="met-n">
+          <span class="met-a">436</span><span class="met-x">→</span><span class="met-d">3.712</span>
+        </div>
+        <span class="met-p">+751,4%</span>
+        <p class="met-e">É aqui que estão os comentários mais longos — os relatos de experiência e as recomendações espontâneas.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/fb-interacoes.png" alt="Interações no Facebook">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Facebook · Cliques no link">
+    <div class="inner met">
+      <div>
+        <p class="eyebrow">Redes &middot; Facebook</p>
+        <p class="met-l" style="margin-top:14px">Cliques no link</p>
+        <div class="met-n">
+          <span class="met-a">375</span><span class="met-x">→</span><span class="met-d">750</span>
+        </div>
+        <span class="met-p">+100%</span>
+        <p class="met-e">Mais cliques que o Instagram. O público do Facebook é mais velho e clica mais para buscar informação.</p>
+      </div>
+      <figure class="met-img" style="margin:0">
+        <img src="/mussi/provas/fb-cliques.png" alt="Cliques no link no Facebook">
+        <figcaption class="met-cap">Print do painel da Meta, sem edição</figcaption>
+      </figure>
+    </div>
+  </section>
+      <p class="selo" style="margin-top:22px"><i></i> 91 novos seguidores (+600%) e 1.372 visitas à página (+50,9%)</p>
 
   <section class="slide" data-t="Comparativo">
     <div class="inner">

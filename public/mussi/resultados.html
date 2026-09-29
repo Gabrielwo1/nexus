@@ -271,6 +271,69 @@
     .fase{border-right:0;border-bottom:1px solid var(--line)}
     .cmp td,.cmp th{padding:9px 12px;font-size:13px}
   }
+
+  /* número grande com referência ao lado */
+  .bns{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .bn{border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    display:flex;flex-direction:column;gap:10px}
+  .bn-r{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--txt-3)}
+  .bn-l{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+  .bn-a{font-family:"IBM Plex Mono",monospace;font-size:clamp(15px,1.6vw,19px);color:var(--txt-3)}
+  .bn-x{color:var(--gold);font-size:15px}
+  .bn-d{font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-size:clamp(30px,3.7vw,48px);font-weight:800;color:#fff;line-height:1;letter-spacing:-.04em}
+  .bn-p{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:#7ee0ad;
+    background:rgba(126,224,173,.13);border-radius:4px;padding:3px 9px;align-self:flex-start}
+  .bn-mini{display:flex;gap:10px;align-items:center;margin-top:2px}
+  .bn-mini img{width:100%;max-width:150px;border-radius:5px;background:#fff;padding:4px;
+    border:1px solid rgba(180,193,214,.25)}
+  @media (max-width:980px){.bns{grid-template-columns:1fr 1fr}}
+  /* comparativo unificado */
+  .comp{width:100%;border-collapse:collapse;border:1px solid var(--line);
+    border-radius:12px;overflow:hidden}
+  .comp th{background:rgba(255,255,255,.05);padding:13px 18px;text-align:left;
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--txt-3);font-weight:500}
+  .comp th.ch{color:var(--gold)}
+  .comp td{padding:13px 18px;border-top:1px solid var(--line-2);font-size:15px;
+    color:var(--txt-2);font-variant-numeric:tabular-nums}
+  .comp td.m{color:#fff;font-weight:500}
+  .comp .par{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .comp .pa{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--txt-3)}
+  .comp .px{color:var(--gold);font-size:12px}
+  .comp .pd{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:19px;
+    font-weight:800;color:#fff;letter-spacing:-.03em}
+  .comp .pp{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:#7ee0ad}
+  .comp tr.tot td{background:rgba(203,152,99,.10);border-top:1px solid var(--gold)}
+  @media (max-width:980px){ .comp td,.comp th{padding:9px 11px;font-size:13px}
+    .comp .pd{font-size:16px} }
+  .scroll{overflow-x:auto}
+
+  .falas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  .fala-c{border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    display:flex;flex-direction:column;gap:12px;min-height:150px}
+  .fala-c.g{grid-column:span 2;border-color:rgba(203,152,99,.42);
+    background:linear-gradient(120deg,rgba(203,152,99,.15),rgba(255,255,255,.02))}
+  .fala-c .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:700;color:#fff;
+    line-height:1.24;letter-spacing:-.02em;font-size:clamp(16px,1.8vw,21px)}
+  .fala-c.g .t{font-size:clamp(19px,2.3vw,28px)}
+  .fala-c .q{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--gold);margin-top:auto}
+  .passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:15px}
+  .pcard{border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:12px;
+    padding:21px;display:flex;flex-direction:column;gap:9px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+  .pcard .n{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gold)}
+  .pcard .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:16.5px;
+    font-weight:700;color:#fff;line-height:1.22}
+  .pcard .d{font-size:13.5px;color:var(--txt-2);line-height:1.5}
+  .pcard .como{font-size:12.5px;color:var(--txt-3);border-top:1px solid var(--line-2);
+    padding-top:9px;margin-top:auto;line-height:1.45}
+  @media (max-width:980px){ .falas{grid-template-columns:1fr} .fala-c.g{grid-column:span 1} }
 </style>
 </head>
 <body>
@@ -320,6 +383,24 @@
       <h2>O ciclo</h2>
       <span class="quem"><i></i><span>Eliab · condução e estratégia</span></span>
       <p class="res">O que o Instituto contratou construir, de onde partimos e o que passou a existir.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="A promessa">
+    <div class="inner">
+      <div class="cit">
+        <p class="q" style="max-width:23ch">É a diferença entre um instituto que aparece e um instituto que <span style="color:var(--gold)">é lembrado</span>.</p>
+        <p class="quem">Proposta comercial &middot; junho de 2026</p>
+      </div>
+      <p style="font-size:clamp(16px,1.5vw,19px);color:var(--txt-2);max-width:62ch;line-height:1.62;margin-top:32px">
+        A proposta abriu com um compromisso: que o Instituto
+        <span style="color:var(--gold);font-weight:600">nunca mais precisasse se preocupar com comunicação</span> —
+        do branding ao conteúdo, do digital ao físico, dos médicos ao institucional,
+        em uma estratégia só e uma equipe só.
+      </p>
+      <p style="font-size:clamp(16px,1.5vw,19px);color:var(--txt-2);max-width:62ch;line-height:1.62;margin-top:14px">
+        Guardem a palavra <strong style="color:#fff">lembrado</strong>. Ela volta no meio desta apresentação.
+      </p>
     </div>
   </section>
 
@@ -376,20 +457,31 @@
     </div>
   </section>
 
-  <section class="slide" data-t="Ponto de partida">
+  <section class="slide" data-t="O que ouvimos">
     <div class="inner">
-      <div class="s-head">
-        <p class="eyebrow">O ponto de partida</p>
-        <h2>Para entender o tamanho do salto, é preciso lembrar de onde ele saiu.</h2>
+      <div class="s-head" style="margin-bottom:26px">
+        <p class="eyebrow">O primeiro sinal</p>
+        <h2>Antes de qualquer número, isso começou a ser dito</h2>
       </div>
-      <div class="box gold">
-        <h3>No Facebook, a página praticamente não tinha movimento.</h3>
-        <p>Os percentuais deste relatório são altos justamente porque a base anterior era muito
-          baixa. Por isso apresentamos <span class="hi">números absolutos</span> junto de cada
-          percentual — é o único jeito honesto de mostrar o que aconteceu.</p>
-        <p>A publicação começou em <span class="hi">27 de julho</span>. A comparação é de dois
-          meses no ar (27/07 a 24/09) contra os dois meses anteriores (27/05 a 26/07).</p>
+      <div class="falas">
+        <div class="fala-c g">
+          <p class="t">&ldquo;As pessoas chegam aqui falando do que viram.&rdquo;</p>
+          <span class="q">Cátia &middot; recepção do Instituto</span>
+        </div>
+        <div class="fala-c">
+          <p class="t">&ldquo;Tive reconhecimento pessoal.&rdquo;</p>
+          <span class="q">Um dos médicos</span>
+        </div>
+        <div class="fala-c">
+          <p class="t">&ldquo;Me pararam na rua para falar sobre.&rdquo;</p>
+          <span class="q">Um dos médicos</span>
+        </div>
+        <div class="fala-c g">
+          <p class="t">Nenhuma dessas frases existia em junho — e nenhuma delas aparece em relatório de métrica.</p>
+          <span class="q">O que muda antes do número mudar</span>
+        </div>
       </div>
+      <p class="selo" style="margin-top:20px"><i></i> Publicação iniciada em 27 de julho &middot; comparação de 27/07 a 24/09 contra 27/05 a 26/07 &middot; percentuais altos porque a base anterior era baixa, por isso mostramos sempre o número absoluto</p>
     </div>
   </section>
 
@@ -487,13 +579,13 @@
         <p class="eyebrow">Redes &middot; Instagram</p>
         <h2>Dois meses no ar</h2>
       </div>
-      <div class="provas p4">
-        <figure class="prova"><img src="/mussi/provas/ig-alcance.png" alt="Alcance"><div class="ad"><span class="a">8.929</span><span class="s">→</span><span class="d">25.688</span><span class="p">+187,7%</span></div><figcaption>Alcance</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/ig-interacoes.png" alt="Interações"><div class="ad"><span class="a">666</span><span class="s">→</span><span class="d">4.317</span><span class="p">+548,2%</span></div><figcaption>Interações</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/ig-cliques.png" alt="Cliques no link"><div class="ad"><span class="a">364</span><span class="s">→</span><span class="d">727</span><span class="p">+100%</span></div><figcaption>Cliques no link</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/ig-seguidores.png" alt="Novos seguidores"><div class="ad"><span class="a">197</span><span class="s">→</span><span class="d">384</span><span class="p">+94,9%</span></div><figcaption>Novos seguidores</figcaption></figure>
+      <div class="bns">
+        <div class="bn"><span class="bn-r">Alcance</span><div class="bn-l"><span class="bn-a">8.929</span><span class="bn-x">→</span><span class="bn-d">25.688</span></div><span class="bn-p">+187,7%</span><span class="bn-mini"><img src="/mussi/provas/ig-alcance.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Interações</span><div class="bn-l"><span class="bn-a">666</span><span class="bn-x">→</span><span class="bn-d">4.317</span></div><span class="bn-p">+548,2%</span><span class="bn-mini"><img src="/mussi/provas/ig-interacoes.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Cliques no link</span><div class="bn-l"><span class="bn-a">364</span><span class="bn-x">→</span><span class="bn-d">727</span></div><span class="bn-p">+100%</span><span class="bn-mini"><img src="/mussi/provas/ig-cliques.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Novos seguidores</span><div class="bn-l"><span class="bn-a">197</span><span class="bn-x">→</span><span class="bn-d">384</span></div><span class="bn-p">+94,9%</span><span class="bn-mini"><img src="/mussi/provas/ig-seguidores.png" alt=""></span></div>
       </div>
-      <p class="selo"><i></i> 174.193 visualizações no período · valores anteriores calculados a partir do percentual do próprio painel</p>
+      <p class="selo"><i></i> 174.193 visualizações no período · o número à esquerda é a base dos dois meses anteriores, calculada a partir do percentual do painel</p>
     </div>
   </section>
 
@@ -503,13 +595,38 @@
         <p class="eyebrow">Redes &middot; Facebook</p>
         <h2>O canal que estava parado</h2>
       </div>
-      <div class="provas p4">
-        <figure class="prova"><img src="/mussi/provas/fb-visualizacoes.png" alt="Visualizações"><div class="ad"><span class="a">≈13.100</span><span class="s">→</span><span class="d">208.824</span><span class="p">+1.500%</span></div><figcaption>Visualizações</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-pessoas.png" alt="Pessoas alcançadas"><div class="ad"><span class="a">≈5.100</span><span class="s">→</span><span class="d">60.599</span><span class="p">+1.100%</span></div><figcaption>Pessoas alcançadas</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-interacoes.png" alt="Interações"><div class="ad"><span class="a">436</span><span class="s">→</span><span class="d">3.712</span><span class="p">+751,4%</span></div><figcaption>Interações</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-cliques.png" alt="Cliques no link"><div class="ad"><span class="a">375</span><span class="s">→</span><span class="d">750</span><span class="p">+100%</span></div><figcaption>Cliques no link</figcaption></figure>
+      <div class="bns">
+        <div class="bn"><span class="bn-r">Visualizações</span><div class="bn-l"><span class="bn-a">≈13.100</span><span class="bn-x">→</span><span class="bn-d">208.824</span></div><span class="bn-p">+1.500%</span><span class="bn-mini"><img src="/mussi/provas/fb-visualizacoes.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Pessoas alcançadas</span><div class="bn-l"><span class="bn-a">≈5.100</span><span class="bn-x">→</span><span class="bn-d">60.599</span></div><span class="bn-p">+1.100%</span><span class="bn-mini"><img src="/mussi/provas/fb-pessoas.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Interações</span><div class="bn-l"><span class="bn-a">436</span><span class="bn-x">→</span><span class="bn-d">3.712</span></div><span class="bn-p">+751,4%</span><span class="bn-mini"><img src="/mussi/provas/fb-interacoes.png" alt=""></span></div>
+        <div class="bn"><span class="bn-r">Cliques no link</span><div class="bn-l"><span class="bn-a">375</span><span class="bn-x">→</span><span class="bn-d">750</span></div><span class="bn-p">+100%</span><span class="bn-mini"><img src="/mussi/provas/fb-cliques.png" alt=""></span></div>
       </div>
       <p class="selo"><i></i> O canal que estava parado · 91 novos seguidores (+600%) e 1.372 visitas à página (+50,9%)</p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Comparativo">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:28px">
+        <p class="eyebrow">Os dois canais lado a lado</p>
+        <h2>Antes e depois, em número absoluto</h2>
+        <p class="sub">Cada linha mostra a base dos dois meses anteriores e o resultado dos
+          dois meses no ar. Nenhum percentual sem o número que o sustenta.</p>
+      </div>
+      <div class="scroll">
+        <table class="comp">
+          <thead><tr><th>Indicador</th><th class="ch">Instagram</th><th class="ch">Facebook</th></tr></thead>
+          <tbody>
+          <tr><td class="m">Visualizações</td><td><div class="par"><span class="pa">42.249</span><span class="px">→</span><span class="pd">174.193</span><span class="pp">+312,3%</span></div></td><td><div class="par"><span class="pa">≈13.100</span><span class="px">→</span><span class="pd">208.824</span><span class="pp">+1.500%</span></div></td></tr>
+          <tr><td class="m">Pessoas alcançadas</td><td><div class="par"><span class="pa">8.929</span><span class="px">→</span><span class="pd">25.688</span><span class="pp">+187,7%</span></div></td><td><div class="par"><span class="pa">≈5.100</span><span class="px">→</span><span class="pd">60.599</span><span class="pp">+1.100%</span></div></td></tr>
+          <tr><td class="m">Interações</td><td><div class="par"><span class="pa">666</span><span class="px">→</span><span class="pd">4.317</span><span class="pp">+548,2%</span></div></td><td><div class="par"><span class="pa">436</span><span class="px">→</span><span class="pd">3.712</span><span class="pp">+751,4%</span></div></td></tr>
+          <tr><td class="m">Visitas ao perfil</td><td><div class="par"><span class="pa">1.101</span><span class="px">→</span><span class="pd">2.700</span><span class="pp">+145,3%</span></div></td><td><div class="par"><span class="pa">909</span><span class="px">→</span><span class="pd">1.372</span><span class="pp">+50,9%</span></div></td></tr>
+          <tr><td class="m">Novos seguidores</td><td><div class="par"><span class="pa">197</span><span class="px">→</span><span class="pd">384</span><span class="pp">+94,9%</span></div></td><td><div class="par"><span class="pa">13</span><span class="px">→</span><span class="pd">91</span><span class="pp">+600%</span></div></td></tr>
+          <tr class="tot"><td class="m">Cliques no link</td><td><div class="par"><span class="pa">364</span><span class="px">→</span><span class="pd">727</span><span class="pp">+100%</span></div></td><td><div class="par"><span class="pa">375</span><span class="px">→</span><span class="pd">750</span><span class="pp">+100%</span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="selo" style="margin-top:20px"><i></i> Somados: <strong style="color:#fff">1.477 cliques</strong> no link, <strong style="color:#fff">86.287</strong> pessoas alcançadas e <strong style="color:#fff">8.029</strong> interações nos dois canais</p>
     </div>
   </section>
 
@@ -537,25 +654,26 @@
   </section>
 
 
-  <section class="slide" data-t="O que funcionou">
+  <section class="slide" data-t="O que aprendemos">
     <div class="inner">
       <div class="s-head">
-        <p class="eyebrow">Aprendizado do ciclo</p>
-        <h2>O que funcionou — e por que isso vale mais que o número</h2>
-        <p class="sub">Depois de dois meses, sabemos com evidência o que este público responde.
-          Esse conhecimento não existia em junho e não se compra pronto.</p>
+        <p class="eyebrow">O que o ciclo revelou</p>
+        <h2>Cinco coisas que agora sabemos sobre este público</h2>
+        <p class="sub">Não são táticas que deram certo — são padrões de comportamento que
+          só aparecem depois de dois meses publicando com constância. Esse conhecimento
+          não existia em junho e não se compra pronto.</p>
       </div>
       <div class="cards">
-        <div class="card"><span class="k">Collabs com os médicos</span>
-          <span class="v">Somam a audiência dos dois perfis. O conteúdo com o Dr. Mussi e os médicos falando dele foi o de maior alcance.</span></div>
-        <div class="card"><span class="k">O post do legado</span>
-          <span class="v">Performou bem e virou porta de entrada fixada no perfil.</span></div>
-        <div class="card"><span class="k">Dr. Henrique sobre tecnologia</span>
-          <span class="v">Conteúdo técnico com rosto próprio gera autoridade e retenção.</span></div>
-        <div class="card"><span class="k">Estudays e Afya</span>
-          <span class="v">O evento e o jogo com os estudantes viraram alcance orgânico multiplicado.</span></div>
-        <div class="card"><span class="k">Bastidores e secretárias</span>
-          <span class="v">Nos stories, o que mais engaja é gente. O cuidado do atendimento comunica tanto quanto a medicina.</span></div>
+        <div class="card"><span class="k">Medicina precisa de rosto</span>
+          <span class="v">O público responde quando há pessoa, contexto e história. Conteúdo técnico sem rosto não sustenta atenção.</span></div>
+        <div class="card"><span class="k">O legado ainda é ativo</span>
+          <span class="v">A trajetória do Instituto não é passado — é o que mais mobiliza a comunidade quando volta à superfície.</span></div>
+        <div class="card"><span class="k">Autoridade é transferível</span>
+          <span class="v">Quando os médicos aparecem juntos, a audiência soma em vez de dividir. É o caminho para a marca herdar a reputação.</span></div>
+        <div class="card"><span class="k">O cuidado comunica tanto quanto a técnica</span>
+          <span class="v">Quem não é médico também constrói a marca. A experiência de atendimento é território pouco ocupado e de alta resposta.</span></div>
+        <div class="card"><span class="k">Existir fora do consultório traz audiência</span>
+          <span class="v">Presença em ensino e em eventos alcança gente que nenhum post alcançaria sozinho.</span></div>
       </div>
     </div>
   </section>
@@ -671,6 +789,37 @@
           <span class="v">79% dos agendamentos entram como &ldquo;indicação&rdquo;. O campo é preenchido na recepção e não reflete a descoberta real.</span></div>
         <div class="card"><span class="k">Como resolvemos</span>
           <span class="v">Link rastreável por origem e a pergunta &ldquo;como nos conheceu?&rdquo; na agenda. Em 60 dias, esta conversa passa a ter número.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Próximo ciclo">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:28px">
+        <p class="eyebrow">O que fazemos a seguir</p>
+        <h2>Cinco frentes, cada uma com um problema definido</h2>
+      </div>
+      <div class="passos">
+        <div class="pcard"><span class="n">Formato</span>
+          <span class="t">Entrevistas mais afiadas</span>
+          <span class="d">O formato validou: economiza o tempo do médico e entrega repertório, opinião e personalidade.</span>
+          <span class="como">Evolução: perguntas mais específicas, ligadas às dúvidas que chegam de verdade ao Instituto.</span></div>
+        <div class="pcard"><span class="n">Narrativa</span>
+          <span class="t">Jornada do paciente</span>
+          <span class="d">Série acompanhando antes, no dia e depois da cirurgia — mostrando atendimento e recuperação.</span>
+          <span class="como">Condição: autorização de imagem e dentro das normas do CFM, sem promessa de resultado.</span></div>
+        <div class="pcard"><span class="n">Marca</span>
+          <span class="t">O Instituto além dos médicos</span>
+          <span class="d">Secretárias, bastidores e o funcionamento real. Nos stories, é o que mais engaja.</span>
+          <span class="como">Objetivo: que a pessoa reconheça o Instituto como ambiente, não só como um médico específico.</span></div>
+        <div class="pcard"><span class="n">Autoridade</span>
+          <span class="t">Transferir do Dr. Mussi para a marca</span>
+          <span class="d">Até aqui usamos a autoridade que já existia nos médicos. O próximo passo é que ela passe a ser do Instituto.</span>
+          <span class="como">Caminho: collabs continuados e conteúdo institucional com rosto de equipe.</span></div>
+        <div class="pcard"><span class="n">Medição</span>
+          <span class="t">Fechar o rastreamento</span>
+          <span class="d">Hoje sabemos que 1.477 pessoas clicaram. Não sabemos quantas viraram consulta.</span>
+          <span class="como">Solução: link rastreável por origem e a pergunta &ldquo;como nos conheceu?&rdquo; na agenda.</span></div>
       </div>
     </div>
   </section>

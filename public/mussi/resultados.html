@@ -458,9 +458,8 @@
   .cbox .ico svg{stroke:#e0917a}
 
   /* provas e comentários maiores */
-  .coms{gap:20px}
-  .coms.c3{grid-template-columns:repeat(2,1fr)}
-  .coms.c3 .com:first-child{grid-column:span 2}
+  .coms{gap:18px}
+  .slide:has(.coms) .inner{max-width:1360px}
   .com,.prova{transition:transform .35s cubic-bezier(.22,.7,.3,1),box-shadow .35s}
   .com{padding:12px;border-radius:14px;box-shadow:0 26px 60px -26px rgba(0,0,0,.85)}
   .com:hover,.prova:hover{transform:translateY(-5px) scale(1.015);
@@ -468,8 +467,7 @@
   .prova{border-radius:14px;padding:12px}
   .met-img{transition:transform .35s,box-shadow .35s}
   .met-img:hover{transform:translateY(-4px) scale(1.012)}
-  @media (max-width:980px){ .coms.c3{grid-template-columns:1fr}
-    .coms.c3 .com:first-child{grid-column:span 1} }
+
 
   /* logo YPHE no chrome */
   .mark{display:flex;align-items:center;gap:13px}

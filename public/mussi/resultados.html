@@ -245,6 +245,23 @@
   .etp .d{font-size:13px;color:var(--txt-2);line-height:1.45}
   @media (max-width:980px){ .etapas{grid-template-columns:1fr}
     .etp{border-right:0;border-bottom:1px solid var(--line)} }
+
+  /* antes → depois embaixo de cada prova */
+  .ad{display:flex;align-items:baseline;gap:9px;justify-content:center;flex-wrap:wrap;
+    padding:2px 0 4px;font-variant-numeric:tabular-nums}
+  .ad .a{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#8792a8}
+  .ad .s{color:#b4c1d6;font-size:11px}
+  .ad .d{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:17px;font-weight:800;color:#1a2338}
+  .ad .p{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:#0e7a52;
+    background:#e6f5ee;border-radius:3px;padding:2px 6px}
+  /* comentários */
+  .coms{display:grid;gap:14px;align-items:start}
+  .coms.c3{grid-template-columns:repeat(3,1fr)}
+  .coms.c2{grid-template-columns:1fr 1fr}
+  .com{background:#fff;border:1px solid rgba(180,193,214,.3);border-radius:10px;padding:8px;
+    box-shadow:0 16px 38px -20px rgba(0,0,0,.7)}
+  .com img{width:100%;height:auto;display:block;border-radius:5px}
+  @media (max-width:980px){ .coms.c3{grid-template-columns:1fr} .coms.c2{grid-template-columns:1fr} }
   @media (prefers-reduced-motion: reduce){ #deck{scroll-behavior:auto} .art img{animation:none} }
   @media (max-width:980px){
     .slide{padding:84px 6vw 96px;align-items:flex-start;overflow-y:auto}
@@ -400,6 +417,61 @@
     </div>
   </section>
 
+  <section class="slide" data-t="Efeito da narrativa">
+    <div class="inner">
+      <div class="s-head">
+        <p class="eyebrow">O efeito da narrativa</p>
+        <h2>Posicionamento não acontece quando mais gente vê. Acontece quando as pessoas passam a associar.</h2>
+        <p class="sub">A Kantar chama de <em style="font-style:normal;color:var(--gold)">salience</em>
+          a facilidade com que uma marca vem à mente quando surge a necessidade. Dois meses não
+          provam que o Instituto virou a referência do mercado — mas mostram sinais claros
+          de que esse lugar começou a se formar.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="k">Antes</span>
+          <span class="v">Comentários genéricos: &ldquo;parabéns&rdquo;, emojis, palmas. Reação, não associação.</span></div>
+        <div class="card"><span class="k">Agora</span>
+          <span class="v">Relatos de experiência, recomendação espontânea, reconhecimento dos médicos e memória de atendimento.</span></div>
+        <div class="card"><span class="k">Por que importa</span>
+          <span class="v">A audiência começou a devolver exatamente os atributos que a comunicação quer fortalecer: confiança, competência e cuidado.</span></div>
+        <div class="card"><span class="k">O que o número não diz</span>
+          <span class="v">Visualização mostra quantos passaram. Comentário mostra o que ficou na cabeça de quem passou.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="A história voltou">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:26px">
+        <p class="eyebrow">O que as pessoas escreveram</p>
+        <h2>Cinquenta anos de história voltaram à superfície</h2>
+      </div>
+      <div class="coms c3">
+        <figure class="com"><img src="/mussi/provas/c-ariane.png" alt="Comentário de paciente relatando atendimento em 1989"></figure>
+        <figure class="com"><img src="/mussi/provas/c-marta.png" alt="Comentário de paciente que conhece o Dr. Mussi desde 1987"></figure>
+        <figure class="com"><img src="/mussi/provas/c-simone.png" alt="Comentário sobre o Dr. Mussi como médico de referência"></figure>
+      </div>
+      <p class="selo" style="margin-top:20px"><i></i> Comentários públicos nos perfis do Instituto, sem edição</p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Autoridade transferida">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:26px">
+        <p class="eyebrow">O movimento mais importante</p>
+        <h2>E o reconhecimento começou a alcançar os outros médicos</h2>
+        <p class="sub">Até aqui usamos a autoridade que já existia no Dr. Mussi para fortalecer
+          a comunicação. O próximo passo é transferir essa autoridade para a marca Instituto —
+          e isso já começou a aparecer.</p>
+      </div>
+      <div class="coms c3">
+        <figure class="com"><img src="/mussi/provas/c-fabio.png" alt="Comentários de pacientes sobre o Dr. Fábio"></figure>
+        <figure class="com"><img src="/mussi/provas/c-instagram.png" alt="Comentários no Instagram recomendando os médicos"></figure>
+        <figure class="com"><img src="/mussi/provas/c-ricardo.png" alt="Comentários sobre o Dr. Ricardo"></figure>
+      </div>
+    </div>
+  </section>
+
   <section class="slide ato" data-t="Ato 2">
     <div class="inner">
       <p class="ato-n">Ato 2 de 3</p>
@@ -415,12 +487,13 @@
         <p class="eyebrow">Redes &middot; Instagram</p>
         <h2>Dois meses no ar</h2>
       </div>
-      <div class="provas p3">
-        <figure class="prova"><img src="/mussi/provas/ig-alcance.png" alt="Alcance · 25,4 mil pessoas"><figcaption>Alcance · 25,4 mil pessoas</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/ig-interacoes.png" alt="Interações · 4,3 mil"><figcaption>Interações · 4,3 mil</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/ig-visitas.png" alt="Visitas ao perfil · 2,6 mil"><figcaption>Visitas ao perfil · 2,6 mil</figcaption></figure>
+      <div class="provas p4">
+        <figure class="prova"><img src="/mussi/provas/ig-alcance.png" alt="Alcance"><div class="ad"><span class="a">8.929</span><span class="s">→</span><span class="d">25.688</span><span class="p">+187,7%</span></div><figcaption>Alcance</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/ig-interacoes.png" alt="Interações"><div class="ad"><span class="a">666</span><span class="s">→</span><span class="d">4.317</span><span class="p">+548,2%</span></div><figcaption>Interações</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/ig-cliques.png" alt="Cliques no link"><div class="ad"><span class="a">364</span><span class="s">→</span><span class="d">727</span><span class="p">+100%</span></div><figcaption>Cliques no link</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/ig-seguidores.png" alt="Novos seguidores"><div class="ad"><span class="a">197</span><span class="s">→</span><span class="d">384</span><span class="p">+94,9%</span></div><figcaption>Novos seguidores</figcaption></figure>
       </div>
-      <p class="selo"><i></i> Prints diretos do painel da Meta, sem edição · 144,7 mil visualizações no período</p>
+      <p class="selo"><i></i> 174.193 visualizações no período · valores anteriores calculados a partir do percentual do próprio painel</p>
     </div>
   </section>
 
@@ -431,12 +504,12 @@
         <h2>O canal que estava parado</h2>
       </div>
       <div class="provas p4">
-        <figure class="prova"><img src="/mussi/provas/fb-visualizacoes.png" alt="Visualizações · 206,5 mil"><figcaption>Visualizações · 206,5 mil</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-pessoas.png" alt="Pessoas · 60,5 mil"><figcaption>Pessoas · 60,5 mil</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-interacoes.png" alt="Interações · 3,6 mil"><figcaption>Interações · 3,6 mil</figcaption></figure>
-        <figure class="prova"><img src="/mussi/provas/fb-visitas.png" alt="Visitas · 1,3 mil"><figcaption>Visitas · 1,3 mil</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-visualizacoes.png" alt="Visualizações"><div class="ad"><span class="a">≈13.100</span><span class="s">→</span><span class="d">208.824</span><span class="p">+1.500%</span></div><figcaption>Visualizações</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-pessoas.png" alt="Pessoas alcançadas"><div class="ad"><span class="a">≈5.100</span><span class="s">→</span><span class="d">60.599</span><span class="p">+1.100%</span></div><figcaption>Pessoas alcançadas</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-interacoes.png" alt="Interações"><div class="ad"><span class="a">436</span><span class="s">→</span><span class="d">3.712</span><span class="p">+751,4%</span></div><figcaption>Interações</figcaption></figure>
+        <figure class="prova"><img src="/mussi/provas/fb-cliques.png" alt="Cliques no link"><div class="ad"><span class="a">375</span><span class="s">→</span><span class="d">750</span><span class="p">+100%</span></div><figcaption>Cliques no link</figcaption></figure>
       </div>
-      <p class="selo"><i></i> O Facebook alcança o público que decide operar — e era o canal que estava parado</p>
+      <p class="selo"><i></i> O canal que estava parado · 91 novos seguidores (+600%) e 1.372 visitas à página (+50,9%)</p>
     </div>
   </section>
 
@@ -445,7 +518,7 @@
       <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:5vw;align-items:center">
         <div>
           <p class="eyebrow">O número que mais importa</p>
-          <p class="big" style="margin:14px 0 6px"><em>1.468</em></p>
+          <p class="big" style="margin:14px 0 6px"><em>1.477</em></p>
           <h2 style="font-size:clamp(21px,2.5vw,30px);font-weight:700;margin-bottom:16px">
             pessoas clicaram para chegar até vocês</h2>
           <p style="font-size:16.5px;color:var(--txt-2);max-width:44ch;line-height:1.6">
@@ -455,35 +528,14 @@
           </p>
         </div>
         <div class="provas p2">
-          <figure class="prova"><img src="/mussi/provas/ig-cliques.png" alt="Cliques no link do Instagram: 726"><figcaption>Instagram · 726 cliques</figcaption></figure>
-          <figure class="prova"><img src="/mussi/provas/fb-cliques.png" alt="Cliques no link do Facebook: 742"><figcaption>Facebook · 742 cliques</figcaption></figure>
+          <figure class="prova"><img src="/mussi/provas/ig-cliques.png" alt="Cliques no link do Instagram: 727"><figcaption>Instagram · 727 cliques</figcaption></figure>
+          <figure class="prova"><img src="/mussi/provas/fb-cliques.png" alt="Cliques no link do Facebook: 750"><figcaption>Facebook · 750 cliques</figcaption></figure>
         </div>
       </div>
       <p class="selo"><i></i> Prints diretos do painel da Meta, sem edição</p>
     </div>
   </section>
 
-  <section class="slide" data-t="Comentários">
-    <div class="inner">
-      <div class="s-head">
-        <p class="eyebrow">A prova de que funcionou</p>
-        <h2>Os comentários são o boca a boca acontecendo à vista de todos</h2>
-        <p class="sub">Alcance mostra quantos viram. Comentário mostra quem se sentiu à vontade
-          para falar — e, num perfil de saúde, isso é sinal de confiança, não de vaidade.</p>
-      </div>
-      <div class="cards">
-        <div class="card"><span class="k">Dúvidas reais</span>
-          <span class="v">Pessoas perguntando sobre procedimento, convênio e como marcar. Antes elas não tinham onde perguntar.</span></div>
-        <div class="card"><span class="k">Marcações</span>
-          <span class="v">Gente marcando parente e amigo nos posts. É indicação pública e rastreável.</span></div>
-        <div class="card"><span class="k">Reconhecimento</span>
-          <span class="v">Ex-pacientes comentando lembranças de atendimento. Cinquenta anos de história voltando à superfície.</span></div>
-        <div class="card"><span class="k">A equipe aparecendo</span>
-          <span class="v">Quando as secretárias entram no conteúdo, o engajamento sobe. O cuidado comunica tanto quanto a técnica.</span></div>
-      </div>
-      <p class="selo" style="margin-top:22px"><i></i> Espaço reservado para os prints de comentários selecionados</p>
-    </div>
-  </section>
 
   <section class="slide" data-t="O que funcionou">
     <div class="inner">

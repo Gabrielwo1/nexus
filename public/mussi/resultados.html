@@ -334,6 +334,34 @@
   .pcard .como{font-size:12.5px;color:var(--txt-3);border-top:1px solid var(--line-2);
     padding-top:9px;margin-top:auto;line-height:1.45}
   @media (max-width:980px){ .falas{grid-template-columns:1fr} .fala-c.g{grid-column:span 1} }
+
+  /* crise de entrada */
+  .crise{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .cbox{border:1px solid rgba(214,120,90,.45);border-left:3px solid #d6785a;border-radius:12px;
+    padding:24px 26px;background:linear-gradient(120deg,rgba(214,120,90,.12),transparent);
+    display:flex;flex-direction:column;gap:10px}
+  .cbox .h{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#e0917a}
+  .cbox .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(18px,2.1vw,25px);
+    font-weight:700;color:#fff;line-height:1.22}
+  .cbox .d{font-size:14.5px;color:var(--txt-2);line-height:1.55}
+  /* linha do tempo */
+  .tl{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:8px}
+  .tl::before{content:"";position:absolute;top:19px;left:6%;right:6%;height:2px;
+    background:linear-gradient(90deg,#d6785a,var(--gold) 28%,var(--gold))}
+  .tn{position:relative;padding:0 12px;display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+  .tn .dot{width:14px;height:14px;border-radius:50%;background:var(--gold);
+    border:3px solid var(--bg);box-shadow:0 0 0 2px var(--gold);margin:13px 0 12px}
+  .tn:first-child .dot{background:#d6785a;box-shadow:0 0 0 2px #d6785a}
+  .tn:last-child .dot{background:var(--bg);box-shadow:0 0 0 2px var(--gold)}
+  .tn .q{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--txt-3)}
+  .tn .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:16px;font-weight:700;
+    color:#fff;line-height:1.2}
+  .tn .d{font-size:13px;color:var(--txt-2);line-height:1.48}
+  @media (max-width:980px){ .crise{grid-template-columns:1fr}
+    .tl{grid-template-columns:1fr;gap:18px} .tl::before{display:none}
+    .tn{border-left:2px solid var(--gold);padding-left:16px} .tn .dot{display:none} }
 </style>
 </head>
 <body>
@@ -687,47 +715,107 @@
     </div>
   </section>
 
-  <section class="slide" data-t="Tecnologia">
-    <div class="inner mono-grid">
-      <div class="art"><span class="halo"></span><img src="/brand/produtos/connect.png" alt=""></div>
-      <div>
-        <p class="eyebrow">O que não aparece no feed</p>
-        <h2 style="font-size:clamp(25px,3.2vw,40px);font-weight:800;margin:14px 0 18px">
-          Tecnologia não é o que se compra. É o que passa a funcionar.</h2>
-        <p style="font-size:16.5px;color:var(--txt-2);max-width:50ch;line-height:1.62">
-          Uma coisa é disponibilizar a plataforma. Outra é adaptá-la à rotina real do Instituto —
-          aos computadores, ao fluxo da recepção, ao jeito como a Cátia trabalha.
-        </p>
-        <ul class="lst" style="margin-top:22px">
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Levantamento da rotina e tradução para configuração técnica</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Acesso local, instalação, testes e validações no ambiente real</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Refinamentos além da configuração-base do fornecedor</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Interlocução técnica contínua com a plataforma</li>
-        </ul>
+  <section class="slide" data-t="A crise">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:28px">
+        <p class="eyebrow">Mês 1 &middot; o que ninguém viu</p>
+        <h2>Quando chegamos, o Instituto não tinha site.</h2>
+        <p class="sub">A frente de tecnologia não começou por escolha estratégica.
+          Começou por emergência.</p>
+      </div>
+      <div class="crise">
+        <div class="cbox">
+          <span class="h">Base de dados</span>
+          <span class="t">Um ataque derrubou o site inteiro</span>
+          <span class="d">A prestadora que cuidava do site, dos e-mails e da base sofreu uma invasão.
+            O site foi perdido por completo e os e-mails ficaram em risco.</span>
+        </div>
+        <div class="cbox">
+          <span class="h">Atendimento</span>
+          <span class="t">O WhatsApp era bloqueado o tempo todo</span>
+          <span class="d">A solução em uso operava fora das regras da plataforma. O número caía
+            com frequência — e cada bloqueio é um paciente sem resposta.</span>
+        </div>
+      </div>
+      <p class="selo" style="margin-top:24px"><i></i> Nada disso aparece no feed. Mas sem resolver isso, não haveria para onde mandar tráfego.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Linha do tempo">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:22px">
+        <p class="eyebrow">Ato 3 &middot; a frente de tecnologia</p>
+        <h2>De uma emergência a uma infraestrutura própria</h2>
+      </div>
+      <div class="tl">
+        <div class="tn"><span class="dot"></span>
+          <span class="q">Mês 1 &middot; resgate</span>
+          <span class="t">Diagnóstico e migração</span>
+          <span class="d">Levantamos o que havia acontecido, migramos todo o dado ainda recuperável e reinstalamos os e-mails — sem perder um único.</span></div>
+        <div class="tn"><span class="dot"></span>
+          <span class="q">Mês 1 &middot; emergência</span>
+          <span class="t">Site provisório no ar</span>
+          <span class="d">Subimos uma versão temporária com toda a base, links e ajustes, para o Instituto não ficar invisível enquanto reconstruíamos.</span></div>
+        <div class="tn"><span class="dot"></span>
+          <span class="q">Base própria</span>
+          <span class="t">CRM do Instituto</span>
+          <span class="d">Criamos a base onde resultado do site, agendamentos e contatos ficam visíveis num lugar só — desenhada para escalar.</span></div>
+        <div class="tn"><span class="dot"></span>
+          <span class="q">Experiência</span>
+          <span class="t">Quiz interativo na Afya</span>
+          <span class="d">Formato mobile por QR Code para os estudantes de medicina — tecnologia a serviço de presença institucional.</span></div>
+        <div class="tn"><span class="dot"></span>
+          <span class="q">Agora</span>
+          <span class="t">Site novo entrando no ar</span>
+          <span class="d">A versão definitiva, moderna e completa, em fase final de revisão.</span></div>
       </div>
     </div>
   </section>
 
-  <section class="slide" data-t="A ponte">
+  <section class="slide" data-t="Integração inédita">
+    <div class="inner mono-grid">
+      <div class="art"><span class="halo"></span><img src="/brand/produtos/connect.png" alt=""></div>
+      <div>
+        <p class="eyebrow">A frente paralela</p>
+        <h2 style="font-size:clamp(24px,3.1vw,38px);font-weight:800;margin:14px 0 18px">
+          Uma integração que não existia no mercado</h2>
+        <p style="font-size:16.5px;color:var(--txt-2);max-width:50ch;line-height:1.62">
+          A YPHE não é só agência de marketing — é também agência de tecnologia para o setor
+          médico, com parceria de longa data na plataforma de bot. Para o Instituto, não bastava
+          revender: era preciso ligar o bot <strong style="color:var(--gold)">direto ao Feegow</strong>,
+          o sistema que a clínica já usa.
+        </p>
+        <ul class="lst" style="margin-top:20px">
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Estratégia e vinculação entre os dois softwares</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Análise dos pontos focais de implementação</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Condução junto ao time de desenvolvimento da plataforma</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Implantação em cadência, no ritmo da rotina do Instituto</li>
+        </ul>
+        <p style="font-size:14.5px;color:var(--txt-3);max-width:50ch;margin-top:18px;line-height:1.5">
+          Essa integração foi desenvolvida para o Instituto e não existia pronta em nenhum lugar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-t="Onde estamos">
     <div class="inner">
-      <div class="s-head c" style="margin-bottom:38px">
-        <p class="eyebrow">Como isso acontece</p>
-        <h2>Três lados que não falam a mesma língua</h2>
+      <div class="s-head">
+        <p class="eyebrow">A frente que segue aberta</p>
+        <h2>O bot está no ar. Agora começa o trabalho fino.</h2>
+        <p class="sub">Integrar é a parte visível. Fazer funcionar dentro da rotina real,
+          com a linguagem certa e sem frustrar paciente, é o que leva tempo — e é onde estamos.</p>
       </div>
-      <div class="ponte">
-        <div class="pb"><div class="t">INSTITUTO</div>
-          <div class="d">Conhece a rotina, as necessidades e o contexto físico. Não precisa conhecer código.</div></div>
-        <span class="seta">&rarr;</span>
-        <div class="pb mid"><div class="t">YPHE</div>
-          <div class="d">Traduz necessidade em configuração. Acesso local, testes, validação e ajuste fino.</div></div>
-        <span class="seta">&rarr;</span>
-        <div class="pb"><div class="t">FORNECEDOR</div>
-          <div class="d">Domina a plataforma e o desenvolvimento-base. Não tem acesso ao dia a dia da clínica.</div></div>
+      <div class="cards">
+        <div class="card"><span class="k">Implantado</span>
+          <span class="v">Bot no ar e integrado ao Feegow, com o fluxo de atendimento mapeado junto à equipe.</span></div>
+        <div class="card"><span class="k">Em teste</span>
+          <span class="v">Testes reais com IA, acompanhando conversas de verdade para achar onde a resposta falha.</span></div>
+        <div class="card"><span class="k">Em revisão</span>
+          <span class="v">Revisão complexa ponto a ponto, transformando cada falha em demanda para o desenvolvimento.</span></div>
+        <div class="card"><span class="k">Em cadência</span>
+          <span class="v">Ritmo combinado entre Instituto e desenvolvimento, para que o ajuste chegue sem atropelar a operação.</span></div>
       </div>
-      <p style="margin-top:30px;font-size:16px;color:var(--txt-2);max-width:72ch">
-        Sem esse meio, a tecnologia fica instalada mas não entra na operação. É o trabalho
-        que menos aparece e o que mais determina se a ferramenta vai ser usada.
-      </p>
     </div>
   </section>
 

@@ -484,6 +484,46 @@
     .bgfx *{animation:none!important}
     .slide > .inner > *{opacity:1;transform:none;transition:none}
   }
+
+  /* roadmap 2026-2030 */
+  .road{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}
+  .ano{padding:20px 22px;border-left:2px solid rgba(180,193,214,.18);
+    display:flex;flex-direction:column;gap:8px}
+  .ano:first-child{border-left-color:var(--gold)}
+  .ano .yr{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    color:var(--gold);font-weight:500}
+  .ano .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:19px;font-weight:700;color:#fff;line-height:1.2}
+  .ano .d{font-size:13.5px;color:var(--txt-2);line-height:1.5}
+  @media (max-width:980px){.road{grid-template-columns:1fr 1fr}}
+
+  /* caminhos da decisao */
+  .vias{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .via{border:1px solid var(--line);border-radius:16px;padding:26px 24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    display:flex;flex-direction:column;gap:12px}
+  .via .tag{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--txt-3);
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+  .via .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(20px,2.3vw,28px);
+    font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.15}
+  .via .d{font-size:14.5px;color:var(--txt-2);line-height:1.55}
+  .via .fo{margin-top:auto;padding-top:14px;border-top:1px solid var(--line-2);
+    font-size:13px;color:var(--txt-3);line-height:1.45}
+  .via.esc{border-color:rgba(203,152,99,.5);
+    background:linear-gradient(160deg,rgba(203,152,99,.17),rgba(255,255,255,.03))}
+  .via.esc .tag{color:var(--gold);border-color:rgba(203,152,99,.45)}
+  .via.esc .fo{color:var(--cy-2)}
+  @media (max-width:980px){.vias{grid-template-columns:1fr}}
+
+  /* quem fala neste slide */
+  .fala-quem{position:absolute;left:7vw;bottom:58px;z-index:15;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--txt-3);display:flex;align-items:center;gap:8px;
+    opacity:0;transition:opacity .5s .3s}
+  .slide.is-on .fala-quem{opacity:.85}
+  .fala-quem i{width:5px;height:5px;border-radius:50%;background:var(--gold);display:block}
+  .fala-quem b{color:#e5e9f1;font-weight:500}
+  @media (max-width:980px){.fala-quem{display:none}}
 </style>
 </head>
 <body>
@@ -588,23 +628,30 @@
     <div class="inner">
       <div class="s-head">
         <p class="eyebrow">Como combinamos operar</p>
-        <h2>Cinco etapas, sempre um mês à frente</h2>
-        <p class="sub">A operação foi desenhada para não tomar o tempo do médico e para que
-          nada vá ao ar sem aprovação do Instituto.</p>
+        <h2>Cinco etapas. <em style="font-style:normal;color:var(--gold)">Um modelo evolutivo.</em></h2>
+        <p class="sub">Desde o início, a operação foi tratada como experimental e adaptativa:
+          dados, rotina e experiência prática orientariam os ajustes até encontrarmos
+          o formato mais eficiente para o Instituto.</p>
       </div>
       <div class="etapas">
-        <div class="etp"><span class="n">01</span><span class="t">Imersão</span>
-          <span class="d">Reunião estratégica com o responsável de marketing e os sêniores da operação.</span></div>
-        <div class="etp"><span class="n">02</span><span class="t">Produção</span>
-          <span class="d">Captação feita pela equipe no Instituto. O médico recebe o roteiro pronto e só aparece.</span></div>
-        <div class="etp"><span class="n">03</span><span class="t">Aprovação</span>
-          <span class="d">Tudo enviado com no mínimo 48h de antecedência. Ajuste entregue em 24h.</span></div>
-        <div class="etp"><span class="n">04</span><span class="t">Resultados</span>
-          <span class="d">Relatório mensal até o 5º dia útil, em formato visual, com contexto e análise.</span></div>
-        <div class="etp"><span class="n">05</span><span class="t">Alinhamento</span>
-          <span class="d">Reuniões recorrentes entre a agência e o ponto focal do Instituto.</span></div>
+        <div class="etp"><span class="n">01 &middot; IMERSÃO</span><span class="t">Responsáveis definidos</span>
+          <span class="d"><strong style="color:#fff">Dr. Ricardo Skroch</strong>, diretor técnico de marketing, e
+          <strong style="color:#fff">Kátia</strong>, administradora, com
+          <strong style="color:#fff">Eliab e Gabriel</strong> como sêniores da operação.</span></div>
+        <div class="etp"><span class="n">02 &middot; PRODUÇÃO</span><span class="t">Do roteiro à entrevista</span>
+          <span class="d">O modelo inicial de roteiros prévios evoluiu para entrevistas direcionadas,
+          extraindo respostas mais naturais, repertório e personalidade.</span></div>
+        <div class="etp"><span class="n">03 &middot; APROVAÇÃO</span><span class="t">Checagem, não direção técnica</span>
+          <span class="d">O Instituto valida informações factuais, institucionais e pontos sensíveis.
+          Decisões técnicas de comunicação ficam com a equipe especializada.</span></div>
+        <div class="etp"><span class="n">04 &middot; RESULTADOS</span><span class="t">Semanal e mensal</span>
+          <span class="d">Relatórios visuais, com contexto e análise, apresentados aos responsáveis
+          de marketing: <strong style="color:#fff">Dr. Ricardo e Kátia</strong>.</span></div>
+        <div class="etp"><span class="n">05 &middot; ALINHAMENTO</span><span class="t">Governança sem ruído</span>
+          <span class="d">Rotina com os pontos focais. Sócios entram nos checkpoints estratégicos —
+          em ciclos curtos, abertura e encerramento; em ciclos longos, marcos trimestrais.</span></div>
       </div>
-      <p class="selo" style="margin-top:22px"><i></i> Operação sempre um mês à frente — o Instituto nunca fica sem conteúdo pronto</p>
+      <p class="selo" style="margin-top:22px"><i></i> Modelo adaptativo: o formato muda conforme os dados e a rotina real do Instituto mostram o que funciona</p>
     </div>
   </section>
 
@@ -616,18 +663,20 @@
       </div>
       <div class="falas">
         <div class="fala-c g">
-          <p class="t">&ldquo;As pessoas chegam aqui falando do que viram.&rdquo;</p>
-          <span class="q">Cátia &middot; recepção do Instituto</span>
+          <p class="t">&ldquo;Várias pessoas não sabiam que o Dr. Mussi ainda estava atendendo
+            até o momento em que começamos a publicar.&rdquo;</p>
+          <span class="q">Kátia &middot; administração do Instituto</span>
         </div>
         <div class="fala-c">
-          <p class="t">&ldquo;Tive reconhecimento pessoal.&rdquo;</p>
-          <span class="q">Um dos médicos</span>
-        </div>
-        <div class="fala-c">
-          <p class="t">&ldquo;Me pararam na rua para falar sobre.&rdquo;</p>
-          <span class="q">Um dos médicos</span>
+          <p class="t">&ldquo;Muita gente começou a reconhecer o trabalho que estava sendo feito —
+            com comentários positivos e até brincadeiras me chamando de &lsquo;blogueiro&rsquo;.&rdquo;</p>
+          <span class="q">Dr. Ricardo &middot; médico do Instituto</span>
         </div>
         <div class="fala-c g">
+          <p class="t">&ldquo;Em 50 anos, vocês foram a melhor empresa que passou por aqui.&rdquo;</p>
+          <span class="q">Dr. Mussi &middot; fundador</span>
+        </div>
+        <div class="fala-c">
           <p class="t">Nenhuma dessas frases existia em junho — e nenhuma delas aparece em relatório de métrica.</p>
           <span class="q">O que muda antes do número mudar</span>
         </div>
@@ -641,11 +690,12 @@
       <div class="s-head">
         <p class="eyebrow">A tese do ciclo</p>
         <h2>O boca a boca não é <em style="font-style:normal;color:var(--gold)">um</em> canal do Instituto. É <em style="font-style:normal;color:var(--gold)">o</em> canal.</h2>
-        <p class="sub">Uma instituição com cinquenta anos de história não é descoberta — ela é
-          indicada. Nenhuma estratégia sensata tentaria substituir isso.</p>
+        <p class="sub">O Instituto não comprou alcance — comprou posicionamento. Uma instituição
+          com cinquenta anos de história não é descoberta, ela é indicada. Nenhuma estratégia
+          sensata tentaria substituir isso.</p>
       </div>
       <div class="box">
-        <h3>O trabalho não foi substituir o boca a boca. Foi dar munição para ele.</h3>
+        <h3>O trabalho não foi substituir o boca a boca. Foi <span class="hi">digitalizar</span> o boca a boca.</h3>
         <p>Quem recebe uma indicação hoje procura o nome antes de ligar. Até junho, encontrava
           pouca coisa — e a dúvida sobre se o Dr. Mussi ainda atendia sobrevivia à indicação.</p>
         <p><span class="hi">Agora encontra um Instituto presente, ativo e reconhecível</span> —
@@ -929,7 +979,7 @@
         <div class="card"><span class="k">O legado ainda é ativo</span>
           <span class="v">A trajetória do Instituto não é passado — é o que mais mobiliza a comunidade quando volta à superfície.</span></div>
         <div class="card"><span class="k">Autoridade é transferível</span>
-          <span class="v">Quando os médicos aparecem juntos, a audiência soma em vez de dividir. É o caminho para a marca herdar a reputação.</span></div>
+          <span class="v">O reconhecimento começou a alcançar <strong style="color:#fff">Ricardo, Henrique, Fábio, Viktor</strong> e a equipe. Quando os médicos aparecem juntos, a audiência soma em vez de dividir.</span></div>
         <div class="card"><span class="k">O cuidado comunica tanto quanto a técnica</span>
           <span class="v">Quem não é médico também constrói a marca. A experiência de atendimento é território pouco ocupado e de alta resposta.</span></div>
         <div class="card"><span class="k">Existir fora do consultório traz audiência</span>
@@ -1135,9 +1185,9 @@
       <div class="fases">
         <div class="fase"><span class="n">CICLO 1 &middot; CONCLUÍDO</span><span class="t">Estruturar</span>
           <span class="d">Posicionamento, narrativa, produção contínua, páginas, tecnologia e mensuração.</span></div>
-        <div class="fase viva"><span class="n">AGORA</span><span class="t">Consolidar</span>
-          <span class="d">Transformar presença em autoridade reconhecida e fechar o rastreamento até o agendamento.</span></div>
-        <div class="fase"><span class="n">MUSSI 2030</span><span class="t">Escalar</span>
+        <div class="fase viva"><span class="n">ATÉ O FIM DE 2026</span><span class="t">Consolidar</span>
+          <span class="d">Manter a operação, amadurecer o que foi implantado, transformar presença em autoridade reconhecida e fechar o rastreamento até o agendamento.</span></div>
+        <div class="fase"><span class="n">A PARTIR DE 2027</span><span class="t">Escalar</span>
           <span class="d">Novos canais, mais médicos, novas frentes e impacto comercial medido.</span></div>
       </div>
       <p style="margin-top:28px;font-size:16.5px;color:var(--txt-2);max-width:72ch">
@@ -1153,8 +1203,18 @@
       <div class="s-head">
         <p class="eyebrow">A próxima fase</p>
         <h2>Mussi 2030</h2>
-        <p class="sub">Os eixos abaixo são a moldura. O conteúdo definitivo vem do material que
-          o Instituto já vem construindo — e deve ser refinado junto com os sócios.</p>
+        <p class="sub">Não como campanha — como direção de quatro anos construída sobre a base
+          que já existe. Os eixos são a moldura; o conteúdo definitivo é refinado junto com os sócios.</p>
+      </div>
+      <div class="road">
+        <div class="ano"><span class="yr">2026</span><span class="t">Consolidar a base</span>
+          <span class="d">Manter o investimento atual até o fim do ano, estabilizar operação e mensuração.</span></div>
+        <div class="ano"><span class="yr">2027</span><span class="t">Expandir presença</span>
+          <span class="d">Novos canais, mais médicos e formatos com profundidade, preservando consistência.</span></div>
+        <div class="ano"><span class="yr">2028&ndash;29</span><span class="t">Transformar autoridade</span>
+          <span class="d">Instituto como instituição: menos dependência de uma única figura, mais força de marca.</span></div>
+        <div class="ano"><span class="yr">2030</span><span class="t">Escala mensurável</span>
+          <span class="d">Referência regional, jornada rastreada, atendimento inteligente e impacto comercial conhecido.</span></div>
       </div>
       <div class="eixos">
         <div class="eixo"><img src="/brand/produtos/branding.png" alt="">
@@ -1176,11 +1236,44 @@
     </div>
   </section>
 
+  <section class="slide" data-t="Os caminhos">
+    <div class="inner">
+      <div class="s-head" style="margin-bottom:30px">
+        <p class="eyebrow">A decisão que está na mesa</p>
+        <h2>Diante da base que já existe, <em style="font-style:normal;color:var(--gold)">qual caminho o Instituto quer seguir?</em></h2>
+      </div>
+      <div class="vias">
+        <div class="via">
+          <span class="tag">Caminho 01</span>
+          <span class="t">Manter como está</span>
+          <span class="d">Preservar o investimento e a operação atual, consolidando o que foi
+            construído até o fim de 2026.</span>
+          <span class="fo">Efeito: continuidade, maturação da base e menor ruptura operacional.</span>
+        </div>
+        <div class="via">
+          <span class="tag">Caminho 02</span>
+          <span class="t">Cortar custos</span>
+          <span class="d">Reduzir escopo, cadência ou frentes da operação para diminuir
+            investimento no curto prazo.</span>
+          <span class="fo">Efeito: exige escolher o que deixa de ser feito e desacelera a construção iniciada.</span>
+        </div>
+        <div class="via esc">
+          <span class="tag">Caminho 03 &middot; 2030</span>
+          <span class="t">Dar o próximo passo</span>
+          <span class="d">Consolidar até o fim do ano e, a partir de janeiro/fevereiro, iniciar
+            uma expansão progressiva de canais, autoridade, tecnologia e mensuração.</span>
+          <span class="fo">Efeito: transformar a base atual em um plano de crescimento de quatro anos.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="slide close" data-t="Fecho">
     <div class="inner">
       <p class="eyebrow">A pergunta desta reunião</p>
       <h2>Diante da base que já existe, qual é o nível de <em>ambição</em> que o Instituto quer para a próxima fase?</h2>
-      <p>O primeiro ciclo respondeu se era possível. O próximo responde até onde vai.</p>
+      <p>O primeiro ciclo respondeu se era possível.
+        <span style="color:var(--cy)">O próximo responde até onde o Instituto quer levar isso.</span></p>
       <img class="lgw" src="/brand/logo-yphe.svg" alt="YPHE">
     </div>
   </section>
@@ -1238,6 +1331,34 @@
   var _paint = paint;
   paint = function(){ _paint(); marcar(); };
   marcar();
+
+
+  // --- quem conduz cada slide ---
+  var FALA = {
+    'Capa':['Eliab','condução geral'], 'Presença':['Eliab','estratégia'],
+    'A promessa':['Eliab','estratégia'], 'O contratado':['Eliab','operação'],
+    'Como operamos':['Eliab','modelo operacional'], 'O que ouvimos':['Eliab','percepção interna'],
+    'Boca a boca':['Eliab','tese estratégica'], 'Efeito da narrativa':['Eliab','narrativa'],
+    'A história voltou':['Eliab','prova social'], 'Autoridade transferida':['Eliab','transição de autoridade'],
+    'Instagram · Alcance':['Karine','dados'], 'Instagram · Interações':['Karine','dados'],
+    'Instagram · Cliques no link':['Karine','dados'], 'Instagram · Novos seguidores':['Karine','dados'],
+    'Facebook · Visualizações':['Karine','dados'], 'Facebook · Pessoas alcançadas':['Karine','dados'],
+    'Facebook · Interações':['Karine','dados'], 'Facebook · Cliques no link':['Karine','dados'],
+    'Comparativo':['Karine','consolidação'], 'Cliques':['Karine','aprendizado de mensuração'],
+    'O que aprendemos':['Karine','leitura dos dados'],
+    'A crise':['Gabriel','diagnóstico técnico'], 'Linha do tempo · Web':['Gabriel','infraestrutura web'],
+    'Linha do tempo · Atendimento':['Gabriel','IA e atendimento'],
+    'Integração inédita':['Gabriel','integração'], 'Onde estamos':['Gabriel','operação real'],
+    'Próximo ciclo':['Eliab','próximos passos'], 'Fases':['Eliab','decisão estratégica'],
+    'Mussi 2030':['Eliab','visão 2030'], 'Os caminhos':['Eliab','caminhos'],
+    'Fecho':['Eliab','fechamento']
+  };
+  slides.forEach(function(sl){
+    var f=FALA[sl.dataset.t]; if(!f||sl.classList.contains('ato'))return;
+    var d=document.createElement('span'); d.className='fala-quem';
+    d.innerHTML='<i></i><b>'+f[0]+'</b> &middot; '+f[1];
+    sl.appendChild(d);
+  });
 
   // --- ícones nos cartões ---
   var ICONS = [

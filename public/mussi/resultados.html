@@ -524,7 +524,7 @@
     font-size:clamp(30px,2.9vw,42px);font-weight:800;letter-spacing:-.035em;
     color:var(--gold);line-height:1;text-align:center;margin-bottom:16px}
   .ano:last-child .ano-y{color:rgba(203,152,99,.72)}
-  .ano-c{flex:1;border:1px solid var(--line);border-radius:16px;padding:24px 24px 26px;
+  .ano-c{flex:1;border:1px solid var(--line);border-radius:16px;padding:22px 22px 24px;
     background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
     display:flex;flex-direction:column;gap:10px;
     transition:border-color .3s,transform .3s,box-shadow .3s}
@@ -532,9 +532,8 @@
     background:linear-gradient(180deg,rgba(203,152,99,.13),rgba(255,255,255,.02))}
   .ano:hover .ano-c{border-color:rgba(203,152,99,.5);transform:translateY(-5px);
     box-shadow:0 28px 56px -30px rgba(0,0,0,.95)}
-  .ano-top{display:flex;align-items:center;gap:13px}
-  .ano-c img{width:46px;height:46px;object-fit:contain;flex:0 0 auto;
-    filter:drop-shadow(0 10px 18px rgba(10,15,28,.8))}
+  .ano-c img{width:50px;height:50px;object-fit:contain;align-self:flex-start;
+    filter:drop-shadow(0 10px 18px rgba(10,15,28,.8));margin-bottom:2px}
   .ano .yr{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.15em;
     text-transform:uppercase;color:var(--txt-3)}
   .ano .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;
@@ -543,9 +542,9 @@
   .ano .d{font-size:clamp(13.5px,1.03vw,15px);color:var(--txt-2);line-height:1.5}
   .ano ul{list-style:none;margin:auto 0 0;padding:14px 0 0;
     display:flex;flex-wrap:wrap;gap:7px;border-top:1px solid var(--line-2)}
-  .ano li{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.02em;
+  .ano li{font-family:"IBM Plex Mono",monospace;font-size:10.8px;letter-spacing:.02em;
     color:var(--txt-2);border:1px solid var(--line);border-radius:999px;
-    padding:5px 11px;background:rgba(255,255,255,.03);white-space:nowrap}
+    padding:4px 9px;background:rgba(255,255,255,.03);white-space:nowrap}
   .ano:first-child li{border-color:rgba(203,152,99,.28)}
   .ano-agora{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:9.5px;
     letter-spacing:.16em;text-transform:uppercase;color:var(--bg);background:var(--gold);
@@ -1242,9 +1241,9 @@
         <div class="ano">
           <span class="ano-y">2026</span>
           <div class="ano-c">
-            <div class="ano-top"><img src="/brand/produtos/prancheta.png" alt="">
-              <div><span class="yr">Nível 1 de 4</span><div class="t">Base estruturada</div></div>
-            </div>
+            <img src="/brand/produtos/prancheta.png" alt="">
+            <span class="yr">Nível 1 de 4</span>
+            <div class="t">Base estruturada</div>
             <span class="ano-agora">Estamos aqui</span>
             <p class="d">Onde o Instituto está hoje: marca, conteúdo, processos e presença operando como uma estrutura só.</p>
             <ul><li>Instagram</li><li>Site institucional</li><li>Google Meu Negócio</li><li>WhatsApp organizado</li><li>Marca e processos</li></ul>
@@ -1253,9 +1252,9 @@
         <div class="ano">
           <span class="ano-y">2027</span>
           <div class="ano-c">
-            <div class="ano-top"><img src="/brand/produtos/content.png" alt="">
-              <div><span class="yr">Nível 2 de 4</span><div class="t">Expansão</div></div>
-            </div>
+            <img src="/brand/produtos/content.png" alt="">
+            <span class="yr">Nível 2 de 4</span>
+            <div class="t">Expansão</div>
             <p class="d">Novos canais e mais capacidade de produção — sem depender de um único ambiente de distribuição.</p>
             <ul><li>YouTube</li><li>TikTok</li><li>Google Ads</li><li>Mídia paga</li><li>Fotografia e vídeo</li></ul>
           </div>
@@ -1263,9 +1262,9 @@
         <div class="ano">
           <span class="ano-y">2028 – 29</span>
           <div class="ano-c">
-            <div class="ano-top"><img src="/brand/produtos/orb.png" alt="">
-              <div><span class="yr">Nível 3 de 4</span><div class="t">Multicanal</div></div>
-            </div>
+            <img src="/brand/produtos/orb.png" alt="">
+            <span class="yr">Nível 3 de 4</span>
+            <div class="t">Multicanal</div>
             <p class="d">A operação vira ecossistema: uma conversa de profundidade vira muitos ativos e a tecnologia passa a ser própria.</p>
             <ul><li>Podcast</li><li>Spotify e YouTube</li><li>Cortes e recortes</li><li>Equipe adicional</li><li>Chatbot</li><li>CRM próprio</li></ul>
           </div>
@@ -1273,9 +1272,9 @@
         <div class="ano">
           <span class="ano-y">2030</span>
           <div class="ano-c">
-            <div class="ano-top"><img src="/brand/produtos/predio.png" alt="">
-              <div><span class="yr">Nível 4 de 4</span><div class="t">Ecossistema 2030</div></div>
-            </div>
+            <img src="/brand/produtos/predio.png" alt="">
+            <span class="yr">Nível 4 de 4</span>
+            <div class="t">Ecossistema 2030</div>
             <p class="d">Instituto e Hospital dentro da mesma construção de valor, com frente B2B e inteligência proprietária.</p>
             <ul><li>Hospital Tereza Mussi</li><li>Arquitetura de marca</li><li>Frente B2B</li><li>Painel de dados</li><li>Estrutura ampliada</li></ul>
           </div>

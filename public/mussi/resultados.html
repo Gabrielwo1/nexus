@@ -518,10 +518,9 @@
     font-weight:800;letter-spacing:.02em;color:var(--gold);line-height:1}
   .ano-p{width:13px;height:13px;border-radius:50%;background:var(--gold);
     border:3px solid var(--bg);box-shadow:0 0 0 2px var(--gold)}
-  .ano-agora{position:absolute;top:-92px;left:50%;transform:translateX(-50%);
-    font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--bg);background:var(--gold);
-    border-radius:999px;padding:4px 10px;white-space:nowrap;font-weight:500}
+  .ano-agora{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:9.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--bg);background:var(--gold);
+    border-radius:999px;padding:4px 11px;white-space:nowrap;font-weight:500;margin-bottom:-2px}
   .ano:last-child .ano-p{background:var(--bg);box-shadow:0 0 0 2px rgba(203,152,99,.6)}
   .ano{position:relative;padding:24px 22px;border:1px solid var(--line);border-top:3px solid rgba(203,152,99,.35);
     border-radius:16px;display:flex;flex-direction:column;gap:11px;
@@ -1232,8 +1231,9 @@
           é ativado.</p>
       </div>
       <div class="road">
-        <div class="ano"><span class="ano-t"><span class="ano-agora">Estamos aqui</span><span class="ano-y">2026</span><span class="ano-p"></span></span>
+        <div class="ano"><span class="ano-t"><span class="ano-y">2026</span><span class="ano-p"></span></span>
           <img src="/brand/produtos/prancheta.png" alt="">
+          <span class="ano-agora">Estamos aqui</span>
           <span class="yr">Nível 1 de 4</span><span class="t">Base estruturada</span>
           <span class="d">Onde o Instituto está hoje. Marca, conteúdo, processos e presença
             operando como uma estrutura só.</span>

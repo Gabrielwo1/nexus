@@ -507,13 +507,13 @@
 
   /* roadmap 2026-2030 */
   .road{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px}
-  .ano{padding:28px 26px;border:1px solid var(--line);border-top:3px solid rgba(203,152,99,.35);
+  .ano{padding:24px 22px;border:1px solid var(--line);border-top:3px solid rgba(203,152,99,.35);
     border-radius:16px;display:flex;flex-direction:column;gap:11px;
     background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
     transition:border-color .3s,transform .3s,box-shadow .3s}
   .ano:hover{border-color:rgba(203,152,99,.5);transform:translateY(-4px);
     box-shadow:0 26px 52px -30px rgba(0,0,0,.95)}
-  .ano img{width:72px;height:72px;object-fit:contain;margin-bottom:4px;
+  .ano img{width:60px;height:60px;object-fit:contain;margin-bottom:2px;
     filter:drop-shadow(0 14px 24px rgba(10,15,28,.8))}
   .ano:nth-child(1){border-top-color:var(--gold)}
   .ano:nth-child(2){border-top-color:rgba(203,152,99,.75)}
@@ -522,7 +522,14 @@
     color:var(--gold);font-weight:500}
   .ano .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(20px,1.7vw,24px);
     font-weight:700;color:#fff;line-height:1.18;letter-spacing:-.02em}
-  .ano .d{font-size:clamp(14px,1.1vw,15.5px);color:var(--txt-2);line-height:1.55}
+  .ano .d{font-size:clamp(13.5px,1.05vw,15px);color:var(--txt-2);line-height:1.5}
+  .ano ul{list-style:none;margin:4px 0 0;padding:12px 0 0;display:flex;flex-direction:column;gap:7px;
+    border-top:1px solid var(--line-2)}
+  .ano li{font-size:clamp(12.5px,.98vw,13.8px);color:var(--txt-3);line-height:1.4;
+    padding-left:14px;position:relative}
+  .ano li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:1px;background:var(--gold)}
+  .ano .soma{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--txt-3);opacity:.75;margin-top:2px}
   @media (max-width:980px){.road{grid-template-columns:1fr 1fr}}
 
   /* caminhos da decisao */
@@ -1199,22 +1206,39 @@
       <div class="s-head">
         <p class="eyebrow">A próxima fase</p>
         <h2>Mussi 2030</h2>
-        <p class="sub">Não como campanha — como direção de quatro anos construída sobre a base
-          que já existe. Os eixos são a moldura; o conteúdo definitivo é refinado junto com os sócios.</p>
+        <p class="sub">Não é uma campanha nem um pacote maior. São quatro níveis de capacidade,
+          e cada um soma ao anterior. Primeiro a capacidade é construída — depois o próximo nível
+          é ativado.</p>
       </div>
       <div class="road">
-        <div class="ano"><img src="/brand/produtos/ciclo.png" alt="">
-          <span class="yr">2026</span><span class="t">Consolidar a base</span>
-          <span class="d">Manter o investimento atual até o fim do ano, estabilizar operação e mensuração.</span></div>
+        <div class="ano"><img src="/brand/produtos/prancheta.png" alt="">
+          <span class="yr">Nível 1 de 4</span><span class="t">Base estruturada</span>
+          <span class="d">Onde o Instituto está hoje. Marca, conteúdo, processos e presença
+            operando como uma estrutura só.</span>
+          <ul><li>Instagram: feed, stories e reels</li><li>Site institucional e agendamento</li>
+            <li>Google Meu Negócio e avaliações</li><li>WhatsApp com fluxo organizado</li>
+            <li>Marca e narrativa aplicadas</li><li>Calendário e rotina de produção</li></ul></div>
         <div class="ano"><img src="/brand/produtos/content.png" alt="">
-          <span class="yr">2027</span><span class="t">Expandir presença</span>
-          <span class="d">Novos canais, mais médicos e formatos com profundidade, preservando consistência.</span></div>
-        <div class="ano"><img src="/brand/produtos/branding.png" alt="">
-          <span class="yr">2028&ndash;29</span><span class="t">Transformar autoridade</span>
-          <span class="d">Instituto como instituição: menos dependência de uma única figura, mais força de marca.</span></div>
+          <span class="yr">Nível 2 de 4</span><span class="t">Expansão</span>
+          <span class="d">Novos canais e mais capacidade de produção — sem depender de um
+            único ambiente de distribuição.</span>
+          <ul><li>YouTube: vídeo longo e busca</li><li>TikTok: novos públicos</li>
+            <li>Google Ads: quem já procura</li><li>Mídia no Instagram</li>
+            <li>Fotografia e vídeo no Instituto</li><li>Mais volume por mês</li></ul></div>
+        <div class="ano"><img src="/brand/produtos/orb.png" alt="">
+          <span class="yr">Nível 3 de 4</span><span class="t">Multicanal</span>
+          <span class="d">A operação vira ecossistema: uma conversa de profundidade vira
+            muitos ativos, e a tecnologia passa a ser própria.</span>
+          <ul><li>Podcast Instituto Mussi Conversa</li><li>Spotify e YouTube: episódios completos</li>
+            <li>Cortes em Reels, Shorts e TikTok</li><li>Equipe adicional: social e audiovisual</li>
+            <li>Chatbot no WhatsApp</li><li>CRM próprio no lugar do Feegow</li></ul></div>
         <div class="ano"><img src="/brand/produtos/predio.png" alt="">
-          <span class="yr">2030</span><span class="t">Escala mensurável</span>
-          <span class="d">Referência regional, jornada rastreada, atendimento inteligente e impacto comercial conhecido.</span></div>
+          <span class="yr">Nível 4 de 4</span><span class="t">Ecossistema 2030</span>
+          <span class="d">Instituto e Hospital dentro da mesma construção de valor, com
+            frente B2B e inteligência proprietária.</span>
+          <ul><li>Hospital Tereza Mussi na mesma marca</li><li>Arquitetura de marca Instituto + Hospital</li>
+            <li>Frente B2B com médicos e LinkedIn</li><li>Dados e inteligência em painel próprio</li>
+            <li>Mídia institucional de reputação</li><li>Estrutura de time ampliada</li></ul></div>
       </div>
     </div>
   </section>

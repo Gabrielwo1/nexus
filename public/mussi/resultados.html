@@ -506,14 +506,23 @@
   }
 
   /* roadmap 2026-2030 */
-  .road{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}
-  .ano{padding:20px 22px;border-left:2px solid rgba(180,193,214,.18);
-    display:flex;flex-direction:column;gap:8px}
-  .ano:first-child{border-left-color:var(--gold)}
-  .ano .yr{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+  .road{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px}
+  .ano{padding:28px 26px;border:1px solid var(--line);border-top:3px solid rgba(203,152,99,.35);
+    border-radius:16px;display:flex;flex-direction:column;gap:11px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    transition:border-color .3s,transform .3s,box-shadow .3s}
+  .ano:hover{border-color:rgba(203,152,99,.5);transform:translateY(-4px);
+    box-shadow:0 26px 52px -30px rgba(0,0,0,.95)}
+  .ano img{width:72px;height:72px;object-fit:contain;margin-bottom:4px;
+    filter:drop-shadow(0 14px 24px rgba(10,15,28,.8))}
+  .ano:nth-child(1){border-top-color:var(--gold)}
+  .ano:nth-child(2){border-top-color:rgba(203,152,99,.75)}
+  .ano:nth-child(3){border-top-color:rgba(203,152,99,.55)}
+  .ano .yr{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.16em;
     color:var(--gold);font-weight:500}
-  .ano .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:19px;font-weight:700;color:#fff;line-height:1.2}
-  .ano .d{font-size:13.5px;color:var(--txt-2);line-height:1.5}
+  .ano .t{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:clamp(20px,1.7vw,24px);
+    font-weight:700;color:#fff;line-height:1.18;letter-spacing:-.02em}
+  .ano .d{font-size:clamp(14px,1.1vw,15.5px);color:var(--txt-2);line-height:1.55}
   @media (max-width:980px){.road{grid-template-columns:1fr 1fr}}
 
   /* caminhos da decisao */
@@ -1194,31 +1203,18 @@
           que já existe. Os eixos são a moldura; o conteúdo definitivo é refinado junto com os sócios.</p>
       </div>
       <div class="road">
-        <div class="ano"><span class="yr">2026</span><span class="t">Consolidar a base</span>
+        <div class="ano"><img src="/brand/produtos/ciclo.png" alt="">
+          <span class="yr">2026</span><span class="t">Consolidar a base</span>
           <span class="d">Manter o investimento atual até o fim do ano, estabilizar operação e mensuração.</span></div>
-        <div class="ano"><span class="yr">2027</span><span class="t">Expandir presença</span>
+        <div class="ano"><img src="/brand/produtos/content.png" alt="">
+          <span class="yr">2027</span><span class="t">Expandir presença</span>
           <span class="d">Novos canais, mais médicos e formatos com profundidade, preservando consistência.</span></div>
-        <div class="ano"><span class="yr">2028&ndash;29</span><span class="t">Transformar autoridade</span>
+        <div class="ano"><img src="/brand/produtos/branding.png" alt="">
+          <span class="yr">2028&ndash;29</span><span class="t">Transformar autoridade</span>
           <span class="d">Instituto como instituição: menos dependência de uma única figura, mais força de marca.</span></div>
-        <div class="ano"><span class="yr">2030</span><span class="t">Escala mensurável</span>
+        <div class="ano"><img src="/brand/produtos/predio.png" alt="">
+          <span class="yr">2030</span><span class="t">Escala mensurável</span>
           <span class="d">Referência regional, jornada rastreada, atendimento inteligente e impacto comercial conhecido.</span></div>
-      </div>
-      <div class="eixos">
-        <div class="eixo"><img src="/brand/produtos/branding.png" alt="">
-          <span class="t">Marca de referência</span>
-          <span class="d">Deixar de ser conhecido na cidade para ser referência regional em ortopedia.</span></div>
-        <div class="eixo"><img src="/brand/produtos/content.png" alt="">
-          <span class="t">Jornada do paciente</span>
-          <span class="d">Série acompanhando antes, durante e depois — com autorização de imagem e dentro do CFM.</span></div>
-        <div class="eixo"><img src="/brand/produtos/predio.png" alt="">
-          <span class="t">Instituto como instituição</span>
-          <span class="d">Equipe, bastidores e cultura. O cuidado comunica tanto quanto a técnica.</span></div>
-        <div class="eixo"><img src="/brand/produtos/diag.png" alt="">
-          <span class="t">Medição fechada</span>
-          <span class="d">Da primeira visualização até a consulta realizada, com número em cada etapa.</span></div>
-        <div class="eixo"><img src="/brand/produtos/orb.png" alt="">
-          <span class="t">Atendimento inteligente</span>
-          <span class="d">Tecnologia que responde, tria e agenda — liberando a equipe para o que é humano.</span></div>
       </div>
     </div>
   </section>

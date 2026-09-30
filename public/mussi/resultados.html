@@ -459,20 +459,21 @@
 
   /* provas e comentários maiores */
   /* montagem: prints grandes, cantos sobrepostos */
-  .slide:has(.coms) .inner{max-width:1500px}
+  .slide:has(.coms){padding-left:3.5vw;padding-right:3.5vw}
+  .slide:has(.coms) .inner{max-width:1720px}
   .coms{display:flex;justify-content:center;align-items:center;gap:0;margin-top:4px}
-  .com{flex:0 0 37%;padding:10px;border-radius:16px;background:#fff;
+  .com{flex:0 0 40%;padding:10px;border-radius:16px;background:#fff;
     border:1px solid rgba(180,193,214,.3);
     box-shadow:0 34px 70px -26px rgba(0,0,0,.92);
     transition:transform .4s cubic-bezier(.22,.7,.3,1),box-shadow .4s,z-index 0s}
   /* nada de corte: o comentário inteiro tem que ficar legível */
   .com img{width:100%;display:block;border-radius:8px;
-    height:auto;max-height:62vh;object-fit:contain;object-position:center}
-  .coms .com:nth-child(1){z-index:1;margin-right:-4.5%;
+    height:auto;max-height:55vh;object-fit:contain;object-position:center}
+  .coms .com:nth-child(1){z-index:1;margin-right:-6%;
     transform:rotate(-2.4deg) translateY(16px)}
-  .coms .com:nth-child(2){flex-basis:41%;z-index:3;transform:translateY(-10px) scale(1.04)}
-  .coms .com:nth-child(2) img{max-height:68vh}
-  .coms .com:nth-child(3){z-index:2;margin-left:-4.5%;
+  .coms .com:nth-child(2){flex-basis:44%;z-index:3;transform:translateY(-10px) scale(1.04)}
+  .coms .com:nth-child(2) img{max-height:59vh}
+  .coms .com:nth-child(3){z-index:2;margin-left:-6%;
     transform:rotate(2.4deg) translateY(16px)}
   .coms .com:hover{z-index:6;transform:translateY(-14px) scale(1.09) rotate(0deg);
     box-shadow:0 50px 100px -28px rgba(0,0,0,1)}
